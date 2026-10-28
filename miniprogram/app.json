@@ -1,0 +1,35 @@
+{
+  "pages": [
+    "pages/login/login",
+    "pages/dashboard/dashboard",
+    "pages/fridge/fridge",
+    "pages/recipes/recipes",
+    "pages/add/add",
+    "pages/impact/impact"
+  ],
+  "window": {
+    "navigationBarBackgroundColor": "#0B3B2E",
+    "navigationBarTextStyle": "white",
+    "navigationBarTitleText": "FreshTrack HK",
+    "backgroundColor": "#F4F7F4",
+    "backgroundTextStyle": "dark"
+  },
+  "tabBar": {
+    "color": "#6B7C72",
+    "selectedColor": "#16A34A",
+    "backgroundColor": "#FFFFFF",
+    "borderStyle": "white",
+    "list": [
+      { "pagePath": "pages/dashboard/dashboard", "text": "首页" },
+      { "pagePath": "pages/fridge/fridge", "text": "冰箱" },
+      { "pagePath": "pages/recipes/recipes", "text": "菜谱" },
+      { "pagePath": "pages/add/add", "text": "添加" },
+      { "pagePath": "pages/impact/impact", "text": "减废" }
+    ]
+  },
+  "usingComponents": {
+    "risk-badge": "/components/risk-badge/risk-badge"
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json"
+}
