@@ -1,0 +1,46 @@
+<view wx:if="{{loading}}" class="page-loading">加载中…</view>
+
+<block wx:elif="{{hasData}}">
+  <view class="hero">
+    <view class="h1">FreshTrack HK</view>
+    <view class="muted">让每一份食材都被好好用完</view>
+  </view>
+
+  <view class="card kpi-grid">
+    <view class="kpi">
+      <view class="kpi-num">{{kpi.month_saved_kg}}<text class="kpi-unit"> kg</text></view>
+      <view class="muted">本月惜食</view>
+    </view>
+    <view class="kpi">
+      <view class="kpi-num">HK${{kpi.month_saved_hkd}}</view>
+      <view class="muted">节省开支</view>
+    </view>
+    <view class="kpi">
+      <view class="kpi-num">{{kpi.co2e_kg}}<text class="kpi-unit"> kg</text></view>
+      <view class="muted">减排 CO₂e</view>
+    </view>
+  </view>
+
+  <view class="card">
+    <view class="between">
+      <view class="h2">今日临期 Top</view>
+      <view class="link" bindtap="goFridge">全部 ›</view>
+    </view>
+    <view class="item" wx:for="{{expiring}}" wx:key="id">
+      <view class="grow">
+        <view class="item-name">{{item.name}}</view>
+        <view class="muted">剩 {{item.days_left}} 天 · {{item.date_type === 'use_by' ? '此日期前食用' : '最佳赏味'}}</view>
+      </view>
+      <risk-badge level="{{item.risk_level}}" />
+    </view>
+    <view wx:if="{{expiring.length === 0}}" class="muted empty">暂无临期食材，做得很棒！</view>
+  </view>
+
+  <view class="quick">
+    <view class="q-btn" bindtap="goAdd"><text class="q-ico">＋</text>添加食材</view>
+    <view class="q-btn" bindtap="goRecipes"><text class="q-ico">🍳</text>抢救菜谱</view>
+    <view class="q-btn" bindtap="goImpact"><text class="q-ico">🌱</text>减废成果</view>
+  </view>
+</block>
+
+<view wx:else class="page-loading">暂无数据，请先在「添加」页录入食材</view>
