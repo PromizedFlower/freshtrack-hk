@@ -1,0 +1,29 @@
+<view wx:if="{{loading}}" class="page-loading">加载中…</view>
+
+<block wx:elif="{{hasData}}">
+  <view class="card rcp" wx:for="{{recipes}}" wx:key="id">
+    <view class="row" data-id="{{item.id}}" bindtap="toggle">
+      <view class="grow">
+        <view class="rcp-title">{{item.title}}</view>
+        <view class="muted rcp-meta">{{item.prep_time_min}} 分钟 · {{item.difficulty}} · {{item.servings}} 人份</view>
+      </view>
+      <view class="score">{{item.match_score}}%</view>
+    </view>
+
+    <view class="rcp-tags">
+      <text class="tag">可耗临期 {{item.expiring_used_count}}</text>
+      <text class="tag">省 {{item.waste_saved_kg}}kg</text>
+    </view>
+
+    <view wx:if="{{expandedId === item.id}}" class="detail">
+      <view class="sec">用料</view>
+      <view class="ing" wx:for="{{item.ingredients}}" wx:for-item="ing" wx:key="name">{{ing.name}}</view>
+      <view class="sec">步骤</view>
+      <view class="step" wx:for="{{item.steps}}" wx:for-item="s" wx:for-index="si" wx:key="*this">{{si + 1}}. {{s}}</view>
+      <button class="btn-primary cook" data-id="{{item.id}}" bindtap="cook">开始下厨（核销）</button>
+    </view>
+  </view>
+  <view wx:if="{{recipes.length === 0}}" class="page-loading">暂无推荐菜谱</view>
+</block>
+
+<view wx:else class="page-loading">暂无数据，请先在「添加」页录入食材</view>
