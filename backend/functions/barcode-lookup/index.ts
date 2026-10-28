@@ -2,6 +2,7 @@
 // Resolves an EAN-13 / UPC barcode to a product: local barcode_cache first (ms), then the
 // Open Food Facts API, caching the result for future scans.
 
+import { serve } from "https://deno.land/std@0.192.0/http/server.ts";
 import { corsResponse } from "../_shared/gemini.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL") || "";
