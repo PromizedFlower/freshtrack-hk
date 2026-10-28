@@ -1,0 +1,23 @@
+<view class="wrap">
+  <view class="brand">
+    <view class="logo">FT</view>
+    <view class="h1">FreshTrack HK</view>
+    <view class="muted">惜食减废 · 智能冰箱管理</view>
+  </view>
+
+  <view class="card">
+    <view class="h2">登录 / 注册</view>
+    <input class="field" type="text" placeholder="邮箱" placeholder-class="ph"
+           value="{{email}}" bindinput="onEmail" />
+    <input class="field" type="password" placeholder="密码" placeholder-class="ph"
+           value="{{password}}" bindinput="onPwd" />
+    <view class="err" wx:if="{{error}}">{{error}}</view>
+    <button class="btn-primary" loading="{{loading}}" bindtap="doLogin">登录</button>
+    <button class="btn-ghost" loading="{{loading}}" bindtap="doSignup">注册新账号</button>
+  </view>
+
+  <view class="demo">
+    <view class="divider">或</view>
+    <button class="btn-demo" bindtap="enterDemo">一键进入 Demo 家庭</button>
+  </view>
+</view>
