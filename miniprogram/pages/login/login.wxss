@@ -1,0 +1,15 @@
+.wrap { padding: 96rpx 40rpx; }
+.brand { text-align: center; margin-bottom: 56rpx; }
+.logo {
+  width: 120rpx; height: 120rpx; line-height: 120rpx; border-radius: 32rpx;
+  background: linear-gradient(135deg, #16A34A, #0B3B2E);
+  color: #fff; font-size: 52rpx; font-weight: 700; margin: 0 auto 24rpx;
+  box-shadow: 0 12rpx 28rpx rgba(11, 59, 46, 0.28);
+}
+.field { background: #F4F7F4; border-radius: 16rpx; padding: 22rpx 24rpx; margin: 20rpx 0; }
+.ph { color: #9AA8A0; }
+.err { color: #DC2626; font-size: 24rpx; margin: 8rpx 0; }
+.btn-ghost { margin-top: 16rpx; }
+.demo { margin-top: 48rpx; text-align: center; }
+.divider { color: #9AA8A0; font-size: 24rpx; margin-bottom: 24rpx; }
+.btn-demo { background: #0EA5E9; color: #fff; border-radius: 999rpx; padding: 24rpx; font-weight: 600; }
