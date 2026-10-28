@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FreshTrack HK — Mobile App Mockup</title>
+<style>
+  :root{
+    --bg:#eef2f0; --panel:#ffffff; --ink:#0f1f1a; --muted:#6b7d76; --line:#e4ebe8;
+    --green:#16a34a; --green-soft:#e7f6ed; --deep:#0b3b2e;
+    --amber:#f59e0b; --amber-soft:#fef3c7;
+    --red:#ef4444; --red-soft:#fee2e2;
+    --blue:#0ea5e9; --blue-soft:#e0f2fe;
+    --purple:#7c3aed; --purple-soft:#ede9fe;
+    --r:14px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+
+  body{
+    font-family:"Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,"Microsoft YaHei",sans-serif;
+    background:
+      radial-gradient(circle at 50% 12%, rgba(22,163,74,.13), transparent 58%),
+      linear-gradient(170deg,#f3f7f5,#e6edea 70%,#e2eae6);
+    background-attachment:fixed;
+    color:var(--ink);-webkit-font-smoothing:antialiased;min-height:100vh;
+  }
+
+  /* ============ page chrome ============ */
+  .chrome{
+    display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+    padding:16px 26px;border-bottom:1px solid rgba(15,31,26,.07);
+    background:rgba(255,255,255,.62);backdrop-filter:blur(10px);
+    position:sticky;top:0;z-index:100;
+  }
+  .chrome-l{display:flex;align-items:baseline;gap:10px;min-width:0}
+  .chrome-l b{font-size:15px;font-weight:750;letter-spacing:-.2px}
+  .chrome-l span{font-size:11.5px;color:var(--muted)}
+  .chrome-l .dot{width:9px;height:9px;border-radius:50%;background:var(--green);flex:none;align-self:center}
+  .chrome-r{margin-left:auto;display:flex;gap:7px;background:rgba(15,31,26,.06);padding:4px;border-radius:11px}
+  .seg{
+    border:none;background:transparent;border-radius:8px;padding:7px 15px;
+    font-size:12.5px;font-weight:650;color:var(--muted);cursor:pointer;font-family:inherit;
+    transition:background .16s,color .16s;
+  }
+  .seg:hover{color:var(--ink)}
+  .seg.on{background:#fff;color:var(--deep);box-shadow:0 1px 3px rgba(11,59,46,.13)}
+
+  .stage{padding:44px 26px 70px;display:flex;justify-content:center}
+
+  /* ============ device frame ============ */
+  .device{
+    width:390px;height:844px;flex:none;
+    background:linear-gradient(160deg,#20302a,#0b1a15 45%,#132119);
+    border-radius:56px;padding:13px;position:relative;
+    box-shadow:
+      0 2px 0 rgba(255,255,255,.14) inset,
+      0 0 0 1px rgba(0,0,0,.35),
+      0 34px 70px -18px rgba(11,59,46,.42),
+      0 12px 26px -10px rgba(11,59,46,.28);
+  }
+  .device::after{
+    content:"";position:absolute;left:50%;transform:translateX(-50%);bottom:9px;
+    width:118px;height:4px;border-radius:3px;background:rgba(255,255,255,.28);
+  }
+  .frame{
+    width:100%;height:100%;background:var(--bg);border-radius:44px;
+    overflow:hidden;position:relative;display:flex;flex-direction:column;
+  }
+  .island{
+    position:absolute;top:13px;left:50%;transform:translateX(-50%);
+    width:112px;height:28px;border-radius:16px;background:#05100c;z-index:60;
+  }
+  .statusbar{
+    height:56px;flex:none;display:flex;align-items:center;justify-content:space-between;
+    padding:0 30px;font-size:14px;font-weight:680;letter-spacing:.2px;position:relative;z-index:55;
+  }
+  .sb-r{display:flex;align-items:center;gap:6px;color:var(--ink)}
+
+  /* ============ app body ============ */
+  .appbody{flex:1;overflow-y:auto;overflow-x:hidden;padding:0 18px 104px;scrollbar-width:none}
+  .appbody::-webkit-scrollbar{width:0;height:0}
+  .m-screen{display:none}
+  .m-screen.on{display:block;animation:pop .24s ease}
+  @keyframes pop{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:none}}
+
+  .mhead{display:flex;align-items:flex-start;gap:12px;padding:4px 0 14px}
+  .mhead h2{font-size:21px;font-weight:750;letter-spacing:-.4px;line-height:1.2}
+  .mhead p{font-size:12px;color:var(--muted);margin-top:4px}
+  .mhead p b{color:var(--red)}
+  .avatar{
+    margin-left:auto;width:40px;height:40px;flex:none;border-radius:50%;border:none;cursor:pointer;
+    background:var(--deep);color:#fff;font-size:15px;font-weight:750;font-family:inherit;
+  }
+  .iconbtn{
+    margin-left:auto;width:36px;height:36px;flex:none;border-radius:11px;cursor:pointer;
+    border:1px solid var(--line);background:var(--panel);color:var(--muted);font-size:15px;font-family:inherit;
+  }
+
+  /* alert hero */
+  .alert{
+    display:flex;align-items:center;gap:12px;border-radius:16px;padding:14px 15px;margin-bottom:14px;
+    background:linear-gradient(120deg,var(--red-soft),#fff5e6);border:1px solid #fbd5d5;
+  }
+  .alert-i{font-size:22px;flex:none}
+  .alert-t{font-size:13.5px;font-weight:750}
+  .alert-s{font-size:11px;color:#8a5a3b;margin-top:3px;line-height:1.45}
+  .alert-b{
+    margin-left:auto;flex:none;border:none;border-radius:9px;padding:8px 13px;cursor:pointer;
+    background:var(--red);color:#fff;font-size:11.5px;font-weight:700;font-family:inherit;
+  }
+
+  /* mini stats */
+  .mini3{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-bottom:18px}
+  .mini{background:var(--panel);border:1px solid var(--line);border-radius:13px;padding:11px 10px;text-align:center}
+  .mini .ml{display:block;font-size:9.5px;font-weight:700;color:var(--muted);letter-spacing:.3px;text-transform:uppercase}
+  .mini .mv{display:block;font-size:18px;font-weight:750;margin-top:5px;letter-spacing:-.4px}
+  .mini .mv small{font-size:10px;font-weight:650}
+
+  /* section head */
+  .sechead{display:flex;align-items:baseline;gap:10px;margin:0 0 10px}
+  .sechead h3{font-size:14px;font-weight:750}
+  .link{
+    margin-left:auto;background:none;border:none;cursor:pointer;font-family:inherit;
+    font-size:11.5px;font-weight:700;color:var(--green);padding:0;
+  }
+
+  /* horizontal cards */
+  .hscroll{
+    display:flex;gap:10px;overflow-x:auto;padding:2px 18px 6px;margin:0 -18px 18px;
+    scrollbar-width:none;
+  }
+  .hscroll::-webkit-scrollbar{height:0}
+  .hcard{
+    flex:none;width:134px;text-align:left;cursor:pointer;font-family:inherit;
+    background:var(--panel);border:1px solid var(--line);border-radius:15px;padding:12px;
+    display:flex;flex-direction:column;gap:6px;transition:border-color .15s,transform .15s;
+  }
+  .hcard:hover{border-color:#c9dcd4;transform:translateY(-2px)}
+  .hcard .he{font-size:22px}
+  .hcard .hn{font-size:12.5px;font-weight:680;color:var(--ink)}
+  .hcard .hd{font-size:10px;color:var(--muted);line-height:1.4}
+  .hcard .pill{align-self:flex-start;margin-top:2px}
+
+  .pill{font-size:10px;font-weight:750;padding:3px 9px;border-radius:20px;display:inline-block}
+  .pill.high{background:var(--red-soft);color:#b91c1c}
+  .pill.med{background:var(--amber-soft);color:#b45309}
+  .pill.low{background:var(--green-soft);color:#15803d}
+
+  /* recipe row */
+  .rrow{
+    width:100%;display:flex;align-items:center;gap:11px;text-align:left;cursor:pointer;font-family:inherit;
+    background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:11px 12px;margin-bottom:9px;
+    transition:border-color .15s,box-shadow .15s;
+  }
+  .rrow:hover{border-color:#c9dcd4;box-shadow:0 3px 12px rgba(11,59,46,.07)}
+  .rrow .rr-i{width:40px;height:40px;flex:none;border-radius:11px;background:var(--green-soft);display:grid;place-items:center;font-size:19px}
+  .rrow .rr-t{flex:1;min-width:0;font-size:12.8px;font-weight:680;color:var(--ink)}
+  .rrow .rr-t small{display:block;font-size:10px;font-weight:500;color:var(--muted);margin-top:3px}
+  .rrow .rr-p{font-size:14px;font-weight:750;color:var(--green);flex:none}
+
+  /* search */
+  .msearch{
+    display:flex;align-items:center;gap:9px;background:var(--panel);border:1px solid var(--line);
+    border-radius:13px;padding:11px 14px;margin-bottom:12px;font-size:14px;color:var(--muted);
+  }
+  .msearch input{border:none;outline:none;background:transparent;font-family:inherit;font-size:13.5px;width:100%;color:var(--ink)}
+
+  /* chips */
+  .chiprow{display:flex;gap:7px;overflow-x:auto;padding:2px 18px 4px;margin:0 -18px 10px;scrollbar-width:none}
+  .chiprow::-webkit-scrollbar{height:0}
+  .chip{
+    flex:none;border:1px solid var(--line);background:var(--panel);border-radius:20px;
+    padding:8px 14px;font-size:12px;font-weight:650;color:var(--muted);cursor:pointer;font-family:inherit;
+    transition:background .15s,color .15s,border-color .15s;
+  }
+  .chip.on{background:var(--deep);color:#fff;border-color:var(--deep)}
+  .chip.warn.on{background:var(--red);border-color:var(--red);color:#fff}
+
+  /* item list */
+  .ilist{display:flex;flex-direction:column;gap:9px;margin-top:4px}
+  .irow{
+    display:flex;align-items:center;gap:11px;background:var(--panel);
+    border:1px solid var(--line);border-radius:14px;padding:11px 12px;
+  }
+  .irow .ie{width:40px;height:40px;flex:none;border-radius:11px;background:var(--bg);display:grid;place-items:center;font-size:19px}
+  .irow .inm{flex:1;min-width:0}
+  .irow .inm b{font-size:12.8px;font-weight:680;display:block}
+  .irow .inm small{font-size:10px;color:var(--muted);display:block;margin-top:3px}
+  .irow .iday{text-align:right;flex:none;font-size:12px;font-weight:700}
+  .irow .iday small{display:block;font-size:9.5px;font-weight:550;color:var(--muted);margin-top:2px}
+
+  /* recipe cards */
+  .rcard{
+    width:100%;text-align:left;cursor:pointer;font-family:inherit;padding:0;overflow:hidden;
+    background:var(--panel);border:1px solid var(--line);border-radius:17px;margin-bottom:12px;
+    transition:box-shadow .15s,transform .15s;
+  }
+  .rcard:hover{box-shadow:0 7px 20px rgba(11,59,46,.11);transform:translateY(-2px)}
+  .rcard .rhero{height:96px;display:grid;place-items:center;font-size:44px;background:var(--green-soft)}
+  .rcard .rbody{padding:12px 14px 13px}
+  .rcard .rt{font-size:14px;font-weight:730;color:var(--ink)}
+  .rcard .rs{font-size:11px;color:var(--muted);margin-top:5px;line-height:1.5}
+  .rcard .rfoot{display:flex;align-items:center;gap:8px;margin-top:11px;padding-top:10px;border-top:1px solid var(--line);font-size:10.5px;color:var(--muted)}
+  .rcard .rfoot .pct{margin-left:auto;font-size:14px;font-weight:780;color:var(--green)}
+  .mtip{
+    font-size:11.5px;color:var(--muted);background:var(--panel);border:1px dashed var(--line);
+    border-radius:12px;padding:10px 13px;margin-bottom:14px;line-height:1.6;
+  }
+
+  /* add item */
+  .scanhero{
+    width:100%;cursor:pointer;font-family:inherit;border:2px dashed #c9dcd4;border-radius:18px;
+    background:linear-gradient(140deg,var(--green-soft),#f7fdf9);
+    padding:26px 18px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:7px;
+    margin-bottom:14px;transition:border-color .15s,background .15s;
+  }
+  .scanhero:hover{border-color:var(--green)}
+  .scanhero .sh-i{font-size:36px}
+  .scanhero .sh-t{font-size:15px;font-weight:750;color:var(--deep)}
+  .scanhero .sh-s{font-size:11px;color:var(--muted);line-height:1.5;max-width:210px}
+
+  .mlist{display:flex;flex-direction:column;gap:9px;margin-bottom:16px}
+  .mrow{
+    width:100%;display:flex;align-items:center;gap:12px;text-align:left;cursor:pointer;font-family:inherit;
+    background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:12px 13px;
+    transition:border-color .15s,background .15s;
+  }
+  .mrow:hover{border-color:var(--green);background:var(--green-soft)}
+  .mrow .mi{width:36px;height:36px;flex:none;border-radius:11px;background:var(--blue-soft);display:grid;place-items:center;font-size:17px}
+  .mrow b{font-size:12.8px;font-weight:680;display:block;color:var(--ink)}
+  .mrow small{font-size:10.5px;color:var(--muted);display:block;margin-top:2px}
+
+  .progress{height:8px;border-radius:6px;background:var(--line);overflow:hidden;margin:14px 0;display:none}
+  .progress.on{display:block}
+  .progress i{display:block;height:100%;width:0;background:var(--green);border-radius:6px;transition:width .34s}
+  .parsed{display:none;margin-top:6px}
+  .parsed.on{display:block;animation:pop .25s ease}
+  .prow{
+    display:flex;align-items:center;gap:10px;background:var(--panel);border:1px solid var(--line);
+    border-radius:12px;padding:10px 12px;margin-bottom:8px;
+  }
+  .prow .pe{font-size:17px;flex:none}
+  .prow .pn{flex:1;min-width:0}
+  .prow .pn b{font-size:12.3px;font-weight:670;display:block}
+  .prow .pn small{font-size:9.8px;color:var(--muted);display:block;margin-top:2px}
+  .prow .pd{font-size:10.5px;font-weight:680;color:var(--muted);text-align:right;flex:none}
+  .prow .pd b{display:block;color:var(--ink);font-size:11.5px}
+  .pacts{display:flex;gap:9px;margin-top:12px}
+
+  .btn{border:none;border-radius:12px;padding:13px 16px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;transition:filter .15s}
+  .btn:hover{filter:brightness(1.06)}
+  .btn.primary{background:var(--green);color:#fff;flex:1}
+  .btn.ghost{background:var(--panel);color:var(--ink);border:1px solid var(--line)}
+  .btn.block{width:100%}
+
+  /* impact */
+  .hero-impact{
+    background:linear-gradient(150deg,var(--deep),#12664a);color:#fff;border-radius:20px;
+    padding:22px 20px;margin-bottom:14px;display:flex;align-items:center;gap:18px;
+  }
+  .ring{
+    width:88px;height:88px;flex:none;border-radius:50%;display:grid;place-items:center;
+    background:conic-gradient(#4ade80 0 68%, rgba(255,255,255,.16) 68% 100%);
+  }
+  .ring span{width:66px;height:66px;border-radius:50%;background:#0e3529;display:grid;place-items:center;font-size:14px;font-weight:750}
+  .hi-n{font-size:31px;font-weight:780;letter-spacing:-1px;line-height:1}
+  .hi-n small{font-size:14px;font-weight:650}
+  .hi-l{font-size:11.5px;color:#a7d6c4;margin-top:6px;line-height:1.5}
+  .hi-d{font-size:11px;font-weight:700;color:#6ee7a0;margin-top:7px}
+
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:15px 16px;margin-bottom:13px}
+  .card h3{font-size:13px;font-weight:730;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+  .card h3 .tag{margin-left:auto;font-size:9.5px;font-weight:650;color:var(--muted);background:var(--bg);padding:3px 8px;border-radius:20px}
+
+  .chart{display:flex;align-items:flex-end;gap:9px;height:112px}
+  .chart .bar{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;height:100%;justify-content:flex-end}
+  .chart .bar i{width:100%;max-width:30px;background:linear-gradient(180deg,#22c55e,#16a34a);border-radius:6px 6px 0 0;display:block}
+  .chart .bar b{font-size:9.5px;font-weight:700}
+  .chart .bar span{font-size:9.5px;color:var(--muted)}
+
+  .sdg{
+    display:flex;align-items:center;gap:9px;border-radius:11px;padding:10px 12px;margin-bottom:8px;
+    background:var(--deep);color:#fff;font-size:11.3px;font-weight:600;line-height:1.4;
+  }
+  .sdg .num{background:#bf8b2e;border-radius:6px;padding:2px 7px;font-weight:800;font-size:10.5px;flex:none}
+  .sdg.b{background:#1e3a8a}
+
+  .disclaim{
+    margin-top:12px;background:#fffbeb;border:1px solid #fde68a;border-radius:13px;padding:11px 13px;
+    font-size:10.5px;color:#92400e;line-height:1.6;
+  }
+  .disclaim b{color:#78350f}
+
+  /* ============ tab bar ============ */
+  .tabbar{
+    position:absolute;left:0;right:0;bottom:0;height:84px;z-index:50;
+    display:grid;grid-template-columns:repeat(5,1fr);align-items:start;padding-top:9px;
+    background:rgba(255,255,255,.93);backdrop-filter:blur(14px);border-top:1px solid var(--line);
+  }
+  .tabbar button{
+    border:none;background:none;cursor:pointer;font-family:inherit;
+    display:flex;flex-direction:column;align-items:center;gap:4px;
+    font-size:9.5px;font-weight:650;color:#9aa9a3;padding:0;transition:color .16s;
+  }
+  .tabbar button svg{width:23px;height:23px;display:block}
+  .tabbar button.on{color:var(--green)}
+  .tabbar button:hover{color:var(--deep)}
+
+  /* ============ bottom sheet ============ */
+  .backdrop{
+    position:absolute;inset:0;background:rgba(11,59,46,.45);opacity:0;pointer-events:none;
+    transition:opacity .26s;z-index:70;
+  }
+  .backdrop.on{opacity:1;pointer-events:auto}
+  .sheet{
+    position:absolute;left:0;right:0;bottom:0;max-height:82%;z-index:80;
+    background:var(--panel);border-radius:26px 26px 0 0;padding:10px 20px 30px;
+    transform:translateY(103%);transition:transform .3s cubic-bezier(.32,.72,0,1);
+    overflow-y:auto;scrollbar-width:none;
+  }
+  .sheet::-webkit-scrollbar{width:0}
+  .sheet.on{transform:translateY(0)}
+  .sheet .grab{width:38px;height:4px;border-radius:3px;background:var(--line);margin:0 auto 16px}
+  .sheet .shd{display:flex;align-items:flex-start;gap:12px;margin-bottom:16px}
+  .sheet .shd .e{width:52px;height:52px;flex:none;border-radius:15px;background:var(--green-soft);display:grid;place-items:center;font-size:26px}
+  .sheet .shd h4{font-size:15.5px;font-weight:750}
+  .sheet .shd p{font-size:11px;color:var(--muted);margin-top:4px}
+  .sheet .close{
+    margin-left:auto;flex:none;width:30px;height:30px;border-radius:9px;border:none;cursor:pointer;
+    background:var(--bg);color:var(--muted);font-size:14px;font-family:inherit;
+  }
+  .sheet h5{font-size:11.5px;font-weight:730;color:var(--deep);margin:15px 0 7px}
+  .sheet ul,.sheet ol{padding-left:19px;font-size:12.3px;line-height:1.8;color:#2b3d37}
+  .sheet .sacts{display:flex;gap:9px;margin-top:18px}
+
+  /* toast */
+  .toast{
+    position:absolute;left:20px;right:20px;bottom:104px;z-index:90;text-align:center;
+    background:var(--deep);color:#fff;padding:12px 16px;border-radius:13px;
+    font-size:12.3px;font-weight:650;line-height:1.45;
+    opacity:0;transform:translateY(10px);pointer-events:none;transition:opacity .26s,transform .26s;
+  }
+  .toast.on{opacity:1;transform:none}
+
+  /* ============ gallery mode ============ */
+  .stage.gallery{display:block;padding:34px 20px 60px}
+  .gwrap{display:flex;flex-wrap:wrap;gap:30px 26px;justify-content:center;align-items:flex-start}
+  .gcell{position:relative;width:250px;height:576px;cursor:pointer}
+  .gcell .device{position:absolute;top:0;left:0;transform:scale(.641);transform-origin:top left}
+  .gcell .device::after{display:none}
+  .gcell .gcap{
+    position:absolute;left:0;right:0;bottom:0;text-align:center;
+    font-size:12px;font-weight:700;color:var(--deep);letter-spacing:.2px;
+  }
+  .gcell .gnum{
+    display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;
+    background:var(--green);color:#fff;font-size:10.5px;font-weight:800;margin-right:7px;vertical-align:1px;
+  }
+  .gcell:hover .device{box-shadow:0 2px 0 rgba(255,255,255,.14) inset,0 0 0 1px rgba(0,0,0,.35),0 40px 80px -18px rgba(11,59,46,.5)}
+  .gnote{
+    max-width:1080px;margin:0 auto 30px;text-align:center;
+    font-size:12.5px;color:var(--muted);line-height:1.7;
+  }
+  .gnote b{color:var(--deep)}
+</style>
+</head>
+<body>
+
+<div class="chrome">
+  <div class="chrome-l">
+    <span class="dot"></span>
+    <b>FreshTrack HK</b>
+    <span>Mobile App Mockup · COMP7950 · Douglas &amp; Cyanblue</span>
+  </div>
+  <div class="chrome-r">
+    <button class="seg on" data-mode="single">Single device</button>
+    <button class="seg" data-mode="gallery">All 5 screens</button>
+  </div>
+</div>
+
+<div class="stage" id="stage">
+
+  <!-- ======================= DEVICE ======================= -->
+  <div class="device" id="deviceSingle">
+    <div class="frame">
+      <div class="island"></div>
+
+      <div class="statusbar">
+        <span>9:41</span>
+        <span class="sb-r">
+          <svg width="18" height="12" viewBox="0 0 18 12" fill="currentColor"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="6" width="3" height="6" rx="1"/><rect x="10" y="3" width="3" height="9" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg>
+          <svg width="16" height="12" viewBox="0 0 16 12" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M1.2 4.3a10 10 0 0 1 13.6 0"/><path d="M4 7a6.1 6.1 0 0 1 8 0"/><circle cx="8" cy="10.1" r="1.05" fill="currentColor" stroke="none"/></svg>
+          <svg width="25" height="12" viewBox="0 0 25 12" fill="none"><rect x=".6" y=".6" width="21" height="10.8" rx="3.2" stroke="currentColor" stroke-opacity=".38"/><rect x="2.3" y="2.3" width="15" height="7.4" rx="1.9" fill="currentColor"/><path d="M23.3 4.1v3.8a1.95 1.95 0 0 0 0-3.8z" fill="currentColor" fill-opacity=".38"/></svg>
+        </span>
+      </div>
+
+      <div class="appbody" id="appbody">
+
+        <!-- ---------- 1. HOME ---------- -->
+        <section class="m-screen on" id="m-home">
+          <div class="mhead">
+            <div>
+              <h2>Good evening, Douglas</h2>
+              <p><b>6 items</b> need your attention soon</p>
+            </div>
+            <button class="avatar" data-toast="Profile screen is outside this mockup">D</button>
+          </div>
+
+          <div class="alert">
+            <span class="alert-i">⚠️</span>
+            <div>
+              <div class="alert-t">2 items at high risk</div>
+              <div class="alert-s">Chicken Breast and Baby Spinach expire tomorrow</div>
+            </div>
+            <button class="alert-b" data-go="fridge">Review</button>
+          </div>
+
+          <div class="mini3">
+            <div class="mini"><span class="ml">Tracked</span><span class="mv">42</span></div>
+            <div class="mini"><span class="ml">Waste saved</span><span class="mv">3.2<small>kg</small></span></div>
+            <div class="mini"><span class="ml">Money saved</span><span class="mv">$486</span></div>
+          </div>
+
+          <div class="sechead"><h3>Use Soon</h3><button class="link" data-go="fridge">See all</button></div>
+          <div class="hscroll">
+            <button class="hcard" data-go="fridge"><span class="he">🥬</span><span class="hn">Baby Spinach</span><span class="hd">1 day · best-before</span><span class="pill high">High</span></button>
+            <button class="hcard" data-go="fridge"><span class="he">🍗</span><span class="hn">Chicken Breast</span><span class="hd">1 day · use-by</span><span class="pill high">High</span></button>
+            <button class="hcard" data-go="fridge"><span class="he">🥛</span><span class="hn">Whole Milk</span><span class="hd">2 days · use-by</span><span class="pill med">Medium</span></button>
+            <button class="hcard" data-go="fridge"><span class="he">🥣</span><span class="hn">Greek Yoghurt</span><span class="hd">2 days · best-before</span><span class="pill med">Medium</span></button>
+            <button class="hcard" data-go="fridge"><span class="he">🍅</span><span class="hn">Cherry Tomatoes</span><span class="hd">3 days · best-before</span><span class="pill low">Low</span></button>
+            <button class="hcard" data-go="fridge"><span class="he">🍌</span><span class="hn">Bananas</span><span class="hd">3 days · best-before</span><span class="pill med">Medium</span></button>
+          </div>
+
+          <div class="sechead"><h3>Rescue tonight</h3><button class="link" data-go="recipes">All recipes</button></div>
+          <button class="rrow" data-recipe="powerbowl">
+            <span class="rr-i">🥗</span>
+            <span class="rr-t">Spinach &amp; Chicken Power Bowl<small>Uses 3 expiring items · saves 0.6 kg</small></span>
+            <span class="rr-p">92%</span>
+          </button>
+          <button class="rrow" data-recipe="dip">
+            <span class="rr-i">🍲</span>
+            <span class="rr-t">Tomato-Yoghurt Dip<small>Uses 2 expiring items · saves 0.3 kg</small></span>
+            <span class="rr-p">78%</span>
+          </button>
+          <button class="rrow" data-recipe="breadpudding">
+            <span class="rr-i">🍞</span>
+            <span class="rr-t">Sourdough Bread Pudding<small>Uses 2 expiring items · saves 0.4 kg</small></span>
+            <span class="rr-p">74%</span>
+          </button>
+
+          <div class="disclaim"><b>Note:</b> FreshTrack estimates <b>spoilage risk</b> only. An AI image cannot certify that food is safe to eat — <b>use-by</b> dates and food-safety guidance always take priority.</div>
+        </section>
+
+        <!-- ---------- 2. FRIDGE ---------- -->
+        <section class="m-screen" id="m-fridge">
+          <div class="mhead">
+            <div><h2>My Fridge</h2><p>42 items tracked · sorted by spoilage risk</p></div>
+            <button class="iconbtn" data-toast="Sort options are simulated">⇅</button>
+          </div>
+
+          <div class="msearch">🔍 <input placeholder="Search my fridge…"></div>
+
+          <div class="chiprow" id="catChips">
+            <button class="chip on" data-cat="all">All</button>
+            <button class="chip" data-cat="produce">Produce</button>
+            <button class="chip" data-cat="dairy">Dairy</button>
+            <button class="chip" data-cat="meat">Meat</button>
+            <button class="chip" data-cat="bakery">Bakery</button>
+            <button class="chip" data-cat="pantry">Pantry</button>
+          </div>
+          <div class="chiprow" id="riskChips">
+            <button class="chip warn" data-risk="high">⚠ High risk only</button>
+          </div>
+
+          <div class="ilist" id="itemList">
+            <div class="irow" data-cat="produce" data-risk="high"><span class="ie">🥬</span><span class="inm"><b>Baby Spinach</b><small>Produce · 200 g</small></span><span class="iday">1 day<small>Best-before</small></span><span class="pill high">High</span></div>
+            <div class="irow" data-cat="meat" data-risk="high"><span class="ie">🍗</span><span class="inm"><b>Chicken Breast</b><small>Meat · 400 g</small></span><span class="iday">1 day<small>Use-by</small></span><span class="pill high">High</span></div>
+            <div class="irow" data-cat="bakery" data-risk="high"><span class="ie">🍞</span><span class="inm"><b>Sourdough Bread</b><small>Bakery · 1 loaf</small></span><span class="iday">1 day<small>Best-before</small></span><span class="pill high">High</span></div>
+            <div class="irow" data-cat="dairy" data-risk="med"><span class="ie">🥛</span><span class="inm"><b>Whole Milk</b><small>Dairy · 1 L</small></span><span class="iday">2 days<small>Use-by</small></span><span class="pill med">Medium</span></div>
+            <div class="irow" data-cat="dairy" data-risk="med"><span class="ie">🥣</span><span class="inm"><b>Greek Yoghurt</b><small>Dairy · 500 g</small></span><span class="iday">2 days<small>Best-before</small></span><span class="pill med">Medium</span></div>
+            <div class="irow" data-cat="produce" data-risk="med"><span class="ie">🍌</span><span class="inm"><b>Bananas</b><small>Produce · 4 pcs</small></span><span class="iday">3 days<small>Best-before</small></span><span class="pill med">Medium</span></div>
+            <div class="irow" data-cat="produce" data-risk="low"><span class="ie">🍅</span><span class="inm"><b>Cherry Tomatoes</b><small>Produce · 300 g</small></span><span class="iday">3 days<small>Best-before</small></span><span class="pill low">Low</span></div>
+            <div class="irow" data-cat="pantry" data-risk="med"><span class="ie">🍝</span><span class="inm"><b>Fresh Pasta</b><small>Pantry · 250 g</small></span><span class="iday">4 days<small>Best-before</small></span><span class="pill med">Medium</span></div>
+            <div class="irow" data-cat="produce" data-risk="low"><span class="ie">🥕</span><span class="inm"><b>Carrots</b><small>Produce · 500 g</small></span><span class="iday">6 days<small>Best-before</small></span><span class="pill low">Low</span></div>
+            <div class="irow" data-cat="dairy" data-risk="low"><span class="ie">🧀</span><span class="inm"><b>Cheddar Cheese</b><small>Dairy · 250 g</small></span><span class="iday">9 days<small>Best-before</small></span><span class="pill low">Low</span></div>
+            <div class="irow" data-cat="meat" data-risk="low"><span class="ie">🥚</span><span class="inm"><b>Eggs (6)</b><small>Meat · 6 pcs</small></span><span class="iday">11 days<small>Best-before</small></span><span class="pill low">Low</span></div>
+            <div class="irow" data-cat="pantry" data-risk="low"><span class="ie">🍚</span><span class="inm"><b>Jasmine Rice</b><small>Pantry · 1 kg</small></span><span class="iday">120 days<small>Best-before</small></span><span class="pill low">Low</span></div>
+          </div>
+        </section>
+
+        <!-- ---------- 3. RECIPES ---------- -->
+        <section class="m-screen" id="m-recipes">
+          <div class="mhead">
+            <div><h2>Recipes</h2><p>Ranked by how many expiring items they rescue</p></div>
+          </div>
+          <p class="mtip">💡 Recipes with a higher match % use more of your soon-to-expire items. Tap any card for ingredients and steps.</p>
+
+          <button class="rcard" data-recipe="powerbowl">
+            <div class="rhero">🥗</div>
+            <div class="rbody">
+              <div class="rt">Spinach &amp; Chicken Power Bowl</div>
+              <div class="rs">Uses 3 expiring items · saves 0.6 kg · 20 min</div>
+              <div class="rfoot"><span>Easy</span><span>·</span><span>2 servings</span><span class="pct">92%</span></div>
+            </div>
+          </button>
+
+          <button class="rcard" data-recipe="dip">
+            <div class="rhero" style="background:var(--amber-soft)">🍲</div>
+            <div class="rbody">
+              <div class="rt">Tomato-Yoghurt Dip</div>
+              <div class="rs">Uses 2 expiring items · saves 0.3 kg · 10 min</div>
+              <div class="rfoot"><span>Easy</span><span>·</span><span>4 servings</span><span class="pct">78%</span></div>
+            </div>
+          </button>
+
+          <button class="rcard" data-recipe="breadpudding">
+            <div class="rhero" style="background:var(--purple-soft)">🍞</div>
+            <div class="rbody">
+              <div class="rt">Sourdough Bread Pudding</div>
+              <div class="rs">Uses 2 expiring items · saves 0.4 kg · 45 min</div>
+              <div class="rfoot"><span>Medium</span><span>·</span><span>6 servings</span><span class="pct">74%</span></div>
+            </div>
+          </button>
+
+          <button class="rcard" data-recipe="pasta">
+            <div class="rhero" style="background:var(--blue-soft)">🍝</div>
+            <div class="rbody">
+              <div class="rt">Creamy Tomato Pasta</div>
+              <div class="rs">Uses 2 expiring items · saves 0.2 kg · 15 min</div>
+              <div class="rfoot"><span>Easy</span><span>·</span><span>2 servings</span><span class="pct">68%</span></div>
+            </div>
+          </button>
+
+          <button class="rcard" data-recipe="smoothie">
+            <div class="rhero" style="background:#dcfce7">🥤</div>
+            <div class="rbody">
+              <div class="rt">Banana-Yoghurt Smoothie</div>
+              <div class="rs">Uses 2 expiring items · saves 0.2 kg · 5 min</div>
+              <div class="rfoot"><span>Easy</span><span>·</span><span>1 serving</span><span class="pct">65%</span></div>
+            </div>
+          </button>
+        </section>
+
+        <!-- ---------- 4. ADD ---------- -->
+        <section class="m-screen" id="m-add">
+          <div class="mhead">
+            <div><h2>Add Item</h2><p>Three ways to get groceries into your fridge</p></div>
+          </div>
+
+          <button class="scanhero" id="btnScanM">
+            <span class="sh-i">🧾</span>
+            <span class="sh-t">Scan receipt</span>
+            <span class="sh-s">Tap to parse item names, quantities and dates automatically</span>
+          </button>
+
+          <div class="mlist">
+            <button class="mrow" id="btnPhotoM"><span class="mi">📷</span><span><b>Photo recognition</b><small>Snap a shelf or a single item</small></span></button>
+            <button class="mrow" id="btnManualM"><span class="mi">✍️</span><span><b>Manual entry</b><small>Type item name + best-before date</small></span></button>
+          </div>
+
+          <div class="progress" id="progressM"><i id="progressBarM"></i></div>
+
+          <div class="parsed" id="parsedM">
+            <p class="mtip" style="margin-bottom:10px">✅ 4 items recognised — please confirm the dates before saving.</p>
+            <div class="prow"><span class="pe">🥬</span><span class="pn"><b>Baby Spinach</b><small>200 g</small></span><span class="pd">Best-before<b>2026-10-15</b></span></div>
+            <div class="prow"><span class="pe">🍗</span><span class="pn"><b>Chicken Breast</b><small>400 g</small></span><span class="pd">Use-by<b>2026-10-15</b></span></div>
+            <div class="prow"><span class="pe">🥛</span><span class="pn"><b>Whole Milk</b><small>1 L</small></span><span class="pd">Use-by<b>2026-10-16</b></span></div>
+            <div class="prow"><span class="pe">🍞</span><span class="pn"><b>Sourdough Bread</b><small>1 loaf</small></span><span class="pd">Best-before<b>2026-10-15</b></span></div>
+            <div class="pacts">
+              <button class="btn primary" id="btnConfirmM">Confirm &amp; add</button>
+              <button class="btn ghost" id="btnCancelM">Cancel</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- ---------- 5. IMPACT ---------- -->
+        <section class="m-screen" id="m-impact">
+          <div class="mhead">
+            <div><h2>Impact</h2><p>How your household maps to SDG 12.3</p></div>
+          </div>
+
+          <div class="hero-impact">
+            <div class="ring"><span>68%</span></div>
+            <div>
+              <div class="hi-n">3.2 <small>kg</small></div>
+              <div class="hi-l">food waste saved this month</div>
+              <div class="hi-d">↑ 18% vs last month</div>
+            </div>
+          </div>
+
+          <div class="mini3">
+            <div class="mini"><span class="ml">CO₂e avoided</span><span class="mv">4.1<small>kg</small></span></div>
+            <div class="mini"><span class="ml">Items rescued</span><span class="mv">11</span></div>
+            <div class="mini"><span class="ml">Avg. risk</span><span class="mv" style="color:var(--green)">Low</span></div>
+          </div>
+
+          <div class="card">
+            <h3>Waste saved — last 6 months<span class="tag">kg</span></h3>
+            <div class="chart">
+              <div class="bar"><b>1.4</b><i style="height:42%"></i><span>May</span></div>
+              <div class="bar"><b>1.8</b><i style="height:54%"></i><span>Jun</span></div>
+              <div class="bar"><b>2.1</b><i style="height:63%"></i><span>Jul</span></div>
+              <div class="bar"><b>2.4</b><i style="height:72%"></i><span>Aug</span></div>
+              <div class="bar"><b>2.7</b><i style="height:81%"></i><span>Sep</span></div>
+              <div class="bar"><b>3.2</b><i style="height:96%"></i><span>Oct</span></div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h3>SDG alignment</h3>
+            <div class="sdg"><span class="num">12.3</span> Halve per-capita global food waste by 2030</div>
+            <div class="sdg" style="background:#134e4a"><span class="num">12.5</span> Substantially reduce waste generation</div>
+            <div class="sdg b"><span class="num">13.3</span> Improve climate-change awareness</div>
+          </div>
+
+          <div class="disclaim"><b>Method note:</b> savings are estimated from rescued item weight and average Hong Kong retail prices. FreshTrack estimates <b>spoilage risk</b> only — it never certifies that food is safe to eat.</div>
+        </section>
+
+      </div><!-- /appbody -->
+
+      <!-- tab bar -->
+      <nav class="tabbar" id="tabbar">
+        <button class="on" data-go="home">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5.6 9.4V20h12.8V9.4"/><path d="M10 20v-5.2h4V20"/></svg>
+          Home
+        </button>
+        <button data-go="fridge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2.6" width="12" height="18.8" rx="3"/><path d="M6 10h12"/><path d="M9.6 6.2v1.8"/><path d="M9.6 13.2v2.6"/></svg>
+          Fridge
+        </button>
+        <button data-go="recipes">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3.4 10.8h17.2"/><path d="M5 10.8a7 7 0 0 0 14 0"/><path d="M9.4 7.2c0-1.3 1-1.6 1-2.8"/><path d="M13.6 7.2c0-1.3 1-1.6 1-2.8"/></svg>
+          Recipes
+        </button>
+        <button data-go="add">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5.4v13.2"/><path d="M5.4 12h13.2"/></svg>
+          Add
+        </button>
+        <button data-go="impact">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><circle cx="12" cy="12" r="9"/><path d="M3.2 12h17.6"/><path d="M12 3c3 3.6 3 14.4 0 18"/><path d="M12 3c-3 3.6-3 14.4 0 18"/></svg>
+          Impact
+        </button>
+      </nav>
+
+      <!-- recipe bottom sheet -->
+      <div class="backdrop" id="backdrop"></div>
+      <div class="sheet" id="sheet">
+        <div class="grab"></div>
+        <div class="shd">
+          <div class="e" id="mIcon">🥗</div>
+          <div>
+            <h4 id="mTitle">Recipe</h4>
+            <p id="mSub">—</p>
+          </div>
+          <button class="close" id="mClose">✕</button>
+        </div>
+        <h5>Ingredients</h5>
+        <ul id="mIng"></ul>
+        <h5>Steps</h5>
+        <ol id="mSteps"></ol>
+        <div class="sacts">
+          <button class="btn primary" id="mCook">Mark as cooked</button>
+          <button class="btn ghost" id="mClose2">Close</button>
+        </div>
+      </div>
+
+      <div class="toast" id="toast">Done</div>
+
+    </div><!-- /frame -->
+  </div><!-- /device -->
+
+</div><!-- /stage -->
+
+<script>
+(function(){
+  var stage   = document.getElementById('stage');
+  var base    = document.getElementById('deviceSingle');
+  var appbody = document.getElementById('appbody');
+  var tabbar  = document.getElementById('tabbar');
+  var toast   = document.getElementById('toast');
+  var modal   = document.getElementById('sheet');
+  var backdrop= document.getElementById('backdrop');
+
+  var SCREENS = ['home','fridge','recipes','add','impact'];
+  var CAPS = ['Home — overview &amp; alerts','My Fridge — inventory','Recipes — rescue suggestions','Add Item — 3 capture methods','Impact — SDG 12.3 alignment'];
+
+  /* ---------------- toast ---------------- */
+  var tTimer = null;
+  function say(msg){
+    toast.textContent = msg;
+    toast.classList.add('on');
+    if (tTimer) clearTimeout(tTimer);
+    tTimer = setTimeout(function(){ toast.classList.remove('on'); }, 2300);
+  }
+
+  /* ---------------- tab switching ---------------- */
+  function go(name){
+    var scr = document.querySelectorAll('.m-screen');
+    for (var i=0;i<scr.length;i++) scr[i].classList.remove('on');
+    var t = document.getElementById('m-' + name);
+    if (t){ t.classList.add('on'); }
+    appbody.scrollTop = 0;
+    var btns = tabbar.querySelectorAll('button');
+    for (var j=0;j<btns.length;j++){
+      btns[j].classList.toggle('on', btns[j].getAttribute('data-go') === name);
+    }
+  }
+
+  /* ---------------- recipe sheet ---------------- */
+  var RECIPES = {
+    powerbowl:{ icon:'🥗', title:'Spinach & Chicken Power Bowl', sub:'Uses 3 expiring items · saves 0.6 kg · 20 min',
+      ing:['🥬 Baby Spinach 200 g — best-before tomorrow','🍗 Chicken Breast 400 g — use-by tomorrow','🍅 Cherry Tomatoes 300 g','🍚 Jasmine Rice 1 cup','🫒 Olive oil, lemon, salt'],
+      steps:['Pan-sear the chicken breast until cooked through, then slice.','Wilt the spinach in the same pan for 1 minute.','Cook the rice and let it cool slightly.','Halve the tomatoes and combine everything in a bowl.','Dress with olive oil, lemon juice and a pinch of salt.'] },
+    dip:{ icon:'🍲', title:'Tomato-Yoghurt Dip', sub:'Uses 2 expiring items · saves 0.3 kg · 10 min',
+      ing:['🍅 Cherry Tomatoes 300 g','🥣 Greek Yoghurt 500 g','🧄 Garlic 1 clove','🫒 Olive oil, mint, salt'],
+      steps:['Roast or pan-blister the tomatoes until soft.','Cool, then fold into the Greek yoghurt.','Add crushed garlic, olive oil and chopped mint.','Chill for 10 minutes before serving.'] },
+    breadpudding:{ icon:'🍞', title:'Sourdough Bread Pudding', sub:'Uses 2 expiring items · saves 0.4 kg · 45 min',
+      ing:['🍞 Sourdough Bread 1 loaf — best-before tomorrow','🥛 Whole Milk 1 L — use-by in 2 days','🥚 Eggs 3 pcs','🍬 Sugar, cinnamon, butter'],
+      steps:['Tear the bread into chunks and place in a baking dish.','Whisk milk, eggs, sugar and cinnamon together.','Pour over the bread and let it soak for 15 minutes.','Bake at 180°C for about 30 minutes until set.'] },
+    pasta:{ icon:'🍝', title:'Creamy Tomato Pasta', sub:'Uses 2 expiring items · saves 0.2 kg · 15 min',
+      ing:['🍝 Fresh Pasta 250 g — best-before in 4 days','🍅 Cherry Tomatoes 300 g','🧀 Cheddar Cheese 250 g','🧄 Garlic, olive oil, pepper'],
+      steps:['Boil the pasta until al dente.','Sauté garlic and tomatoes until saucy.','Toss the pasta through the sauce.','Finish with grated cheddar and black pepper.'] },
+    smoothie:{ icon:'🥤', title:'Banana-Yoghurt Smoothie', sub:'Uses 2 expiring items · saves 0.2 kg · 5 min',
+      ing:['🍌 Bananas 4 pcs — best-before in 3 days','🥣 Greek Yoghurt 500 g','🥛 Whole Milk 1 L','🍯 Honey (optional)'],
+      steps:['Peel the bananas and break into chunks.','Add yoghurt, milk and a spoon of honey.','Blend until smooth.','Serve immediately over ice.'] }
+  };
+
+  function openRecipe(key){
+    var r = RECIPES[key];
+    if (!r) return;
+    document.getElementById('mIcon').textContent  = r.icon;
+    document.getElementById('mTitle').textContent = r.title;
+    document.getElementById('mSub').textContent   = r.sub;
+    var ing = document.getElementById('mIng'); ing.innerHTML = '';
+    r.ing.forEach(function(x){ var li=document.createElement('li'); li.textContent=x; ing.appendChild(li); });
+    var st = document.getElementById('mSteps'); st.innerHTML = '';
+    r.steps.forEach(function(x){ var li=document.createElement('li'); li.textContent=x; st.appendChild(li); });
+    modal.classList.add('on'); backdrop.classList.add('on');
+  }
+  function closeRecipe(){ modal.classList.remove('on'); backdrop.classList.remove('on'); }
+
+  document.getElementById('mClose').onclick  = closeRecipe;
+  document.getElementById('mClose2').onclick = closeRecipe;
+  backdrop.onclick = closeRecipe;
+  document.getElementById('mCook').onclick = function(){ closeRecipe(); say('Marked as cooked — 0.6 kg rescued 🎉'); };
+
+  /* ---------------- fridge filters ---------------- */
+  var catChips  = document.getElementById('catChips');
+  var riskChips = document.getElementById('riskChips');
+  var itemList  = document.getElementById('itemList');
+  var activeCat = 'all';
+  var highOnly  = false;
+
+  function applyFilters(){
+    var rows = itemList.querySelectorAll('.irow');
+    var shown = 0;
+    for (var i=0;i<rows.length;i++){
+      var c = rows[i];
+      var okCat  = (activeCat === 'all' || c.getAttribute('data-cat') === activeCat);
+      var okRisk = (!highOnly || c.getAttribute('data-risk') === 'high');
+      var show = okCat && okRisk;
+      c.style.display = show ? '' : 'none';
+      if (show) shown++;
+    }
+    return shown;
+  }
+  catChips.addEventListener('click', function(e){
+    var b = e.target.closest('[data-cat]'); if (!b) return;
+    activeCat = b.getAttribute('data-cat');
+    var all = catChips.querySelectorAll('.chip');
+    for (var i=0;i<all.length;i++) all[i].classList.toggle('on', all[i] === b);
+    var n = applyFilters();
+    if (activeCat !== 'all') say(n + ' item' + (n===1?'':'s') + ' in ' + b.textContent.trim());
+  });
+  riskChips.addEventListener('click', function(e){
+    var b = e.target.closest('[data-risk]'); if (!b) return;
+    highOnly = !highOnly;
+    b.classList.toggle('on', highOnly);
+    var n = applyFilters();
+    say(highOnly ? (n + ' high-risk items shown') : 'Showing all items');
+  });
+
+  /* ---------------- receipt scan simulation ---------------- */
+  var progress = document.getElementById('progressM');
+  var bar      = document.getElementById('progressBarM');
+  var parsed   = document.getElementById('parsedM');
+  var scanning = false;
+
+  function runScan(){
+    if (scanning) return;
+    scanning = true;
+    parsed.classList.remove('on');
+    progress.classList.add('on');
+    bar.style.width = '0%';
+    say('Reading receipt…');
+    var pct = 0;
+    var timer = setInterval(function(){
+      pct += 8 + Math.random()*14;
+      if (pct >= 100){
+        pct = 100;
+        clearInterval(timer);
+        setTimeout(function(){
+          progress.classList.remove('on');
+          parsed.classList.add('on');
+          appbody.scrollTop = appbody.scrollHeight;
+          say('4 items recognised');
+          scanning = false;
+        }, 320);
+      }
+      bar.style.width = pct + '%';
+    }, 220);
+  }
+  document.getElementById('btnScanM').onclick   = runScan;
+  document.getElementById('btnPhotoM').onclick  = function(){ say('Camera capture is simulated in this mockup'); };
+  document.getElementById('btnManualM').onclick = function(){ say('Manual entry form is simulated in this mockup'); };
+  document.getElementById('btnConfirmM').onclick = function(){
+    parsed.classList.remove('on');
+    say('4 items added to My Fridge ✓');
+  };
+  document.getElementById('btnCancelM').onclick = function(){ parsed.classList.remove('on'); say('Scan discarded'); };
+
+  /* ---------------- gallery mode ---------------- */
+  var galleryBuilt = false;
+
+  function buildGallery(){
+    if (galleryBuilt) return;
+    var g = document.createElement('div');
+    g.className = 'gwrap';
+
+    var note = document.createElement('p');
+    note.className = 'gnote';
+    note.innerHTML = 'FreshTrack HK mobile app — <b>five screens</b> of the household-facing prototype. ' +
+                     'Click any phone to open it in the interactive single-device view.';
+
+    SCREENS.forEach(function(id, i){
+      var cell = document.createElement('div');
+      cell.className = 'gcell';
+      cell.setAttribute('data-screen', id);
+
+      var dev = base.cloneNode(true);
+      dev.removeAttribute('id');
+
+      // 1) filter screens by id FIRST — must happen while the ids still exist
+      var list = dev.querySelectorAll('.m-screen');
+      var target = null;
+      for (var n=list.length-1;n>=0;n--){
+        if (list[n].id === 'm-' + id){ target = list[n]; }
+        else { list[n].parentNode.removeChild(list[n]); }
+      }
+      if (target) target.classList.add('on');
+
+      // 2) only now strip every id, so the clone can never collide with the live device
+      var withId = dev.querySelectorAll('[id]');
+      for (var k=0;k<withId.length;k++) withId[k].removeAttribute('id');
+
+      // 3) sync tab bar highlight by index (ids are gone, order is stable)
+      var tb = dev.querySelectorAll('.tabbar button');
+      for (var t=0;t<tb.length;t++){
+        tb[t].classList.toggle('on', t === i);
+      }
+      // neutralise inner data-* hooks so the cell click wins
+      var hooks = dev.querySelectorAll('[data-go],[data-recipe],[data-toast],[data-cat],[data-risk]');
+      for (var h=0;h<hooks.length;h++){
+        hooks[h].removeAttribute('data-go');
+        hooks[h].removeAttribute('data-recipe');
+        hooks[h].removeAttribute('data-toast');
+      }
+      dev.querySelectorAll('input').forEach(function(inp){ inp.setAttribute('tabindex','-1'); });
+
+      var cap = document.createElement('div');
+      cap.className = 'gcap';
+      cap.innerHTML = '<span class="gnum">' + (i+1) + '</span>' + CAPS[i];
+
+      cell.appendChild(dev);
+      cell.appendChild(cap);
+      g.appendChild(cell);
+    });
+
+    stage.appendChild(note);
+    stage.appendChild(g);
+    galleryBuilt = true;
+  }
+
+  function setMode(mode){
+    if (mode === 'gallery'){
+      buildGallery();
+      stage.classList.add('gallery');
+      base.style.display = 'none';
+      var note = stage.querySelector('.gnote');
+      var g = stage.querySelector('.gwrap');
+      if (note) note.style.display = '';
+      if (g) g.style.display = 'flex';
+    } else {
+      stage.classList.remove('gallery');
+      base.style.display = '';
+      var note2 = stage.querySelector('.gnote');
+      var g2 = stage.querySelector('.gwrap');
+      if (note2) note2.style.display = 'none';
+      if (g2) g2.style.display = 'none';
+    }
+    var segs = document.querySelectorAll('.seg');
+    for (var i=0;i<segs.length;i++) segs[i].classList.toggle('on', segs[i].getAttribute('data-mode') === mode);
+  }
+
+  document.querySelectorAll('.seg').forEach(function(s){
+    s.onclick = function(){ setMode(s.getAttribute('data-mode')); };
+  });
+
+  /* ---------------- global click routing ---------------- */
+  document.addEventListener('click', function(e){
+    if (!e.target.closest) return;
+
+    // gallery cell → jump into single-device view on that screen
+    var cell = e.target.closest('.gcell');
+    if (cell){
+      setMode('single');
+      go(cell.getAttribute('data-screen'));
+      return;
+    }
+
+    var seg = e.target.closest('.seg');
+    if (seg) return; // handled above
+
+    var tst = e.target.closest('[data-toast]');
+    if (tst){ say(tst.getAttribute('data-toast')); return; }
+
+    var rec = e.target.closest('[data-recipe]');
+    if (rec){ openRecipe(rec.getAttribute('data-recipe')); return; }
+
+    var g = e.target.closest('[data-go]');
+    if (g){ go(g.getAttribute('data-go')); }
+  });
+
+  go('home');
+})();
+</script>
+</body>
+</html>

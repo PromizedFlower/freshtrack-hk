@@ -1,0 +1,27 @@
+:root {
+  /* FreshTrack HK v1.1 Semantic Color Tokens — Decoupled for easy future UI redesign */
+  --ft-deep-green: #0B3B2E;
+  --ft-brand-green: #16A34A;
+  --ft-soft-green: #E7F6ED;
+
+  /* 3-Tier Spoilage Risk Semantic Colors (WCAG AA/AAA High-Contrast Dark Text on Soft Fill) */
+  --ft-risk-high-text: #991B1B;
+  --ft-risk-high-dot: #EF4444;
+  --ft-risk-high-bg: #FEE2E2;
+
+  --ft-risk-med-text: #92400E;
+  --ft-risk-med-dot: #F59E0B;
+  --ft-risk-med-bg: #FEF3C7;
+
+  --ft-risk-low-text: #166534;
+  --ft-risk-low-dot: #16A34A;
+  --ft-risk-low-bg: #E7F6ED;
+
+  /* Neutral & Surface Hierarchy */
+  --ft-bg-canvas: #EEF2F0;
+  --ft-bg-surface: #FFFFFF;
+  --ft-text-ink: #0F1F1A;
+  --ft-text-muted: #6B7D76;
+  --ft-border-line: #E4EBE8;
+  --ft-notice-bg: #FFFBEB;
+}
