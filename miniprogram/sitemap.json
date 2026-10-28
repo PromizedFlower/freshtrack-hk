@@ -1,0 +1,4 @@
+{
+  "desc": "FreshTrack HK sitemap",
+  "rules": [{ "action": "allow", "page": "*" }]
+}
