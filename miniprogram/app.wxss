@@ -1,0 +1,57 @@
+page {
+  --brand: #16A34A;
+  --forest: #0B3B2E;
+  --bg: #F4F7F4;
+  --card: #FFFFFF;
+  --text: #1F2A24;
+  --muted: #6B7C72;
+  --high: #DC2626;
+  --medium: #F59E0B;
+  --low: #16A34A;
+  --info: #0EA5E9;
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, "PingFang SC", "Helvetica Neue", sans-serif;
+  font-size: 28rpx;
+  line-height: 1.5;
+}
+
+.card {
+  background: var(--card);
+  border-radius: 24rpx;
+  padding: 28rpx;
+  box-shadow: 0 8rpx 24rpx rgba(11, 59, 46, 0.06);
+  margin: 20rpx 24rpx;
+}
+
+.h1 { font-size: 44rpx; font-weight: 700; letter-spacing: 0.5rpx; }
+.h2 { font-size: 34rpx; font-weight: 600; }
+.muted { color: var(--muted); }
+.row { display: flex; align-items: center; }
+.between { display: flex; align-items: center; justify-content: space-between; }
+.grow { flex: 1; }
+
+.btn-primary {
+  background: linear-gradient(135deg, #16A34A 0%, #0B3B2E 100%);
+  color: #fff;
+  border-radius: 999rpx;
+  padding: 26rpx;
+  text-align: center;
+  font-weight: 600;
+  font-size: 30rpx;
+  box-shadow: 0 10rpx 24rpx rgba(22, 163, 74, 0.28);
+}
+.btn-primary:active { opacity: 0.88; }
+
+.btn-ghost {
+  background: #fff;
+  color: var(--forest);
+  border: 2rpx solid #D7E5DA;
+  border-radius: 999rpx;
+  padding: 24rpx;
+  text-align: center;
+  font-weight: 600;
+  font-size: 28rpx;
+}
+
+.page-loading { padding: 120rpx 0; text-align: center; color: var(--muted); }
