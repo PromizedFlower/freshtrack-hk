@@ -1,0 +1,47 @@
+<view wx:if="{{loading}}" class="page-loading">加载中…</view>
+
+<block wx:elif="{{hasData}}">
+  <view class="hero">
+    <view class="h1">SDG 12.3</view>
+    <view class="muted">减少食物浪费 · 减缓气候变化</view>
+  </view>
+
+  <view class="card bigs">
+    <view class="big">
+      <view class="big-num">{{kpi.month_saved_kg}}<text class="u"> kg</text></view>
+      <view class="muted">本月惜食</view>
+    </view>
+    <view class="big">
+      <view class="big-num">HK${{kpi.month_saved_hkd}}</view>
+      <view class="muted">节省开支</view>
+    </view>
+    <view class="big">
+      <view class="big-num">{{kpi.co2e_kg}}<text class="u"> kg</text></view>
+      <view class="muted">减排 CO₂e</view>
+    </view>
+  </view>
+
+  <view class="card">
+    <view class="h2">近 6 月惜食趋势</view>
+    <view class="chart">
+      <view class="bar-col" wx:for="{{trend}}" wx:key="month">
+        <view class="bar-val">{{item.saved_kg}}</view>
+        <view class="bar-wrap"><view class="bar" style="height: {{item.pct}}%;"></view></view>
+        <view class="bar-label">{{item.month.slice(5)}}</view>
+      </view>
+    </view>
+  </view>
+
+  <view class="card stat">
+    <view class="between">
+      <view class="muted">当前跟踪食材</view>
+      <view class="val">{{kpi.total_tracked}} 项</view>
+    </view>
+    <view class="between">
+      <view class="muted">临期 (高风险)</view>
+      <view class="val warn">{{kpi.expiring_soon}} 项</view>
+    </view>
+  </view>
+</block>
+
+<view wx:else class="page-loading">暂无数据，请先在「添加」页录入食材</view>
