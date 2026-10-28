@@ -3,6 +3,7 @@
 // SDG 12.3 impact logs, returning the updated household KPI. Delegates the atomic work to
 // the Postgres function consume_for_recipe (schema_cook.sql).
 
+import { serve } from "https://deno.land/std@0.192.0/http/server.ts";
 import { corsResponse } from "../_shared/gemini.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL") || "";
