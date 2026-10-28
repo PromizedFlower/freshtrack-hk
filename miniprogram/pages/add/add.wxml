@@ -1,0 +1,81 @@
+<view class="modes">
+  <view class="mode {{mode === 'receipt' ? 'on' : ''}}" data-mode="receipt" bindtap="setMode">小票扫描</view>
+  <view class="mode {{mode === 'food' ? 'on' : ''}}" data-mode="food" bindtap="setMode">食材拍照</view>
+  <view class="mode {{mode === 'manual' ? 'on' : ''}}" data-mode="manual" bindtap="setMode">手动录入</view>
+</view>
+
+<!-- AI scan -->
+<block wx:if="{{mode !== 'manual'}}">
+  <view class="card scan-box">
+    <button class="btn-primary" loading="{{scanning}}" bindtap="chooseImage">
+      {{scanning ? '识别中…' : (mode === 'receipt' ? '拍摄超市小票' : '拍摄食材 / 喷码')}}
+    </button>
+    <view class="muted tip">支持百佳 / 惠康 / HKTVmall 小票；自动识别名称、数量与保质期</view>
+  </view>
+
+  <view class="card" wx:if="{{detected.length > 0}}">
+    <view class="h2">识别结果</view>
+    <view class="det" wx:for="{{detected}}" wx:for-index="di" wx:key="di">
+      <view class="grow">
+        <view class="det-name">{{item.name}}</view>
+        <view class="muted">{{item.category}} · {{item.expiry_date || item.suggested_expiry_date}}</view>
+      </view>
+    </view>
+    <button class="btn-primary" bindtap="confirmDetected">确认入库 ({{detected.length}})</button>
+  </view>
+</block>
+
+<!-- manual form -->
+<block wx:else>
+  <view class="card">
+    <view class="field">
+      <view class="label">名称</view>
+      <input class="input" value="{{form.name}}" data-key="name" bindinput="onInput" placeholder="如：Baby Spinach / 菠菜" />
+    </view>
+    <view class="field">
+      <view class="label">类别</view>
+      <picker range="{{catLabels}}" bindchange="onCat">
+        <view class="picker">{{catLabels[catIndex]}}</view>
+      </picker>
+    </view>
+    <view class="row">
+      <view class="field grow">
+        <view class="label">数量</view>
+        <input class="input" type="number" value="{{form.quantity}}" data-key="quantity" bindinput="onInput" />
+      </view>
+      <view class="field grow">
+        <view class="label">单位</view>
+        <input class="input" value="{{form.unit}}" data-key="unit" bindinput="onInput" placeholder="pcs" />
+      </view>
+    </view>
+    <view class="row">
+      <view class="field grow">
+        <view class="label">重量(g)</view>
+        <input class="input" type="number" value="{{form.weight_grams}}" data-key="weight_grams" bindinput="onInput" />
+      </view>
+      <view class="field grow">
+        <view class="label">价格(HK$)</view>
+        <input class="input" type="digit" value="{{form.price_hkd}}" data-key="price_hkd" bindinput="onInput" />
+      </view>
+    </view>
+    <view class="field">
+      <view class="label">日期类型</view>
+      <picker range="{{typeLabels}}" bindchange="onType">
+        <view class="picker">{{typeLabels[form.date_type === 'use_by' ? 1 : 0]}}</view>
+      </picker>
+    </view>
+    <view class="field">
+      <view class="label">到期日期</view>
+      <picker mode="date" value="{{form.expiry_date}}" bindchange="onExpiry">
+        <view class="picker">{{form.expiry_date}}</view>
+      </picker>
+    </view>
+    <view class="field">
+      <view class="label">存放位置</view>
+      <picker range="{{zoneLabels}}" bindchange="onZone">
+        <view class="picker">{{zoneLabels[form.storage_zone === 'freezer' ? 1 : (form.storage_zone === 'pantry' ? 2 : 0)]}}</view>
+      </picker>
+    </view>
+    <button class="btn-primary" bindtap="saveManual">保存</button>
+  </view>
+</block>
