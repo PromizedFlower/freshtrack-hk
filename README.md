@@ -28,19 +28,23 @@ freshtrack-hk/
 ├── README.md                          # 项目总览与快速启动指南
 ├── docs/
 │   └── PRD_MVP_and_Roadmap.md         # 产品策划、MVP 功能说明书与 V2/V3 演进路线图
-├── prototypes/                        # 交互视觉基准（v1.1 高保真单文件可点击原型）
-│   ├── FreshTrack_HK_web_dashboard.html
-│   └── FreshTrack_HK_mobile_app.html
+├── prototypes/                        # 高保真交互原型（静态演示基准）
+├── miniprogram/                       # [NEW] 微信小程序（原生，5 屏 MVP）
+│   ├── app.js / app.json / app.wxss   # 全局登录态、页面注册、语义色板
+│   ├── project.config.json            # AppID 占位（用户填真实 AppID）
+│   ├── utils/                         # config / api：直连 Supabase REST·RPC·Edge Functions
+│   ├── components/risk-badge/         # 三档风险语义色徽标组件
+│   └── pages/                         # login + dashboard / fridge / recipes / add / impact
 ├── backend/
-│   ├── supabase/
-│   │   ├── schema.sql                 # PostgreSQL 5 张核心业务表、索引与视图定义
-│   │   └── seed_storage_rules.sql     # 香港常见生鲜储存规则与碳排系数种子数据
-│   └── functions/
-│       └── ai-scan/index.ts           # 基于 Gemini 2.5 Flash 的小票/食材识别云函数
+│   ├── supabase/                      # 增量迁移与种子（schema_*.sql / seed_*）
+│   ├── functions/                     # Edge Functions（_shared 共享模块 + 各函数）
+│   └── deploy/                        # [NEW] 一键部署包
+│       ├── 00-run-all.sql             # 合并迁移（按依赖顺序一次执行）
+│       ├── seed_demo.sql              # demo 家庭 + 临期库存 + 减废记录
+│       ├── deploy-functions.sh        # 部署云函数脚本
+│       └── SECRETS.md                 # 密钥清单（占位符，勿提交真实值）
 └── frontend/
-    ├── src/
-    │   ├── styles/tokens.css          # 13 色语义色板 CSS 变量（支持后期 UI 大改版）
-    │   └── utils/riskCalculator.ts    # 腐坏风险三档评估与 SDG 减废核算核心纯函数
+    └── src/                           # tokens.css + riskCalculator.ts（核心纯函数）
 ```
 
 ---
@@ -50,17 +54,21 @@ freshtrack-hk/
 ### 1. 预览高保真交互原型
 直接用浏览器打开 `prototypes/FreshTrack_HK_web_dashboard.html`（桌面大屏端）或 `prototypes/FreshTrack_HK_mobile_app.html`（手机端五屏并排/单机切换视图）。
 
-### 2. 初始化 Supabase 云数据库
-1. 登录 [Supabase](https://supabase.com/) 创建免费项目。
-2. 进入左侧 **SQL Editor**，依次粘贴并执行：
-   - `backend/supabase/schema.sql`（创建核心表结构）
-   - `backend/supabase/seed_storage_rules.sql`（导入生鲜规则字典与初始菜谱）
-
-### 3. 部署 AI 视觉扫描云函数
+### 2. 部署后端（数据库 + 云函数）
+1. 登录 [Supabase](https://supabase.com/) 创建项目，记下 **Project URL / anon key / service role key**。
+2. 左侧 **SQL Editor**，依次执行（详见 `backend/deploy/SECRETS.md`）：
+   - `backend/deploy/00-run-all.sql`（建表、RLS、风险引擎、SDG 聚合、种子数据，一次跑通）
+   - `backend/deploy/seed_demo.sql`（demo 家庭 + 临期库存 + 减废记录）
+3. 部署云函数并注入密钥：
 ```bash
-supabase secrets set GEMINI_API_KEY=your_google_gemini_api_key
-supabase functions deploy ai-scan
+cd backend
+bash deploy/deploy-functions.sh   # 内部会 supabase secrets set + functions deploy
 ```
+
+### 3. 运行微信小程序
+1. 打开**微信开发者工具**，导入 `miniprogram/` 目录，填入你的 **AppID**（或先用测试号）。
+2. 首次开发预览建议在 `project.config.json` 保持 `urlCheck: false`（正式上线需在公众平台把 `*.supabase.co` 加入 request 合法域名）。
+3. 编译运行 → 登录页点「一键进入 Demo 家庭」，即可查看 Dashboard / 冰箱 / 菜谱 / 添加 / 减废 五屏。
 
 ---
 
