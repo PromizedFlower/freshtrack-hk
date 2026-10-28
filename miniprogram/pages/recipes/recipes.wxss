@@ -1,0 +1,11 @@
+.rcp-title { font-size: 32rpx; font-weight: 600; }
+.rcp-meta { font-size: 24rpx; margin-top: 4rpx; }
+.score { font-size: 40rpx; font-weight: 700; color: var(--brand); }
+.rcp-tags { margin-top: 12rpx; }
+.tag { display: inline-block; background: #EAF7EE; color: var(--forest); border-radius: 999rpx; padding: 4rpx 16rpx; font-size: 22rpx; margin-right: 12rpx; }
+
+.detail { margin-top: 20rpx; border-top: 1rpx solid #F0F4F0; padding-top: 20rpx; }
+.sec { font-size: 26rpx; font-weight: 600; color: var(--forest); margin: 16rpx 0 8rpx; }
+.ing { font-size: 26rpx; padding: 6rpx 0; }
+.step { font-size: 26rpx; color: #4A5B51; padding: 6rpx 0; }
+.cook { margin-top: 20rpx; }
