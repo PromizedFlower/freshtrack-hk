@@ -5,6 +5,7 @@
 //   weight: high=3.0, medium=2.0, low=1.0  -> expiring items dominate the ranking.
 // Optional AI fallback generates a recipe when the best static match is weak (< 60%).
 
+import { serve } from "https://deno.land/std@0.192.0/http/server.ts";
 import { callGemini, corsResponse } from "../_shared/gemini.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL") || "";
@@ -94,6 +95,22 @@ function scoreRecipes(recipes: RecipeRow[], items: FridgeItem[]): any[] {
     .sort((a, b) => b.match_score - a.match_score || b.expiring_used_count - a.expiring_used_count);
 }
 
+// P3-3 overlay: exclude recipes containing an allergen, and (optionally) restrict to a
+// dietary tag (e.g. "vegetarian"/"vegan"). Dietary tags must be present on the recipe.
+function filterRecipes(recipes: RecipeRow[], allergies: string[], dietary: string[]): RecipeRow[] {
+  return recipes.filter((r) => {
+    const ingNames = (r.ingredients || []).map((i) => norm(i.name || ""));
+    if (allergies.length && ingNames.some((n) => allergies.some((a) => n.includes(norm(a)) || norm(a).includes(n)))) {
+      return false;
+    }
+    if (dietary.length) {
+      const tags = (r.tags || []).map((t) => norm(t));
+      if (!dietary.some((d) => tags.some((t) => t.includes(norm(d)) || norm(d).includes(t)))) return false;
+    }
+    return true;
+  });
+}
+
 const FALLBACK_SYSTEM = `You are the Rescue Recipe agent for FreshTrack HK. Given a list of expiring fridge items,
 generate ONE practical recipe that uses as many of the high/medium risk items as possible.
 Constraints: total cook time <= 20 min; output ONLY JSON:
@@ -109,10 +126,19 @@ serve(async (req: Request) => {
     const url = new URL(req.url);
     let household_id = url.searchParams.get("household_id") || "";
     let use_ai_fallback = url.searchParams.get("use_ai_fallback") === "true";
+    let allergies: string[] = [];
+    let dietary: string[] = [];
     if (req.method === "POST") {
       const body = await req.json().catch(() => ({}));
       household_id = household_id || body.household_id || "";
       use_ai_fallback = use_ai_fallback || body.use_ai_fallback === true;
+      if (Array.isArray(body.allergies)) allergies = body.allergies.map(String);
+      if (Array.isArray(body.dietary)) dietary = body.dietary.map(String);
+    } else {
+      const aq = url.searchParams.get("allergies");
+      if (aq) allergies = aq.split(",").map((s) => s.trim()).filter(Boolean);
+      const dq = url.searchParams.get("dietary");
+      if (dq) dietary = dq.split(",").map((s) => s.trim()).filter(Boolean);
     }
     if (!household_id) return corsResponse({ error: "household_id is required" }, 400);
     if (!SUPABASE_URL || !SERVICE_KEY) return corsResponse({ error: "Supabase env not configured" }, 500);
@@ -122,7 +148,8 @@ serve(async (req: Request) => {
       getJson(`recipes?select=id,title,prep_time_min,difficulty,servings,ingredients,steps,tags`),
     ]);
 
-    const ranked = scoreRecipes(recipes as RecipeRow[], items as FridgeItem[]);
+    const filtered = filterRecipes(recipes as RecipeRow[], allergies, dietary);
+    const ranked = scoreRecipes(filtered, items as FridgeItem[]);
 
     let aiRecipe: any = null;
     if (use_ai_fallback && (ranked.length === 0 || ranked[0].match_score < 60)) {
