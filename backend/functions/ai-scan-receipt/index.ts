@@ -3,6 +3,7 @@
 // grocery line items, and enriches each with a rule-backed suggested expiry date.
 // Strictly distinguishes best_before (quality) from use_by (safety). Never judges edibility.
 
+import { serve } from "https://deno.land/std@0.192.0/http/server.ts";
 import { callGemini, corsResponse } from "../_shared/gemini.ts";
 import { lookupRule, suggestExpiry } from "../_shared/storageRules.ts";
 
