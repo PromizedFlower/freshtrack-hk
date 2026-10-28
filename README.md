@@ -59,8 +59,11 @@ freshtrack-hk/
 ### 3. 部署 AI 视觉扫描云函数
 ```bash
 supabase secrets set GEMINI_API_KEY=your_google_gemini_api_key
+# 可选：切换 AI 模型（默认 flash；Google AI Pro 会员可改为 gemini-2.5-pro 提升识别准确率）
+supabase secrets set GEMINI_MODEL=gemini-2.5-flash
 supabase functions deploy ai-scan
 ```
+> 模型 ID 由环境变量 `GEMINI_MODEL` 控制，默认 `gemini-2.5-flash`（快、省、日额度高）。如需更高识别准确率，可设为 `gemini-2.5-pro`（更慢、更贵、日额度更低）。
 
 ---
 
