@@ -1,0 +1,25 @@
+<view wx:if="{{loading}}" class="page-loading">加载中…</view>
+
+<block wx:elif="{{hasData}}">
+  <view class="card item" wx:for="{{items}}" wx:key="id">
+    <view class="grow">
+      <view class="row">
+        <view class="item-name">{{item.name}}</view>
+        <risk-badge level="{{item.risk_level}}" />
+      </view>
+      <view class="muted meta">
+        剩 {{item.days_left}} 天 · {{item.category}} · {{item.quantity}}{{item.unit}}
+      </view>
+      <view class="suggest">{{item.suggested_action}}</view>
+    </view>
+    <view class="ops">
+      <button class="op op-done" size="mini" data-id="{{item.id}}" data-name="{{item.name}}" bindtap="consume">已用</button>
+      <button class="op op-del" size="mini" data-id="{{item.id}}" data-name="{{item.name}}" bindtap="remove">删除</button>
+    </view>
+  </view>
+  <view wx:if="{{items.length === 0}}" class="page-loading">冰箱空空如也，去添加食材吧</view>
+</block>
+
+<view wx:else class="page-loading">暂无数据，请先在「添加」页录入食材</view>
+
+<view class="fab" bindtap="goAdd">＋</view>
