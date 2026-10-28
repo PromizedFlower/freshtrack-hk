@@ -4,7 +4,8 @@
 import { serve } from "https://deno.land/std@0.192.0/http/server.ts";
 
 const GEMINI_API_KEY = Deno.env.get("GEMINI_API_KEY") || "";
-const GEMINI_ENDPOINT = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+const GEMINI_MODEL = Deno.env.get("GEMINI_MODEL") || "gemini-2.5-flash";
+const GEMINI_ENDPOINT = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${GEMINI_API_KEY}`;
 
 const SYSTEM_PROMPT = `You are the vision extraction agent for FreshTrack HK, a household food waste reduction app in Hong Kong.
 Analyze the uploaded supermarket receipt (PARKnSHOP, Wellcome, HKTVmall, AEON) or food/date label photo.
