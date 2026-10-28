@@ -1,0 +1,24 @@
+.hero { padding: 32rpx 32rpx 8rpx; }
+.hero .muted { margin-top: 4rpx; }
+
+.kpi-grid { display: flex; }
+.kpi { flex: 1; text-align: center; padding: 8rpx 0; }
+.kpi + .kpi { border-left: 1rpx solid #EEF2EE; }
+.kpi-num { font-size: 40rpx; font-weight: 700; color: var(--forest); }
+.kpi-unit { font-size: 22rpx; font-weight: 500; color: var(--muted); }
+.kpi .muted { font-size: 24rpx; margin-top: 4rpx; }
+
+.between .link { color: var(--brand); font-size: 26rpx; }
+.item { display: flex; align-items: center; padding: 20rpx 0; border-bottom: 1rpx solid #F0F4F0; }
+.item:last-child { border-bottom: none; }
+.item-name { font-size: 30rpx; font-weight: 600; }
+.item .muted { font-size: 24rpx; }
+.empty { text-align: center; padding: 24rpx 0; }
+
+.quick { display: flex; margin: 8rpx 12rpx 40rpx; }
+.q-btn {
+  flex: 1; margin: 0 12rpx; background: #fff; border-radius: 20rpx;
+  padding: 30rpx 12rpx; text-align: center; font-size: 26rpx; font-weight: 600;
+  box-shadow: 0 8rpx 20rpx rgba(11, 59, 46, 0.06);
+}
+.q-ico { display: block; font-size: 44rpx; margin-bottom: 8rpx; }
