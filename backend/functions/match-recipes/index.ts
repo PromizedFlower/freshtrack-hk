@@ -6,7 +6,8 @@
 // Optional AI fallback generates a recipe when the best static match is weak (< 60%).
 
 import { serve } from "https://deno.land/std@0.192.0/http/server.ts";
-import { callGemini, corsResponse } from "../_shared/gemini.ts";
+import { corsResponse } from "../_shared/gemini.ts";
+import { generateRescueRecipes } from "../_shared/rescueRecipe.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL") || "";
 const SERVICE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") || "";
@@ -17,6 +18,8 @@ interface FridgeItem {
   category: string;
   weight_grams: number;
   risk_level: "high" | "medium" | "low";
+  days_left?: number;
+  date_type?: string;
 }
 interface RecipeRow {
   id: string;
@@ -111,13 +114,6 @@ function filterRecipes(recipes: RecipeRow[], allergies: string[], dietary: strin
   });
 }
 
-const FALLBACK_SYSTEM = `You are the Rescue Recipe agent for FreshTrack HK. Given a list of expiring fridge items,
-generate ONE practical recipe that uses as many of the high/medium risk items as possible.
-Constraints: total cook time <= 20 min; output ONLY JSON:
-{"title","prep_time_min","difficulty","servings","ingredients":[{"name","weight_g"}],"steps":["..."],"disclaimer"}
-The disclaimer must remind users this is a suggestion and food safety (use_by) dates must be respected.
-Do not claim any food is safe to eat.`;
-
 serve(async (req: Request) => {
   if (req.method === "OPTIONS") return corsResponse("ok");
   if (req.method !== "POST" && req.method !== "GET") return corsResponse({ error: "Method not allowed" }, 405);
@@ -126,15 +122,19 @@ serve(async (req: Request) => {
     const url = new URL(req.url);
     let household_id = url.searchParams.get("household_id") || "";
     let use_ai_fallback = url.searchParams.get("use_ai_fallback") === "true";
+    let query = "";
     let allergies: string[] = [];
     let dietary: string[] = [];
     if (req.method === "POST") {
       const body = await req.json().catch(() => ({}));
       household_id = household_id || body.household_id || "";
       use_ai_fallback = use_ai_fallback || body.use_ai_fallback === true;
+      query = query || body.query || "";
       if (Array.isArray(body.allergies)) allergies = body.allergies.map(String);
       if (Array.isArray(body.dietary)) dietary = body.dietary.map(String);
     } else {
+      const qq = url.searchParams.get("query");
+      if (qq) query = qq;
       const aq = url.searchParams.get("allergies");
       if (aq) allergies = aq.split(",").map((s) => s.trim()).filter(Boolean);
       const dq = url.searchParams.get("dietary");
@@ -144,26 +144,35 @@ serve(async (req: Request) => {
     if (!SUPABASE_URL || !SERVICE_KEY) return corsResponse({ error: "Supabase env not configured" }, 500);
 
     const [items, recipes] = await Promise.all([
-      getJson(`v_fridge_items_with_risk?household_id=eq.${encodeURIComponent(household_id)}&select=id,name,category,weight_grams,risk_level`),
-      getJson(`recipes?select=id,title,prep_time_min,difficulty,servings,ingredients,steps,tags`),
+      getJson(`v_fridge_items_with_risk?household_id=eq.${encodeURIComponent(household_id)}&select=id,name,category,weight_grams,risk_level,days_left,date_type&order=days_left.asc`),
+      getJson(`recipes?select=id,title,prep_time_min,difficulty,servings,ingredients,steps,tags,source`),
     ]);
 
     const filtered = filterRecipes(recipes as RecipeRow[], allergies, dietary);
     const ranked = scoreRecipes(filtered, items as FridgeItem[]);
 
-    let aiRecipe: any = null;
-    if (use_ai_fallback && (ranked.length === 0 || ranked[0].match_score < 60)) {
-      const expiring = (items as FridgeItem[])
-        .filter((i) => i.risk_level !== "low")
-        .map((i) => `${i.name} (${i.risk_level}, ${i.weight_grams}g)`);
-      if (expiring.length > 0) {
-        const prompt = `Expiring items: ${expiring.join(", ")}. Generate a rescue recipe.`;
-        const parsed = await callGemini({ systemPrompt: FALLBACK_SYSTEM, promptText: prompt, imageBase64: "" }).catch(() => null);
-        if (parsed) aiRecipe = { ...parsed, match_score: 0, expiring_used_count: expiring.length, waste_saved_kg: 0, ai_generated: true };
+    let aiRecipes: any[] = [];
+    let aiDisclaimer = "";
+    const expiringItems = (items as FridgeItem[]).filter((i) => i.risk_level === "high" || i.risk_level === "medium");
+    const wantAi = use_ai_fallback || (query && query.trim().length > 0);
+    if (wantAi && (query || ranked.length === 0 || ranked[0].match_score < 60)) {
+      try {
+        const result = await generateRescueRecipes({
+          items: expiringItems.map((i) => ({ ...i, days_left: i.days_left ?? 0 })),
+          candidateRecipes: (recipes as RecipeRow[]).map((r) => ({ title: r.title, ingredients: r.ingredients })),
+          query,
+          allergies,
+          dietary,
+          count: 3,
+        });
+        aiRecipes = result.recipes;
+        aiDisclaimer = result.disclaimer;
+      } catch (_) {
+        // AI unavailable — client keeps the local ranked list as the fallback.
       }
     }
 
-    return corsResponse({ recipes: ranked, ai_recipe: aiRecipe });
+    return corsResponse({ recipes: ranked, ai_recipes: aiRecipes, ai_disclaimer: aiDisclaimer });
   } catch (err) {
     return corsResponse({ error: String(err?.message || err) }, 500);
   }
