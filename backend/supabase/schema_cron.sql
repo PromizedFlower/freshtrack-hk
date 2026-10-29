@@ -35,7 +35,8 @@ END;
 $$;
 
 -- Register the pg_cron job (no-op if the pg_cron extension is unavailable).
-DO $$
+-- NOTE: use distinct dollar-quote tags — a nested $$ would close the outer $$ early.
+DO $cron$
 BEGIN
     IF EXISTS (
         SELECT 1 FROM pg_extension WHERE extname = 'pg_cron'
@@ -43,7 +44,7 @@ BEGIN
         PERFORM cron.schedule(
             'daily-expiry-scan',
             '0 8 * * *',
-            $$SELECT refresh_risk_and_enqueue_notifications();$$
+            $sql$SELECT refresh_risk_and_enqueue_notifications();$sql$
         );
     END IF;
-END $$;
+END $cron$;
