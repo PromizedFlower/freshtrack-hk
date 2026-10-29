@@ -3,185 +3,329 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>FreshTrack HK — Clickable Dashboard Mockup</title>
+<title>FreshTrack HK — Golden Fusion Web Dashboard v2.0</title>
 <style>
   :root{
-    --bg:#eef2f0; --panel:#ffffff; --ink:#0f1f1a; --muted:#6b7d76; --line:#e4ebe8;
-    --green:#16a34a; --green-soft:#e7f6ed; --deep:#0b3b2e;
-    --amber:#f59e0b; --amber-soft:#fef3c7;
-    --red:#ef4444; --red-soft:#fee2e2;
-    --blue:#0ea5e9; --blue-soft:#e0f2fe;
-    --purple:#7c3aed; --purple-soft:#ede9fe;
-    --r:14px;
+    /* Golden Fusion Tokens: Warm Oat Recycled Paper + Eco Forest + High-Contrast Semantic Risk */
+    --bg:#F7F5F0;
+    --panel:#FFFEFA;
+    --subtle:#EFECE4;
+    --ink:#0F1F1A;
+    --muted:#647870;
+    --line:#E5E0D5;
+    --green:#16A34A;
+    --green-soft:#E7F6ED;
+    --deep:#0B3B2E;
+    --amber:#D97706;
+    --amber-soft:#FEF3C7;
+    --red:#EF4444;
+    --red-soft:#FEE2E2;
+    --blue:#0EA5E9;
+    --blue-soft:#E0F2FE;
+    --purple:#7C3AED;
+    --purple-soft:#EDE9FE;
+    --r:18px;
+    --scale:1;
+    --ease-spring:cubic-bezier(0.22, 1, 0.36, 1);
   }
+
+  body.dark-theme{
+    --bg:#071712;
+    --panel:#0F2920;
+    --subtle:#14352A;
+    --ink:#ECFDF5;
+    --muted:#8EABA0;
+    --line:#1B4335;
+    --green-soft:rgba(22,163,74,0.18);
+    --amber-soft:rgba(245,158,11,0.18);
+    --red-soft:rgba(239,68,68,0.20);
+    --blue-soft:rgba(14,165,233,0.18);
+  }
+
+  body.helper-mode{
+    --scale:1.18;
+  }
+
   *{box-sizing:border-box;margin:0;padding:0}
   body{
-    font-family:"Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,"Microsoft YaHei",sans-serif;
+    font-family:"Inter","Segoe UI",system-ui,-apple-system,"PingFang HK","Microsoft YaHei",sans-serif;
     background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;
+    transition:background .25s ease,color .25s ease;
   }
-  .app{display:grid;grid-template-columns:238px 1fr;min-height:100vh}
+  .app{display:grid;grid-template-columns:248px 1fr;min-height:100vh}
+  @media (max-width:860px){.app{grid-template-columns:1fr}.sidebar{display:none}}
 
   /* ============ Sidebar ============ */
-  .sidebar{background:var(--deep);color:#d7e6e0;padding:22px 16px;display:flex;flex-direction:column;gap:24px;position:sticky;top:0;height:100vh}
+  .sidebar{
+    background:var(--deep);color:#D7E6E0;padding:22px 16px;
+    display:flex;flex-direction:column;gap:20px;position:sticky;top:0;height:100vh;
+  }
   .brand{display:flex;align-items:center;gap:10px;padding:0 6px}
-  .brand .mark{width:36px;height:36px;border-radius:10px;background:var(--green);display:grid;place-items:center;font-size:20px}
-  .brand h1{font-size:15px;font-weight:700;color:#fff;line-height:1.15}
-  .brand span{font-size:10.5px;color:#8fb3a6;letter-spacing:.4px}
-  .nav{display:flex;flex-direction:column;gap:4px}
+  .brand .mark{width:38px;height:38px;border-radius:11px;background:var(--green);display:grid;place-items:center;font-size:20px}
+  .brand h1{font-size:15.5px;font-weight:760;color:#fff;line-height:1.15}
+  .brand span{font-size:10px;color:#8FB3A6;letter-spacing:.4px}
+  .nav{display:flex;flex-direction:column;gap:5px}
   .nav button{
-    display:flex;align-items:center;gap:11px;padding:11px 12px;border-radius:9px;
-    color:#b9d0c7;background:none;border:none;text-align:left;font-size:13.5px;font-weight:500;
+    display:flex;align-items:center;gap:11px;padding:11px 13px;border-radius:11px;
+    color:#B9D0C7;background:none;border:none;text-align:left;font-size:13.5px;font-weight:560;
     cursor:pointer;font-family:inherit;width:100%;transition:background .15s,color .15s;
   }
-  .nav button .ic{width:18px;text-align:center;font-size:14px}
-  .nav button:hover{background:rgba(255,255,255,.06);color:#fff}
-  .nav button.on{background:rgba(255,255,255,.10);color:#fff}
-  .nav button.on .ic{color:var(--green)}
-  .side-foot{margin-top:auto;font-size:11px;color:#7fa294;line-height:1.6;border-top:1px solid rgba(255,255,255,.12);padding-top:14px}
+  .nav button .ic{width:19px;text-align:center;font-size:15px}
+  .nav button:hover{background:rgba(255,255,255,.07);color:#fff}
+  .nav button.on{background:rgba(255,255,255,.13);color:#fff;font-weight:680}
+
+  /* Sidebar Living Eco-Tree Widget */
+  .side-tree{
+    background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);
+    border-radius:15px;padding:13px;display:flex;align-items:center;gap:11px;cursor:pointer;
+    transition:transform .2s var(--ease-spring),background .2s;
+  }
+  .side-tree:hover{background:rgba(255,255,255,.11);transform:translateY(-2px)}
+  .side-tree.pulse{animation:treePulse .55s var(--ease-spring)}
+  @keyframes treePulse{0%{transform:scale(1)}40%{transform:scale(1.12)}100%{transform:scale(1)}}
+  .side-tree .st-info b{display:block;font-size:12px;color:#fff}
+  .side-tree .st-info small{display:block;font-size:10.5px;color:#6EE7A0;margin-top:2px}
+
+  .side-foot{margin-top:auto;font-size:11px;color:#7FA294;line-height:1.6;border-top:1px solid rgba(255,255,255,.12);padding-top:14px}
 
   /* ============ Main ============ */
-  .main{padding:24px 28px 40px}
-  .screen{display:none}
-  .screen.on{display:block;animation:fade .22s ease}
+  .main{padding:22px 28px 44px;max-width:1360px}
+  .screen{display:none;position:relative}
+  .screen.on{display:block;animation:fade .24s var(--ease-spring)}
   @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 
-  .topbar{display:flex;align-items:center;gap:14px;margin-bottom:18px}
-  .topbar .hello h2{font-size:20px;font-weight:700}
-  .topbar .hello p{font-size:12.5px;color:var(--muted);margin-top:3px}
+  /* Fridge Door Ice Glow */
+  #screen-fridge.on::before{
+    content:"";position:absolute;top:-22px;left:-28px;right:-28px;height:110px;
+    background:radial-gradient(ellipse at 50% 0%, rgba(186,230,253,.45), transparent 75%);
+    pointer-events:none;z-index:0;
+  }
+
+  .topbar{display:flex;align-items:center;gap:11px;margin-bottom:18px;flex-wrap:wrap;position:relative;z-index:2}
+  .topbar .hello h2{font-size:calc(21px * var(--scale));font-weight:760}
+  .topbar .hello p{font-size:calc(12.5px * var(--scale));color:var(--muted);margin-top:3px}
   .topbar .spacer{flex:1}
-  .search{display:flex;align-items:center;gap:8px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:9px 13px;width:230px;color:var(--muted);font-size:13px}
+  .search{
+    display:flex;align-items:center;gap:8px;background:var(--panel);border:1px solid var(--line);
+    border-radius:11px;padding:9px 13px;width:230px;color:var(--muted);font-size:13px;
+  }
   .search input{border:none;outline:none;font-family:inherit;font-size:13px;width:100%;background:transparent;color:var(--ink)}
-  .btn{border:none;border-radius:10px;padding:10px 15px;font-size:13px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:7px;font-family:inherit;transition:filter .15s}
-  .btn:hover{filter:brightness(1.06)}
+
+  .btn{
+    border:none;border-radius:11px;padding:9.5px 14px;font-size:12.5px;font-weight:660;
+    cursor:pointer;display:inline-flex;align-items:center;gap:6px;font-family:inherit;
+    transition:filter .15s,transform .12s;
+  }
+  .btn:hover{filter:brightness(1.05)}
+  .btn:active{transform:scale(.98)}
   .btn.primary{background:var(--green);color:#fff}
   .btn.ghost{background:var(--panel);color:var(--ink);border:1px solid var(--line)}
-  .btn.sm{padding:6px 11px;font-size:12px;border-radius:8px}
+  .btn.ghost.on{background:var(--green-soft);color:var(--green);border-color:rgba(22,163,74,.35)}
 
-  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:14px}
-  .kpi{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:15px 16px}
-  .kpi .lab{font-size:11.5px;color:var(--muted);font-weight:600;letter-spacing:.2px}
-  .kpi .val{font-size:25px;font-weight:750;margin-top:7px;letter-spacing:-.5px}
-  .kpi .val small{font-size:14px;font-weight:600}
-  .kpi .sub{font-size:11px;color:var(--muted);margin-top:5px}
+  /* KPI Cards */
+  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:13px;margin-bottom:14px}
+  @media (max-width:980px){.kpis{grid-template-columns:repeat(2,1fr)}}
+  .kpi{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:15px 17px;box-shadow:0 4px 16px rgba(11,59,46,.03)}
+  .kpi.bump{animation:treePulse .45s var(--ease-spring)}
+  .kpi .lab{font-size:11px;color:var(--muted);font-weight:680;letter-spacing:.3px}
+  .kpi .val{font-size:calc(25px * var(--scale));font-weight:780;margin-top:6px;letter-spacing:-.5px}
+  .kpi .val small{font-size:13.5px;font-weight:650}
+  .kpi .sub{font-size:11px;color:var(--muted);margin-top:4px}
   .kpi .sub b{color:var(--green)}
   .kpi.warn .val{color:var(--amber)}
 
-  .cols{display:grid;grid-template-columns:1.35fr 1fr;gap:14px;margin-bottom:14px}
+  .cols{display:grid;grid-template-columns:1.4fr 1fr;gap:14px;margin-bottom:14px}
   .cols3{display:grid;grid-template-columns:1.1fr 1fr 1.1fr;gap:14px;margin-bottom:14px}
-  .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:16px 17px}
-  .card h3{font-size:13.5px;font-weight:700;display:flex;align-items:center;gap:8px;margin-bottom:12px}
-  .card h3 .tag{margin-left:auto;font-size:10.5px;font-weight:600;color:var(--muted);background:var(--bg);padding:3px 8px;border-radius:20px}
+  @media (max-width:1024px){.cols,.cols3{grid-template-columns:1fr}}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:16px 18px;box-shadow:0 4px 16px rgba(11,59,46,.03)}
+  .card h3{font-size:calc(13.8px * var(--scale));font-weight:740;display:flex;align-items:center;gap:8px;margin-bottom:12px}
+  .card h3 .tag{margin-left:auto;font-size:10.5px;font-weight:650;color:var(--muted);background:var(--subtle);padding:3px 9px;border-radius:20px}
 
-  /* Use-soon rows */
-  .row{display:grid;grid-template-columns:1fr 86px 70px 108px;align-items:center;gap:10px;padding:10px 4px;border-bottom:1px solid var(--line)}
+  /* Use Soon Rows with Liquid Countdown Ring */
+  .row{
+    display:grid;grid-template-columns:1fr 96px 68px 112px;align-items:center;gap:10px;
+    padding:9px 6px;border-bottom:1px solid var(--line);border-radius:11px;transition:background .15s;
+  }
   .row:last-child{border-bottom:none}
+  .row.critical-halo{
+    background:rgba(254,226,226,.32);
+    animation:haloPulse 2.4s infinite ease-in-out;
+  }
+  @keyframes haloPulse{
+    0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,.35)}
+    50%{box-shadow:0 0 0 5px rgba(239,68,68,0)}
+  }
+
   .item{display:flex;align-items:center;gap:11px;min-width:0}
-  .item .emoji{width:34px;height:34px;border-radius:9px;background:var(--bg);display:grid;place-items:center;font-size:17px;flex:none}
-  .item .nm{font-size:13px;font-weight:600}
+  .ring-wrap{position:relative;width:40px;height:40px;flex:none;display:grid;place-items:center}
+  .ring-wrap svg{position:absolute;inset:0;width:40px;height:40px;transform:rotate(-90deg)}
+  .ring-wrap .em{font-size:17px;position:relative;z-index:2}
+  .ring-wrap .buyer{
+    position:absolute;right:-2px;bottom:-2px;width:15px;height:15px;border-radius:50%;
+    background:var(--deep);color:#fff;font-size:8.5px;font-weight:800;display:grid;place-items:center;border:1.5px solid var(--panel);z-index:3;
+  }
+  .item .nm{font-size:calc(13px * var(--scale));font-weight:670}
   .item .mt{font-size:10.5px;color:var(--muted);margin-top:2px}
-  .days{font-size:12px;font-weight:600}
+  .days{font-size:12px;font-weight:670}
   .days small{display:block;color:var(--muted);font-weight:500;font-size:10px}
-  .pill{font-size:10.5px;font-weight:700;padding:4px 9px;border-radius:20px;text-align:center}
-  .pill.high{background:var(--red-soft);color:#b91c1c}
-  .pill.med{background:var(--amber-soft);color:#b45309}
-  .pill.low{background:var(--green-soft);color:#15803d}
-  .act{font-size:11.5px;font-weight:600;color:var(--green);background:var(--green-soft);border-radius:8px;padding:6px 9px;text-align:center;cursor:pointer;border:none;font-family:inherit}
-  .act:hover{filter:brightness(.96)}
+  .pill{font-size:10px;font-weight:750;padding:3.5px 9px;border-radius:20px;text-align:center;display:inline-block}
+  .pill.high{background:var(--red-soft);color:#B91C1C}
+  .pill.med{background:var(--amber-soft);color:#B45309}
+  .pill.low{background:var(--green-soft);color:#15803D}
+
+  .qacts{display:flex;align-items:center;gap:5px;justify-content:flex-end}
+  .qbtn{
+    border:1px solid var(--line);background:var(--subtle);border-radius:8px;
+    width:29px;height:29px;display:grid;place-items:center;cursor:pointer;
+    font-size:12.5px;transition:transform .14s,background .14s;
+  }
+  .qbtn:hover{transform:scale(1.1)}
+  .qbtn.eat:hover{background:var(--green-soft);border-color:var(--green)}
+  .qbtn.frz:hover{background:var(--blue-soft);border-color:var(--blue)}
+  .qbtn.pot.in-pot{background:var(--amber-soft);border-color:var(--amber)}
 
   /* Recipes */
   .recipes{display:flex;flex-direction:column;gap:10px}
-  .recipe{border:1px solid var(--line);border-radius:12px;padding:12px 13px;display:flex;gap:12px;align-items:center;cursor:pointer;transition:border-color .15s,box-shadow .15s}
-  .recipe:hover{border-color:#c9dcd4;box-shadow:0 2px 10px rgba(11,59,46,.06)}
-  .recipe .pic{width:44px;height:44px;border-radius:10px;background:var(--green-soft);display:grid;place-items:center;font-size:22px;flex:none}
+  .recipe{
+    border:1px solid var(--line);border-radius:14px;padding:12px 13px;
+    display:flex;gap:12px;align-items:center;cursor:pointer;transition:border-color .15s,transform .15s;
+  }
+  .recipe:hover{border-color:var(--green);transform:translateY(-1px)}
+  .recipe .pic{width:44px;height:44px;border-radius:11px;background:var(--green-soft);display:grid;place-items:center;font-size:22px;flex:none}
   .recipe .info{flex:1;min-width:0}
-  .recipe .info .t{font-size:12.8px;font-weight:650}
+  .recipe .info .t{font-size:calc(13px * var(--scale));font-weight:680}
   .recipe .info .s{font-size:10.5px;color:var(--muted);margin-top:3px}
   .recipe .match{text-align:right}
-  .recipe .match b{font-size:15px;color:var(--green);font-weight:750}
+  .recipe .match b{font-size:15px;color:var(--green);font-weight:780}
   .recipe .match small{display:block;font-size:9.5px;color:var(--muted)}
 
-  /* category bars */
+  /* Category Bars */
   .cat{display:flex;flex-direction:column;gap:9px}
-  .cat .c{display:grid;grid-template-columns:66px 1fr 30px;align-items:center;gap:9px;font-size:11.5px}
-  .cat .c .track{height:8px;border-radius:5px;background:var(--bg);overflow:hidden}
+  .cat .c{display:grid;grid-template-columns:68px 1fr 30px;align-items:center;gap:9px;font-size:11.5px}
+  .cat .c .track{height:8px;border-radius:5px;background:var(--subtle);overflow:hidden}
   .cat .c .track i{display:block;height:100%;border-radius:5px}
-  .cat .c .n{text-align:right;font-weight:600;color:var(--muted)}
+  .cat .c .n{text-align:right;font-weight:650;color:var(--muted)}
 
   .methods{display:flex;flex-direction:column;gap:9px}
-  .method{display:flex;align-items:center;gap:11px;border:1px dashed var(--line);border-radius:11px;padding:10px 12px;cursor:pointer;background:none;font-family:inherit;text-align:left;width:100%;transition:border-color .15s,background .15s}
+  .method{
+    display:flex;align-items:center;gap:11px;border:1px dashed var(--line);border-radius:12px;
+    padding:10px 12px;cursor:pointer;background:none;font-family:inherit;text-align:left;width:100%;
+    transition:border-color .15s,background .15s;
+  }
   .method:hover{border-color:var(--green);background:var(--green-soft)}
-  .method .mi{width:32px;height:32px;border-radius:9px;background:var(--blue-soft);display:grid;place-items:center;font-size:15px;flex:none}
-  .method .mtx{font-size:12.3px;font-weight:600;color:var(--ink)}
+  .method .mi{width:34px;height:34px;border-radius:9px;background:var(--blue-soft);display:grid;place-items:center;font-size:16px;flex:none}
+  .method .mtx{font-size:12.5px;font-weight:650;color:var(--ink)}
   .method .mtx small{display:block;font-size:10.3px;color:var(--muted);font-weight:500;margin-top:1px}
 
-  .impact{display:flex;flex-direction:column;gap:11px}
+  .impact{display:flex;flex-direction:column;gap:10px}
   .imp{display:flex;align-items:center;justify-content:space-between;font-size:12.3px}
   .imp .k{color:var(--muted)}
-  .imp .v{font-weight:700}
-  .sdg{display:inline-flex;align-items:center;gap:8px;background:var(--deep);color:#fff;border-radius:9px;padding:8px 11px;font-size:11.3px;font-weight:600}
-  .sdg .num{background:#bf8b2e;border-radius:6px;padding:2px 7px;font-weight:800}
+  .imp .v{font-weight:720}
+  .sdg{display:inline-flex;align-items:center;gap:8px;background:var(--deep);color:#fff;border-radius:10px;padding:8px 11px;font-size:11.3px;font-weight:600}
+  .sdg .num{background:#BF8B2E;border-radius:6px;padding:2px 7px;font-weight:800}
 
-  .disclaim{margin-top:14px;background:#fffbeb;border:1px solid #fde68a;border-radius:11px;padding:11px 14px;font-size:11.5px;color:#92400e;display:flex;gap:9px;align-items:flex-start}
-  .disclaim b{color:#78350f}
+  .disclaim{
+    margin-top:14px;background:#FFFBEB;border:1px solid #FDE68A;border-radius:12px;
+    padding:11px 14px;font-size:11.3px;color:#92400E;display:flex;gap:9px;align-items:flex-start;
+  }
+  body.dark-theme .disclaim{background:#231F12;border-color:#78350F;color:#FCD34D}
 
-  /* ============ My Fridge ============ */
+  /* ============ My Fridge 3-Zone Spatial Shelf & Grid ============ */
   .toolbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px}
   .chips{display:flex;gap:7px;flex-wrap:wrap}
-  .chip{border:1px solid var(--line);background:var(--panel);border-radius:20px;padding:7px 13px;font-size:12px;font-weight:600;cursor:pointer;color:var(--muted);font-family:inherit}
+  .chip{
+    border:1px solid var(--line);background:var(--panel);border-radius:20px;
+    padding:7px 13px;font-size:12px;font-weight:650;cursor:pointer;color:var(--muted);font-family:inherit;
+  }
   .chip.on{background:var(--deep);color:#fff;border-color:var(--deep)}
-  .grid-items{display:grid;grid-template-columns:repeat(auto-fill,minmax(196px,1fr));gap:13px}
-  .icard{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:14px;position:relative}
-  .icard .top{display:flex;align-items:center;gap:10px;margin-bottom:11px}
-  .icard .e{width:38px;height:38px;border-radius:10px;background:var(--bg);display:grid;place-items:center;font-size:19px}
-  .icard .nm{font-size:13px;font-weight:650}
-  .icard .sub{font-size:10.5px;color:var(--muted);margin-top:2px}
-  .icard .meta{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-top:9px;padding-top:9px;border-top:1px solid var(--line)}
-  .icard .meta b{color:var(--ink)}
-  .badge{position:absolute;top:12px;right:12px;font-size:10px;font-weight:700;padding:3px 8px;border-radius:20px}
+  .view-seg{margin-left:auto;display:flex;gap:4px;background:var(--subtle);padding:3.5px;border-radius:11px;border:1px solid var(--line)}
+  .vbtn{border:none;background:transparent;padding:6px 12px;border-radius:8px;font-size:12px;font-weight:660;color:var(--muted);cursor:pointer;font-family:inherit}
+  .vbtn.on{background:var(--panel);color:var(--green);box-shadow:0 1px 4px rgba(0,0,0,.08)}
 
-  /* ============ Recipes screen ============ */
-  .rgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
+  .shelf-zone{
+    background:var(--panel);border:1.5px solid var(--line);border-radius:18px;
+    padding:14px 16px;margin-bottom:14px;border-bottom:6px solid #D5E2DC;
+    box-shadow:inset 0 8px 18px rgba(11,59,46,.03);
+  }
+  .shelf-zone.freezer{background:linear-gradient(180deg,var(--panel),rgba(224,242,254,.35));border-bottom-color:#BAE6FD}
+  .shelf-zone-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:11px;font-size:12.5px;font-weight:750;color:var(--ink)}
+  .shelf-zone-hd span.tbadge{font-size:11px;padding:3px 9px;border-radius:99px;background:var(--subtle);color:var(--muted)}
+
+  .grid-items{display:grid;grid-template-columns:repeat(auto-fill,minmax(225px,1fr));gap:12px}
+  .icard{
+    background:var(--bg);border:1px solid var(--line);border-radius:15px;padding:12px 13px;
+    display:flex;align-items:center;gap:10px;transition:transform .15s,border-color .15s;
+  }
+  .icard:hover{transform:translateY(-2px);border-color:var(--green)}
+  .icard .info{flex:1;min-width:0}
+  .icard .nm{font-size:calc(12.8px * var(--scale));font-weight:680;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .icard .sub{font-size:10.5px;color:var(--muted);margin-top:2px}
+
+  /* Floating Pot Bar */
+  .pot-bar{
+    position:sticky;bottom:16px;z-index:30;margin-top:14px;
+    background:linear-gradient(135deg,var(--deep),#14533E);color:#fff;
+    border-radius:16px;padding:12px 18px;display:flex;align-items:center;gap:12px;
+    box-shadow:0 12px 30px rgba(11,59,46,.28);
+  }
+  .pot-bar .ptxt{flex:1;font-size:13px;font-weight:670}
+  .pot-bar .ptxt small{display:block;font-size:11px;color:#A7F3D0;margin-top:2px}
+
+  /* Recipes Grid */
+  .rgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
   .rcard{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;cursor:pointer;transition:box-shadow .15s,transform .15s}
-  .rcard:hover{box-shadow:0 6px 18px rgba(11,59,46,.10);transform:translateY(-2px)}
-  .rcard .hero{height:88px;display:grid;place-items:center;font-size:40px;background:var(--green-soft)}
-  .rcard .body{padding:13px 14px}
-  .rcard .body .t{font-size:13.5px;font-weight:700}
+  .rcard:hover{box-shadow:0 8px 22px rgba(11,59,46,.10);transform:translateY(-2px)}
+  .rcard .hero{height:92px;display:grid;place-items:center;font-size:42px;background:var(--green-soft)}
+  .rcard .body{padding:14px 15px}
+  .rcard .body .t{font-size:calc(13.8px * var(--scale));font-weight:720}
   .rcard .body .s{font-size:11px;color:var(--muted);margin-top:5px;line-height:1.5}
   .rcard .foot{display:flex;align-items:center;gap:8px;margin-top:11px;padding-top:10px;border-top:1px solid var(--line);font-size:11px;color:var(--muted)}
-  .rcard .foot .pct{margin-left:auto;font-weight:750;color:var(--green);font-size:13px}
+  .rcard .foot .pct{margin-left:auto;font-weight:780;color:var(--green);font-size:13.5px}
 
-  /* ============ Add item ============ */
-  .scanbox{border:2px dashed var(--line);border-radius:var(--r);padding:26px;text-align:center;background:var(--panel)}
-  .scanbox .big{font-size:34px;margin-bottom:10px}
-  .scanbox h4{font-size:14px;font-weight:700;margin-bottom:6px}
+  /* Add Item Laser Scanner */
+  .scanbox{border:2px dashed rgba(22,163,74,.45);border-radius:var(--r);padding:28px;text-align:center;background:var(--panel);position:relative;overflow:hidden}
+  .scanbox .laser{
+    display:none;position:absolute;left:8%;right:8%;height:3px;
+    background:var(--green);box-shadow:0 0 14px var(--green),0 0 26px var(--green);
+    border-radius:99px;animation:laserScan 1.4s infinite ease-in-out;
+  }
+  .scanbox.scanning .laser{display:block}
+  @keyframes laserScan{0%{top:10%}50%{top:88%}100%{top:10%}}
+  .scanbox .big{font-size:36px;margin-bottom:8px}
+  .scanbox h4{font-size:14.5px;font-weight:730;margin-bottom:5px}
   .scanbox p{font-size:12px;color:var(--muted);margin-bottom:14px}
-  .progress{height:8px;border-radius:6px;background:var(--bg);overflow:hidden;margin:14px auto 0;max-width:340px;display:none}
+  .progress{height:8px;border-radius:6px;background:var(--subtle);overflow:hidden;margin:14px auto 0;max-width:340px;display:none}
   .progress.on{display:block}
-  .progress i{display:block;height:100%;width:0;background:var(--green);border-radius:6px;transition:width .35s}
+  .progress i{display:block;height:100%;width:0;background:var(--green);border-radius:6px;transition:width .3s}
   .parsed{margin-top:16px;display:none}
   .parsed.on{display:block}
 
-  /* ============ Impact ============ */
+  /* Chart */
   .chart{display:flex;align-items:flex-end;gap:14px;height:150px;padding-top:8px}
   .chart .bar{flex:1;display:flex;flex-direction:column;align-items:center;gap:7px;height:100%;justify-content:flex-end}
-  .chart .bar i{width:100%;max-width:44px;background:linear-gradient(180deg,#22c55e,#16a34a);border-radius:7px 7px 0 0;display:block}
+  .chart .bar i{width:100%;max-width:44px;background:linear-gradient(180deg,#22C55E,#16A34A);border-radius:7px 7px 0 0;display:block}
   .chart .bar span{font-size:10.5px;color:var(--muted)}
   .chart .bar b{font-size:10.5px;font-weight:700}
 
-  /* ============ Modal / toast ============ */
-  .modal{position:fixed;inset:0;background:rgba(11,59,46,.45);display:none;place-items:center;padding:24px;z-index:50}
+  /* Modal & Toast */
+  .modal{position:fixed;inset:0;background:rgba(11,59,46,.48);display:none;place-items:center;padding:24px;z-index:80}
   .modal.on{display:grid}
-  .sheet{background:var(--panel);border-radius:18px;max-width:560px;width:100%;max-height:84vh;overflow:auto;padding:22px 24px}
+  .sheet{background:var(--panel);border-radius:20px;max-width:560px;width:100%;max-height:84vh;overflow:auto;padding:22px 24px}
   .sheet .hd{display:flex;align-items:flex-start;gap:12px;margin-bottom:14px}
   .sheet .hd .e{width:52px;height:52px;border-radius:14px;background:var(--green-soft);display:grid;place-items:center;font-size:26px;flex:none}
   .sheet .hd h4{font-size:16px;font-weight:750}
   .sheet .hd p{font-size:11.5px;color:var(--muted);margin-top:4px}
-  .sheet .close{margin-left:auto;background:var(--bg);border:none;border-radius:9px;width:32px;height:32px;cursor:pointer;font-size:15px;color:var(--muted)}
-  .sheet h5{font-size:12px;font-weight:700;margin:14px 0 7px;color:var(--deep)}
-  .sheet ul,.sheet ol{padding-left:18px;font-size:12.5px;line-height:1.75;color:#2b3d37}
-  .toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%) translateY(20px);background:var(--deep);color:#fff;padding:12px 20px;border-radius:11px;font-size:13px;font-weight:600;opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;z-index:60}
+  .sheet .close{margin-left:auto;background:var(--subtle);border:none;border-radius:9px;width:32px;height:32px;cursor:pointer;font-size:15px;color:var(--muted)}
+  .sheet h5{font-size:12px;font-weight:720;margin:14px 0 7px;color:var(--green)}
+  .sheet ul,.sheet ol{padding-left:18px;font-size:12.5px;line-height:1.75;color:var(--ink)}
+  .toast{
+    position:fixed;left:50%;bottom:28px;transform:translateX(-50%) translateY(20px);
+    background:var(--deep);color:#fff;padding:12px 20px;border-radius:12px;
+    font-size:13px;font-weight:660;opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;z-index:90;
+  }
   .toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
-  .hint{font-size:11.5px;color:var(--muted);background:var(--panel);border:1px dashed var(--line);border-radius:10px;padding:9px 13px;margin-bottom:14px}
+  .hint{font-size:11.5px;color:var(--muted);background:var(--panel);border:1px dashed var(--line);border-radius:11px;padding:10px 14px;margin-bottom:14px}
+  .leaf-particle{position:fixed;pointer-events:none;z-index:999;font-size:18px;transition:transform .7s cubic-bezier(.2,.9,.3,1),opacity .7s ease}
 </style>
 </head>
 <body>
@@ -193,20 +337,30 @@
       <div class="mark">🥬</div>
       <div>
         <h1>FreshTrack HK</h1>
-        <span>SMART FOOD ASSISTANT</span>
+        <span>GOLDEN FUSION v2.0</span>
       </div>
     </div>
     <nav class="nav" id="nav">
       <button class="on" data-go="dashboard"><span class="ic">▦</span> Dashboard</button>
-      <button data-go="fridge"><span class="ic">🧺</span> My Fridge</button>
-      <button data-go="recipes"><span class="ic">🍳</span> Recipes</button>
-      <button data-go="add"><span class="ic">➕</span> Add Item</button>
-      <button data-go="impact"><span class="ic">🌍</span> Impact</button>
+      <button data-go="fridge"><span class="ic">🧊</span> My Fridge (3-Zone)</button>
+      <button data-go="recipes"><span class="ic">🍳</span> Rescue Recipes</button>
+      <button data-go="add"><span class="ic">➕</span> Add Groceries</button>
+      <button data-go="impact"><span class="ic">🌍</span> SDG Impact</button>
     </nav>
+
+    <!-- Living Eco-Tree Sidebar Card -->
+    <div class="side-tree" id="sideTreeCard" data-go="impact" title="Click to view Household Living Eco-Tree">
+      <span style="font-size:28px">🌳</span>
+      <div class="st-info">
+        <b id="sideTreeTitle">Lv.3 Lush Eco-Tree</b>
+        <small id="sideTreeSub">3.2 kg rescued · SDG 12.3</small>
+      </div>
+    </div>
+
     <div class="side-foot">
-      Clickable mockup v1.0<br>
-      COMP7950 · Team Frontend<br>
-      Douglas &amp; Cyanblue
+      Golden Fusion UI v2.0<br>
+      Eco-Paper · Spatial Shelf · Motion<br>
+      COMP7950 · Douglas &amp; Cyanblue
     </div>
   </aside>
 
@@ -217,55 +371,28 @@
     <section class="screen on" id="screen-dashboard">
       <div class="topbar">
         <div class="hello">
-          <h2>Good evening, Douglas 👋</h2>
-          <p><b style="color:#ef4444">6 items</b> need your attention in the next 3 days</p>
+          <h2 id="lblWebGreeting">Good evening, Douglas 👋</h2>
+          <p><b style="color:var(--red)" id="dashUrgentCount">6 items</b> <span id="lblWebSub">need your attention in the next 3 days</span></p>
         </div>
         <div class="spacer"></div>
-        <div class="search">🔍 <input placeholder="Search items, recipes…"></div>
+        <button class="btn ghost" id="btnWebHelper" title="125% Large Font Mode">👵 Aa 大字</button>
+        <button class="btn ghost" id="btnWebLang" title="Switch EN / 繁中 / ID">🌐 EN</button>
+        <button class="btn ghost" id="btnWebDark" title="OLED Dark Mode">🌙 OLED</button>
         <button class="btn ghost" data-go="add">🧾 Scan Receipt</button>
         <button class="btn primary" data-go="add">＋ Add Item</button>
       </div>
 
       <div class="kpis">
-        <div class="kpi"><div class="lab">ITEMS TRACKED</div><div class="val">42</div><div class="sub"><b>+3</b> added today</div></div>
-        <div class="kpi warn"><div class="lab">EXPIRING ≤ 3 DAYS</div><div class="val">6</div><div class="sub">2 high-risk · 4 to plan</div></div>
-        <div class="kpi"><div class="lab">FOOD WASTE SAVED (MONTH)</div><div class="val">3.2 <small>kg</small></div><div class="sub"><b>↑ 18%</b> vs last month</div></div>
-        <div class="kpi"><div class="lab">EST. MONEY SAVED (MONTH)</div><div class="val">HK$486</div><div class="sub">from 11 rescued items</div></div>
+        <div class="kpi"><div class="lab">ITEMS TRACKED</div><div class="val" id="webKpiTracked">12</div><div class="sub"><b>+3</b> added today</div></div>
+        <div class="kpi warn"><div class="lab">EXPIRING ≤ 3 DAYS</div><div class="val" id="webKpiUrgent">6</div><div class="sub">Use ✓ to eat or ❄️ to freeze</div></div>
+        <div class="kpi" id="webKpiWasteCard"><div class="lab">FOOD WASTE SAVED (MONTH)</div><div class="val"><span id="webKpiWaste">3.2</span> <small>kg</small></div><div class="sub"><b>↑ 18%</b> vs last month</div></div>
+        <div class="kpi"><div class="lab">EST. MONEY SAVED (MONTH)</div><div class="val">HK$<span id="webKpiMoney">486</span></div><div class="sub">from <span id="webKpiRescued">11</span> rescued items</div></div>
       </div>
 
       <div class="cols">
         <div class="card">
-          <h3>⚠️ Use Soon — Spoilage Risk<span class="tag">Rule-based estimate</span></h3>
-          <div class="row">
-            <div class="item"><div class="emoji">🥬</div><div><div class="nm">Baby Spinach</div><div class="mt">Produce · 200 g</div></div></div>
-            <div class="days">1 day<small>Best-before</small></div><div class="pill high">High</div>
-            <button class="act" data-go="recipes">Add to tonight</button>
-          </div>
-          <div class="row">
-            <div class="item"><div class="emoji">🍗</div><div><div class="nm">Chicken Breast</div><div class="mt">Meat · 400 g</div></div></div>
-            <div class="days">1 day<small>Use-by ⚠</small></div><div class="pill high">High</div>
-            <button class="act" data-go="fridge">Cook or freeze</button>
-          </div>
-          <div class="row">
-            <div class="item"><div class="emoji">🥛</div><div><div class="nm">Whole Milk</div><div class="mt">Dairy · 1 L</div></div></div>
-            <div class="days">2 days<small>Use-by ⚠</small></div><div class="pill med">Medium</div>
-            <button class="act" data-go="fridge">Use by Thu</button>
-          </div>
-          <div class="row">
-            <div class="item"><div class="emoji">🥣</div><div><div class="nm">Greek Yoghurt</div><div class="mt">Dairy · 500 g</div></div></div>
-            <div class="days">2 days<small>Best-before</small></div><div class="pill med">Medium</div>
-            <button class="act" data-go="recipes">Breakfast idea</button>
-          </div>
-          <div class="row">
-            <div class="item"><div class="emoji">🍅</div><div><div class="nm">Cherry Tomatoes</div><div class="mt">Produce · 300 g</div></div></div>
-            <div class="days">3 days<small>Best-before</small></div><div class="pill low">Low</div>
-            <button class="act" data-go="recipes">Plan meal</button>
-          </div>
-          <div class="row">
-            <div class="item"><div class="emoji">🍌</div><div><div class="nm">Bananas</div><div class="mt">Produce · 4 pcs</div></div></div>
-            <div class="days">3 days<small>Best-before</small></div><div class="pill med">Medium</div>
-            <button class="act" data-go="recipes">Smoothie idea</button>
-          </div>
+          <h3>🔥 Today's Priority Rescue — Spoilage Risk<span class="tag">✓ Eat · ❄️ Freeze (+30d) · 🍲 Pot</span></h3>
+          <div id="dashUseSoonRows"></div>
         </div>
 
         <div class="card">
@@ -294,27 +421,27 @@
         <div class="card">
           <h3>📦 Inventory by Category</h3>
           <div class="cat">
-            <div class="c"><span>Produce</span><div class="track"><i style="width:88%;background:#16a34a"></i></div><span class="n">14</span></div>
-            <div class="c"><span>Pantry</span><div class="track"><i style="width:56%;background:#65a30d"></i></div><span class="n">9</span></div>
-            <div class="c"><span>Dairy</span><div class="track"><i style="width:50%;background:#0ea5e9"></i></div><span class="n">8</span></div>
-            <div class="c"><span>Meat</span><div class="track"><i style="width:38%;background:#ef4444"></i></div><span class="n">6</span></div>
-            <div class="c"><span>Bakery</span><div class="track"><i style="width:31%;background:#f59e0b"></i></div><span class="n">5</span></div>
+            <div class="c"><span>Produce</span><div class="track"><i style="width:88%;background:#16A34A"></i></div><span class="n">4</span></div>
+            <div class="c"><span>Dairy</span><div class="track"><i style="width:62%;background:#0EA5E9"></i></div><span class="n">3</span></div>
+            <div class="c"><span>Meat</span><div class="track"><i style="width:50%;background:#EF4444"></i></div><span class="n">3</span></div>
+            <div class="c"><span>Bakery</span><div class="track"><i style="width:30%;background:#F59E0B"></i></div><span class="n">1</span></div>
+            <div class="c"><span>Pantry</span><div class="track"><i style="width:30%;background:#65A30D"></i></div><span class="n">1</span></div>
           </div>
         </div>
         <div class="card">
-          <h3>➕ Add Items</h3>
+          <h3>➕ 3-Second AI Capture</h3>
           <div class="methods">
-            <button class="method" data-go="add"><div class="mi">🧾</div><div class="mtx">Scan Receipt<small>Auto-parse items &amp; dates</small></div></button>
-            <button class="method" data-go="add"><div class="mi">📷</div><div class="mtx">Photo Recognition<small>Snap a shelf or item</small></div></button>
-            <button class="method" data-go="add"><div class="mi">✍️</div><div class="mtx">Manual Entry<small>Type item + best-before</small></div></button>
+            <button class="method" data-go="add"><div class="mi">🧾</div><div class="mtx">Scan Receipt (Laser OCR)<small>Auto-parse PARKnSHOP / Wellcome dates</small></div></button>
+            <button class="method" data-go="add"><div class="mi">📷</div><div class="mtx">Photo &amp; Expiry Label Scan<small>Distinguishes best-before vs use-by</small></div></button>
+            <button class="method" data-go="add"><div class="mi">🎙️</div><div class="mtx">Voice / Quick Entry<small>Say item name + shelf life</small></div></button>
           </div>
         </div>
         <div class="card">
-          <h3>🌍 Sustainability Impact</h3>
+          <h3>🌱 Household Living Eco-Tree</h3>
           <div class="impact">
-            <div class="imp"><span class="k">CO₂e avoided (month)</span><span class="v">4.1 kg</span></div>
-            <div class="imp"><span class="k">Items rescued from bin</span><span class="v">11</span></div>
-            <div class="imp"><span class="k">Avg. spoilage risk</span><span class="v" style="color:#16a34a">Low ↓</span></div>
+            <div class="imp"><span class="k">CO₂e avoided (month)</span><span class="v"><span id="webCo2Val">4.1</span> kg</span></div>
+            <div class="imp"><span class="k">Items rescued from bin</span><span class="v" id="webRescuedVal2">11</span></div>
+            <div class="imp"><span class="k">Eco-Tree Growth Stage</span><span class="v" style="color:var(--green)" id="webTreeStageTxt">Stage 3 Lush 🌳</span></div>
             <div class="sdg"><span class="num">12.3</span> Halve per-capita food waste by 2030</div>
           </div>
         </div>
@@ -326,12 +453,12 @@
       </div>
     </section>
 
-    <!-- ========== SCREEN 2 : MY FRIDGE ========== -->
+    <!-- ========== SCREEN 2 : MY FRIDGE (3-Zone Spatial Shelf + Grid) ========== -->
     <section class="screen" id="screen-fridge">
       <div class="topbar">
-        <div class="hello"><h2>My Fridge</h2><p>42 items tracked · sorted by spoilage risk</p></div>
+        <div class="hello"><h2>My Fridge — 3-Zone Spatial View</h2><p>Mirrors your real refrigerator compartments · tap ✓ to eat, ❄️ to freeze (+30d), or 🍲 to add to pot</p></div>
         <div class="spacer"></div>
-        <div class="search">🔍 <input placeholder="Search my fridge…"></div>
+        <div class="search">🔍 <input id="webFridgeSearch" placeholder="Search my fridge…"></div>
         <button class="btn primary" data-go="add">＋ Add Item</button>
       </div>
 
@@ -345,82 +472,33 @@
           <button class="chip" data-cat="pantry">Pantry</button>
         </div>
         <div class="chips" id="riskChips">
-          <button class="chip" data-risk="high">High risk only</button>
+          <button class="chip" data-risk="high">⚠ High risk only</button>
+        </div>
+        <div class="view-seg" id="webViewToggle">
+          <button class="vbtn on" data-view="shelf">🧊 3-Zone Shelf View</button>
+          <button class="vbtn" data-view="grid">▦ Classic Grid</button>
         </div>
       </div>
 
-      <div class="grid-items" id="itemGrid">
-        <div class="icard" data-cat="produce" data-risk="high">
-          <div class="badge pill high">High</div>
-          <div class="top"><div class="e">🥬</div><div><div class="nm">Baby Spinach</div><div class="sub">Produce · 200 g</div></div></div>
-          <div class="meta"><span>Best-before <b>1 day</b></span><span>Fridge</span></div>
+      <div id="webShelfContainer"></div>
+      <div class="grid-items" id="itemGrid" style="display:none"></div>
+
+      <div class="pot-bar" id="webPotBar">
+        <span style="font-size:24px">🍲</span>
+        <div class="ptxt">
+          <b>Interactive Rescue Cooking Pot (<span id="webPotCount">0</span> items selected)</b>
+          <small id="webPotSub">Click 🍲 on any expiring item above to synthesize a rescue recipe</small>
         </div>
-        <div class="icard" data-cat="meat" data-risk="high">
-          <div class="badge pill high">High</div>
-          <div class="top"><div class="e">🍗</div><div><div class="nm">Chicken Breast</div><div class="sub">Meat · 400 g</div></div></div>
-          <div class="meta"><span>Use-by <b>1 day</b></span><span>Fridge</span></div>
-        </div>
-        <div class="icard" data-cat="dairy" data-risk="med">
-          <div class="badge pill med">Medium</div>
-          <div class="top"><div class="e">🥛</div><div><div class="nm">Whole Milk</div><div class="sub">Dairy · 1 L</div></div></div>
-          <div class="meta"><span>Use-by <b>2 days</b></span><span>Fridge</span></div>
-        </div>
-        <div class="icard" data-cat="dairy" data-risk="med">
-          <div class="badge pill med">Medium</div>
-          <div class="top"><div class="e">🥣</div><div><div class="nm">Greek Yoghurt</div><div class="sub">Dairy · 500 g</div></div></div>
-          <div class="meta"><span>Best-before <b>2 days</b></span><span>Fridge</span></div>
-        </div>
-        <div class="icard" data-cat="produce" data-risk="low">
-          <div class="badge pill low">Low</div>
-          <div class="top"><div class="e">🍅</div><div><div class="nm">Cherry Tomatoes</div><div class="sub">Produce · 300 g</div></div></div>
-          <div class="meta"><span>Best-before <b>3 days</b></span><span>Fridge</span></div>
-        </div>
-        <div class="icard" data-cat="bakery" data-risk="high">
-          <div class="badge pill high">High</div>
-          <div class="top"><div class="e">🍞</div><div><div class="nm">Sourdough Bread</div><div class="sub">Bakery · 1 loaf</div></div></div>
-          <div class="meta"><span>Best-before <b>1 day</b></span><span>Pantry</span></div>
-        </div>
-        <div class="icard" data-cat="produce" data-risk="low">
-          <div class="badge pill low">Low</div>
-          <div class="top"><div class="e">🥕</div><div><div class="nm">Carrots</div><div class="sub">Produce · 500 g</div></div></div>
-          <div class="meta"><span>Best-before <b>6 days</b></span><span>Fridge</span></div>
-        </div>
-        <div class="icard" data-cat="dairy" data-risk="low">
-          <div class="badge pill low">Low</div>
-          <div class="top"><div class="e">🧀</div><div><div class="nm">Cheddar Cheese</div><div class="sub">Dairy · 250 g</div></div></div>
-          <div class="meta"><span>Best-before <b>9 days</b></span><span>Fridge</span></div>
-        </div>
-        <div class="icard" data-cat="meat" data-risk="low">
-          <div class="badge pill low">Low</div>
-          <div class="top"><div class="e">🥚</div><div><div class="nm">Eggs (6)</div><div class="sub">Meat · 6 pcs</div></div></div>
-          <div class="meta"><span>Best-before <b>11 days</b></span><span>Fridge</span></div>
-        </div>
-        <div class="icard" data-cat="pantry" data-risk="low">
-          <div class="badge pill low">Low</div>
-          <div class="top"><div class="e">🍚</div><div><div class="nm">Jasmine Rice</div><div class="sub">Pantry · 1 kg</div></div></div>
-          <div class="meta"><span>Best-before <b>120 days</b></span><span>Pantry</span></div>
-        </div>
-        <div class="icard" data-cat="pantry" data-risk="med">
-          <div class="badge pill med">Medium</div>
-          <div class="top"><div class="e">🍝</div><div><div class="nm">Fresh Pasta</div><div class="sub">Pantry · 250 g</div></div></div>
-          <div class="meta"><span>Best-before <b>4 days</b></span><span>Fridge</span></div>
-        </div>
-        <div class="icard" data-cat="produce" data-risk="med">
-          <div class="badge pill med">Medium</div>
-          <div class="top"><div class="e">🍌</div><div><div class="nm">Bananas</div><div class="sub">Produce · 4 pcs</div></div></div>
-          <div class="meta"><span>Best-before <b>3 days</b></span><span>Counter</span></div>
-        </div>
+        <button class="btn primary" id="btnWebCookPot">Synthesize Recipe →</button>
       </div>
     </section>
 
     <!-- ========== SCREEN 3 : RECIPES ========== -->
     <section class="screen" id="screen-recipes">
       <div class="topbar">
-        <div class="hello"><h2>Recipes</h2><p>Ranked by how many expiring items they rescue</p></div>
-        <div class="spacer"></div>
-        <button class="btn ghost">Sort: Match %</button>
+        <div class="hello"><h2>Rescue Recipes</h2><p>Ranked by how many expiring items they rescue</p></div>
       </div>
-      <div class="hint">💡 Tip: recipes with a higher match % use more of your <b>soon-to-expire</b> items. Click any card to preview ingredients and steps.</div>
+      <div class="hint">💡 Tip: recipes with a higher match % use more of your <b>soon-to-expire</b> items. Click any card to preview ingredients and mark as cooked.</div>
 
       <div class="rgrid">
         <div class="rcard" data-recipe="powerbowl">
@@ -455,48 +533,41 @@
             <div class="foot"><span>Easy</span><span>·</span><span>2 servings</span><span class="pct">68%</span></div>
           </div>
         </div>
-        <div class="rcard" data-recipe="smoothie">
-          <div class="hero" style="background:#dcfce7">🥤</div>
-          <div class="body">
-            <div class="t">Banana-Yoghurt Smoothie</div>
-            <div class="s">Uses 2 expiring items · saves 0.2 kg · 5 min</div>
-            <div class="foot"><span>Easy</span><span>·</span><span>1 serving</span><span class="pct">65%</span></div>
-          </div>
-        </div>
       </div>
     </section>
 
     <!-- ========== SCREEN 4 : ADD ITEM ========== -->
     <section class="screen" id="screen-add">
       <div class="topbar">
-        <div class="hello"><h2>Add Item</h2><p>Three ways to get groceries into your fridge</p></div>
+        <div class="hello"><h2>Add Groceries</h2><p>Three ways to get groceries into your household fridge</p></div>
       </div>
 
       <div class="cols3" style="grid-template-columns:repeat(3,1fr)">
         <div class="card">
           <h3>🧾 Scan Receipt</h3>
-          <p style="font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:12px">Photograph a supermarket receipt — items, quantities and purchase dates are parsed automatically.</p>
-          <button class="btn primary" id="btnScan">Start scan</button>
+          <p style="font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:12px">Photograph a PARKnSHOP or Wellcome receipt — items, quantities and dates are parsed automatically.</p>
+          <button class="btn primary" id="btnScan">Start laser scan</button>
         </div>
         <div class="card">
           <h3>📷 Photo Recognition</h3>
-          <p style="font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:12px">Snap a shelf or single item. The model suggests a category and a typical storage life.</p>
+          <p style="font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:12px">Snap a shelf or date label. Distinguishes safety use-by from quality best-before.</p>
           <button class="btn ghost" id="btnPhoto">Open camera</button>
         </div>
         <div class="card">
-          <h3>✍️ Manual Entry</h3>
-          <p style="font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:12px">Type the item name and its best-before / use-by date when no packaging is available.</p>
+          <h3>🎙️ Voice / Manual Entry</h3>
+          <p style="font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:12px">Speak or type item name + best-before / use-by date with quick chips.</p>
           <button class="btn ghost" id="btnManual">Add manually</button>
         </div>
       </div>
 
       <div class="card" style="margin-top:14px">
-        <h3>Scan preview<span class="tag">Simulated</span></h3>
-        <div class="scanbox">
+        <h3>AI Vision Scan Preview<span class="tag">Gemini 2.5 Flash</span></h3>
+        <div class="scanbox" id="webScanBox">
+          <div class="laser"></div>
           <div class="big">🧾</div>
-          <h4 id="scanTitle">Drop or select a receipt photo</h4>
-          <p id="scanSub">FreshTrack will extract item names, quantities and dates.</p>
-          <button class="btn primary" id="btnScan2">Simulate scan</button>
+          <h4 id="scanTitle">Drop or select a supermarket receipt photo</h4>
+          <p id="scanSub">FreshTrack will extract item names, weights and best-before / use-by dates.</p>
+          <button class="btn primary" id="btnScan2">Simulate laser scan</button>
           <div class="progress" id="progress"><i id="progressBar"></i></div>
         </div>
 
@@ -508,14 +579,14 @@
                 <th style="text-align:left;padding:9px 8px;border-bottom:1px solid var(--line);font-size:11px;color:var(--muted)">ITEM</th>
                 <th style="text-align:left;padding:9px 8px;border-bottom:1px solid var(--line);font-size:11px;color:var(--muted)">QTY</th>
                 <th style="text-align:left;padding:9px 8px;border-bottom:1px solid var(--line);font-size:11px;color:var(--muted)">BEST-BEFORE</th>
-                <th style="text-align:left;padding:9px 8px;border-bottom:1px solid var(--line);font-size:11px;color:var(--muted)">USE-BY</th>
+                <th style="text-align:left;padding:9px 8px;border-bottom:1px solid var(--line);font-size:11px;color:var(--muted)">USE-BY (SAFETY)</th>
               </tr>
             </thead>
             <tbody>
-              <tr><td style="padding:9px 8px;border-bottom:1px solid var(--line)">🥬 Baby Spinach</td><td style="padding:9px 8px;border-bottom:1px solid var(--line)">200 g</td><td style="padding:9px 8px;border-bottom:1px solid var(--line)">2026-10-15</td><td style="padding:9px 8px;border-bottom:1px solid var(--line)">—</td></tr>
-              <tr><td style="padding:9px 8px;border-bottom:1px solid var(--line)">🍗 Chicken Breast</td><td style="padding:9px 8px;border-bottom:1px solid var(--line)">400 g</td><td style="padding:9px 8px;border-bottom:1px solid var(--line)">—</td><td style="padding:9px 8px;border-bottom:1px solid var(--line)">2026-10-15</td></tr>
-              <tr><td style="padding:9px 8px;border-bottom:1px solid var(--line)">🥛 Whole Milk</td><td style="padding:9px 8px;border-bottom:1px solid var(--line)">1 L</td><td style="padding:9px 8px;border-bottom:1px solid var(--line)">—</td><td style="padding:9px 8px;border-bottom:1px solid var(--line)">2026-10-16</td></tr>
-              <tr><td style="padding:9px 8px">🍞 Sourdough Bread</td><td style="padding:9px 8px">1 loaf</td><td style="padding:9px 8px">2026-10-15</td><td style="padding:9px 8px">—</td></tr>
+              <tr><td style="padding:9px 8px;border-bottom:1px solid var(--line)">🥬 Organic Baby Spinach</td><td style="padding:9px 8px;border-bottom:1px solid var(--line)">200 g</td><td style="padding:9px 8px;border-bottom:1px solid var(--line)">+3 days</td><td style="padding:9px 8px;border-bottom:1px solid var(--line)">—</td></tr>
+              <tr><td style="padding:9px 8px;border-bottom:1px solid var(--line)">🍗 Chilled Chicken Breast</td><td style="padding:9px 8px;border-bottom:1px solid var(--line)">400 g</td><td style="padding:9px 8px;border-bottom:1px solid var(--line)">—</td><td style="padding:9px 8px;border-bottom:1px solid var(--line);color:var(--red);font-weight:700">+2 days ⚠</td></tr>
+              <tr><td style="padding:9px 8px;border-bottom:1px solid var(--line)">🥛 Meiji Fresh Milk</td><td style="padding:9px 8px;border-bottom:1px solid var(--line)">1 L</td><td style="padding:9px 8px;border-bottom:1px solid var(--line)">—</td><td style="padding:9px 8px;border-bottom:1px solid var(--line);color:var(--red);font-weight:700">+4 days ⚠</td></tr>
+              <tr><td style="padding:9px 8px">🍞 Sourdough Bread</td><td style="padding:9px 8px">1 loaf</td><td style="padding:9px 8px">+3 days</td><td style="padding:9px 8px">—</td></tr>
             </tbody>
           </table>
           <div style="display:flex;gap:10px;margin-top:14px">
@@ -529,14 +600,14 @@
     <!-- ========== SCREEN 5 : IMPACT ========== -->
     <section class="screen" id="screen-impact">
       <div class="topbar">
-        <div class="hello"><h2>Sustainability Impact</h2><p>How your household behaviour maps to SDG 12.3</p></div>
+        <div class="hello"><h2>Sustainability Impact &amp; Living Eco-Tree</h2><p>How your household behaviour maps to UN SDG 12.3</p></div>
       </div>
 
       <div class="kpis">
-        <div class="kpi"><div class="lab">FOOD WASTE SAVED</div><div class="val">3.2 <small>kg</small></div><div class="sub">this month</div></div>
-        <div class="kpi"><div class="lab">MONEY SAVED</div><div class="val">HK$486</div><div class="sub">11 rescued items</div></div>
-        <div class="kpi"><div class="lab">CO₂e AVOIDED</div><div class="val">4.1 <small>kg</small></div><div class="sub">vs sending to landfill</div></div>
-        <div class="kpi"><div class="lab">ITEMS RESCUED</div><div class="val">11</div><div class="sub">from the bin this month</div></div>
+        <div class="kpi"><div class="lab">FOOD WASTE SAVED</div><div class="val"><span id="impWasteVal">3.2</span> <small>kg</small></div><div class="sub">this month</div></div>
+        <div class="kpi"><div class="lab">MONEY SAVED</div><div class="val">HK$<span id="impMoneyVal">486</span></div><div class="sub">rescued from bin</div></div>
+        <div class="kpi"><div class="lab">CO₂e AVOIDED</div><div class="val"><span id="impCo2Val">4.1</span> <small>kg</small></div><div class="sub">vs sending to landfill</div></div>
+        <div class="kpi"><div class="lab">ITEMS RESCUED</div><div class="val" id="impRescuedVal">11</div><div class="sub">from the bin this month</div></div>
       </div>
 
       <div class="cols">
@@ -548,17 +619,17 @@
             <div class="bar"><b>2.1</b><i style="height:63%"></i><span>Jul</span></div>
             <div class="bar"><b>2.4</b><i style="height:72%"></i><span>Aug</span></div>
             <div class="bar"><b>2.7</b><i style="height:81%"></i><span>Sep</span></div>
-            <div class="bar"><b>3.2</b><i style="height:96%"></i><span>Oct</span></div>
+            <div class="bar"><b id="impOctLbl">3.2</b><i style="height:95%"></i><span>Oct</span></div>
           </div>
         </div>
         <div class="card">
-          <h3>🌍 SDG Alignment</h3>
+          <h3>🌍 UN SDG Alignment</h3>
           <div class="impact">
             <div class="sdg" style="width:100%;justify-content:flex-start"><span class="num">12.3</span> Halve per-capita global food waste by 2030</div>
-            <div class="sdg" style="width:100%;justify-content:flex-start;background:#134e4a"><span class="num">12.5</span> Substantially reduce waste generation</div>
-            <div class="sdg" style="width:100%;justify-content:flex-start;background:#1e3a8a"><span class="num">13.3</span> Improve climate-change awareness</div>
-            <div class="imp" style="margin-top:4px"><span class="k">Household target</span><span class="v">≤ 1.5 kg / month</span></div>
-            <div class="imp"><span class="k">Current</span><span class="v" style="color:#16a34a">3.2 kg saved ↑</span></div>
+            <div class="sdg" style="width:100%;justify-content:flex-start;background:#134E4A"><span class="num">12.5</span> Substantially reduce waste generation</div>
+            <div class="sdg" style="width:100%;justify-content:flex-start;background:#1E3A8A"><span class="num">13.3</span> Improve climate-change awareness</div>
+            <div class="imp" style="margin-top:4px"><span class="k">Household target</span><span class="v">≤ 1.5 kg waste / month</span></div>
+            <div class="imp"><span class="k">Current status</span><span class="v" style="color:var(--green)">Stage 3 Lush Eco-Tree 🌳</span></div>
           </div>
         </div>
       </div>
@@ -588,7 +659,7 @@
     <h5>Steps</h5>
     <ol id="mSteps"></ol>
     <div style="display:flex;gap:10px;margin-top:16px">
-      <button class="btn primary" id="mCook">Mark as cooked</button>
+      <button class="btn primary" id="mCook">🍳 Mark as cooked (+0.6kg Eco)</button>
       <button class="btn ghost" id="mClose2">Close</button>
     </div>
   </div>
@@ -598,11 +669,169 @@
 
 <script>
 (function(){
+  var ITEMS = [
+    { id:'sp1', emoji:'🥬', name:'Baby Spinach', cat:'produce', weight:'200 g', days:1, maxDays:5, type:'Best-before', risk:'high', zone:'crisper', buyer:'M', inPot:false },
+    { id:'ck1', emoji:'🍗', name:'Chicken Breast', cat:'meat', weight:'400 g', days:1, maxDays:3, type:'Use-by', risk:'high', zone:'chiller', buyer:'D', inPot:false },
+    { id:'sd1', emoji:'🍞', name:'Sourdough Bread', cat:'bakery', weight:'1 loaf', days:1, maxDays:4, type:'Best-before', risk:'high', zone:'chiller', buyer:'D', inPot:false },
+    { id:'mk1', emoji:'🥛', name:'Whole Milk', cat:'dairy', weight:'1 L', days:2, maxDays:6, type:'Use-by', risk:'med', zone:'chiller', buyer:'M', inPot:false },
+    { id:'yg1', emoji:'🥣', name:'Greek Yoghurt', cat:'dairy', weight:'500 g', days:2, maxDays:10, type:'Best-before', risk:'med', zone:'chiller', buyer:'D', inPot:false },
+    { id:'bn1', emoji:'🍌', name:'Bananas', cat:'produce', weight:'4 pcs', days:3, maxDays:5, type:'Best-before', risk:'med', zone:'crisper', buyer:'M', inPot:false },
+    { id:'tm1', emoji:'🍅', name:'Cherry Tomatoes', cat:'produce', weight:'300 g', days:3, maxDays:7, type:'Best-before', risk:'low', zone:'crisper', buyer:'D', inPot:false },
+    { id:'ps1', emoji:'🍝', name:'Fresh Pasta', cat:'pantry', weight:'250 g', days:4, maxDays:14, type:'Best-before', risk:'med', zone:'chiller', buyer:'D', inPot:false },
+    { id:'cr1', emoji:'🥕', name:'Carrots', cat:'produce', weight:'500 g', days:6, maxDays:14, type:'Best-before', risk:'low', zone:'crisper', buyer:'M', inPot:false },
+    { id:'ch1', emoji:'🧀', name:'Cheddar Cheese', cat:'dairy', weight:'250 g', days:9, maxDays:21, type:'Best-before', risk:'low', zone:'chiller', buyer:'D', inPot:false },
+    { id:'eg1', emoji:'🥚', name:'Eggs (6 pcs)', cat:'meat', weight:'6 pcs', days:11, maxDays:21, type:'Best-before', risk:'low', zone:'chiller', buyer:'M', inPot:false },
+    { id:'dm1', emoji:'🥟', name:'Frozen Pork Dumplings', cat:'meat', weight:'500 g', days:45, maxDays:60, type:'Best-before', risk:'low', zone:'freezer', buyer:'M', inPot:false }
+  ];
+
+  var stats = { wasteKg: 3.2, moneyHkd: 486, co2Kg: 4.1, rescuedCount: 11 };
+  var activeCat = 'all';
+  var highOnly = false;
+  var searchQuery = '';
+  var viewMode = 'shelf';
+  var lang = 'EN';
+
   var nav = document.getElementById('nav');
+  var toast = document.getElementById('toast');
+  var toastTimer = null;
+
+  function say(msg){
+    toast.textContent = msg;
+    toast.classList.add('on');
+    if (toastTimer) clearTimeout(toastTimer);
+    toastTimer = setTimeout(function(){ toast.classList.remove('on'); }, 2300);
+  }
+
+  function spawnLeaves(sourceEl){
+    var rect = sourceEl ? sourceEl.getBoundingClientRect() : { left: window.innerWidth/2, top: window.innerHeight/2 };
+    var target = document.getElementById('sideTreeCard');
+    var tRect = target ? target.getBoundingClientRect() : { left: 100, top: 300 };
+    for (var i=0;i<5;i++){
+      (function(idx){
+        var lf = document.createElement('div');
+        lf.className = 'leaf-particle';
+        lf.textContent = idx % 2 === 0 ? '🍃' : '✨';
+        lf.style.left = (rect.left + idx*8) + 'px';
+        lf.style.top = rect.top + 'px';
+        document.body.appendChild(lf);
+        requestAnimationFrame(function(){
+          lf.style.transform = 'translate(' + (tRect.left - rect.left) + 'px,' + (tRect.top - rect.top) + 'px) scale(0.4)';
+          lf.style.opacity = '0';
+        });
+        setTimeout(function(){ if (lf.parentNode) lf.parentNode.removeChild(lf); }, 720);
+      })(i);
+    }
+    if (target){ target.classList.remove('pulse'); void target.offsetWidth; target.classList.add('pulse'); }
+  }
+
+  function buildRingHTML(item){
+    var ratio = Math.max(0.08, Math.min(1, item.days / (item.maxDays || 7)));
+    var circ = 100.5;
+    var offset = (circ * (1 - ratio)).toFixed(1);
+    var col = item.risk === 'high' ? '#EF4444' : (item.risk === 'med' ? '#F59E0B' : '#16A34A');
+    return '<div class="ring-wrap">' +
+      '<svg viewBox="0 0 38 38">' +
+        '<circle cx="19" cy="19" r="16" fill="none" stroke="var(--line)" stroke-width="3"/>' +
+        '<circle cx="19" cy="19" r="16" fill="none" stroke="' + col + '" stroke-width="3" stroke-linecap="round" stroke-dasharray="' + circ + '" stroke-dashoffset="' + offset + '"/>' +
+      '</svg>' +
+      '<span class="em">' + item.emoji + '</span>' +
+      '<span class="buyer" title="Added by member ' + item.buyer + '">' + item.buyer + '</span>' +
+    '</div>';
+  }
+
+  function renderWeb(){
+    // 1. Dashboard Use Soon Rows
+    var urgent = ITEMS.slice().sort(function(a,b){ return a.days - b.days; }).slice(0, 6);
+    document.getElementById('dashUseSoonRows').innerHTML = urgent.map(function(item){
+      var crit = (item.type === 'Use-by' && item.days <= 1);
+      return '<div class="row ' + (crit ? 'critical-halo' : '') + '">' +
+        '<div class="item">' + buildRingHTML(item) + '<div><div class="nm">' + item.name + '</div><div class="mt">' + item.weight + ' · Added by ' + item.buyer + '</div></div></div>' +
+        '<div class="days">' + item.days + (item.days===1?' day':' days') + '<small>' + item.type + (item.type==='Use-by'?' ⚠':'') + '</small></div>' +
+        '<div class="pill ' + item.risk + '">' + (item.risk==='high'?'High':(item.risk==='med'?'Medium':'Low')) + '</div>' +
+        '<div class="qacts">' +
+          '<button class="qbtn eat" data-act="eat" data-id="' + item.id + '" title="Mark eaten">✓</button>' +
+          '<button class="qbtn frz" data-act="freeze" data-id="' + item.id + '" title="Move to Freezer (+30d)">❄️</button>' +
+          '<button class="qbtn pot ' + (item.inPot?'in-pot':'') + '" data-act="pot" data-id="' + item.id + '" title="Add to Pot">🍲</button>' +
+        '</div>' +
+      '</div>';
+    }).join('');
+
+    // 2. Filtered Fridge Items
+    var filtered = ITEMS.filter(function(i){
+      var okCat = (activeCat === 'all' || i.cat === activeCat);
+      var okRisk = (!highOnly || i.risk === 'high');
+      var okQ = (!searchQuery || i.name.toLowerCase().indexOf(searchQuery) !== -1);
+      return okCat && okRisk && okQ;
+    });
+
+    // Classic Grid
+    document.getElementById('itemGrid').innerHTML = filtered.map(function(item){
+      return '<div class="icard">' +
+        buildRingHTML(item) +
+        '<div class="info"><div class="nm">' + item.name + '</div><div class="sub">' + item.weight + ' · ' + item.type + ' (' + item.days + 'd)</div></div>' +
+        '<div class="qacts">' +
+          '<button class="qbtn eat" data-act="eat" data-id="' + item.id + '">✓</button>' +
+          '<button class="qbtn frz" data-act="freeze" data-id="' + item.id + '">❄️</button>' +
+          '<button class="qbtn pot ' + (item.inPot?'in-pot':'') + '" data-act="pot" data-id="' + item.id + '">🍲</button>' +
+        '</div>' +
+      '</div>';
+    }).join('');
+
+    // 3-Zone Spatial Shelf
+    var zones = [
+      { key:'chiller', icon:'🥛', title:'Upper Chiller Compartment (Dairy, Meat & Ready-to-Eat)', temp:'4°C Chilled', cls:'' },
+      { key:'crisper', icon:'🥬', title:'Crisper Humidity Drawer (Fresh Greens & Produce)', temp:'6°C High-Humidity', cls:'' },
+      { key:'freezer', icon:'❄️', title:'Deep Freezer Compartment (Long-Term Frozen Storage)', temp:'-18°C Frozen', cls:'freezer' }
+    ];
+    document.getElementById('webShelfContainer').innerHTML = zones.map(function(z){
+      var zList = filtered.filter(function(i){ return i.zone === z.key; });
+      var html = zList.length ? zList.map(function(item){
+        return '<div class="icard">' +
+          buildRingHTML(item) +
+          '<div class="info"><div class="nm">' + item.name + '</div><div class="sub">' + item.weight + ' · ' + item.days + 'd (' + item.type + ')</div></div>' +
+          '<div class="qacts">' +
+            '<button class="qbtn eat" data-act="eat" data-id="' + item.id + '" title="Eat">✓</button>' +
+            (z.key !== 'freezer' ? '<button class="qbtn frz" data-act="freeze" data-id="' + item.id + '" title="Freeze +30d">❄️</button>' : '') +
+            '<button class="qbtn pot ' + (item.inPot?'in-pot':'') + '" data-act="pot" data-id="' + item.id + '" title="Add to Pot">🍲</button>' +
+          '</div>' +
+        '</div>';
+      }).join('') : '<div style="font-size:12px;color:var(--muted);padding:6px">No matching items in this compartment</div>';
+      return '<div class="shelf-zone ' + z.cls + '">' +
+        '<div class="shelf-zone-hd"><span>' + z.icon + ' ' + z.title + '</span><span class="tbadge">' + z.temp + '</span></div>' +
+        '<div class="grid-items">' + html + '</div>' +
+      '</div>';
+    }).join('');
+
+    // Update KPIs & Pot
+    var potItems = ITEMS.filter(function(i){ return i.inPot; });
+    document.getElementById('webPotCount').textContent = potItems.length;
+    document.getElementById('webPotSub').textContent = potItems.length
+      ? ('Selected for pot: ' + potItems.map(function(i){ return i.name; }).join(', '))
+      : 'Click 🍲 on any expiring item above to synthesize a rescue recipe';
+
+    var urgCnt = ITEMS.filter(function(i){ return i.risk !== 'low'; }).length;
+    document.getElementById('webKpiTracked').textContent = ITEMS.length;
+    document.getElementById('webKpiUrgent').textContent = urgCnt;
+    document.getElementById('dashUrgentCount').textContent = urgCnt + ' items';
+    document.getElementById('webKpiWaste').textContent = stats.wasteKg.toFixed(1);
+    document.getElementById('webKpiMoney').textContent = stats.moneyHkd;
+    document.getElementById('webKpiRescued').textContent = stats.rescuedCount;
+    document.getElementById('webCo2Val').textContent = stats.co2Kg.toFixed(1);
+    document.getElementById('webRescuedVal2').textContent = stats.rescuedCount;
+    document.getElementById('impWasteVal').textContent = stats.wasteKg.toFixed(1);
+    document.getElementById('impMoneyVal').textContent = stats.moneyHkd;
+    document.getElementById('impCo2Val').textContent = stats.co2Kg.toFixed(1);
+    document.getElementById('impRescuedVal').textContent = stats.rescuedCount;
+    document.getElementById('impOctLbl').textContent = stats.wasteKg.toFixed(1);
+    var lv = Math.min(5, Math.floor(stats.wasteKg / 1.2) + 1);
+    document.getElementById('sideTreeTitle').textContent = 'Lv.' + lv + ' Lush Eco-Tree';
+    document.getElementById('sideTreeSub').textContent = stats.wasteKg.toFixed(1) + ' kg rescued · SDG 12.3';
+    document.getElementById('webTreeStageTxt').textContent = 'Stage ' + lv + ' Lush 🌳';
+  }
 
   function go(name){
     var screens = document.querySelectorAll('.screen');
-    for (var i=0;i<screens.length;i++){ screens[i].classList.remove('on'); }
+    for (var i=0;i<screens.length;i++) screens[i].classList.remove('on');
     var target = document.getElementById('screen-' + name);
     if (target) target.classList.add('on');
     var btns = nav.querySelectorAll('button');
@@ -613,43 +842,92 @@
   }
 
   document.addEventListener('click', function(e){
-    var el = e.target.closest ? e.target.closest('[data-go]') : null;
-    if (el){ go(el.getAttribute('data-go')); }
+    if (!e.target.closest) return;
+    var actBtn = e.target.closest('[data-act]');
+    if (actBtn){
+      e.stopPropagation();
+      var act = actBtn.getAttribute('data-act');
+      var id = actBtn.getAttribute('data-id');
+      var idx = ITEMS.findIndex(function(x){ return x.id === id; });
+      if (idx === -1) return;
+      var item = ITEMS[idx];
+      if (act === 'eat'){
+        ITEMS.splice(idx, 1);
+        stats.wasteKg = Math.round((stats.wasteKg + 0.3)*10)/10;
+        stats.moneyHkd += 28;
+        stats.co2Kg = Math.round(stats.wasteKg * 1.28 * 10)/10;
+        stats.rescuedCount += 1;
+        spawnLeaves(actBtn);
+        renderWeb();
+        say('✓ Consumed ' + item.name + ' — +0.3kg waste saved 🍃');
+      } else if (act === 'freeze'){
+        item.zone = 'freezer';
+        item.days += 30;
+        item.maxDays = 45;
+        item.risk = 'low';
+        renderWeb();
+        say('❄️ Moved ' + item.name + ' to Deep Freezer (+30 days extended)');
+      } else if (act === 'pot'){
+        item.inPot = !item.inPot;
+        renderWeb();
+        say(item.inPot ? ('🍲 Added ' + item.name + ' to rescue pot') : ('Removed ' + item.name + ' from pot'));
+      }
+      return;
+    }
+
+    var rec = e.target.closest('[data-recipe]');
+    if (rec){ openRecipe(rec.getAttribute('data-recipe')); return; }
+
+    var g = e.target.closest('[data-go]');
+    if (g){ go(g.getAttribute('data-go')); }
   });
 
-  /* ---- toast ---- */
-  var toast = document.getElementById('toast');
-  var toastTimer = null;
-  function say(msg){
-    toast.textContent = msg;
-    toast.classList.add('on');
-    if (toastTimer) clearTimeout(toastTimer);
-    toastTimer = setTimeout(function(){ toast.classList.remove('on'); }, 2200);
-  }
+  document.getElementById('webViewToggle').addEventListener('click', function(e){
+    var b = e.target.closest('[data-view]'); if (!b) return;
+    viewMode = b.getAttribute('data-view');
+    var all = this.querySelectorAll('.vbtn');
+    for (var i=0;i<all.length;i++) all[i].classList.toggle('on', all[i] === b);
+    document.getElementById('webShelfContainer').style.display = viewMode === 'shelf' ? '' : 'none';
+    document.getElementById('itemGrid').style.display = viewMode === 'grid' ? '' : 'none';
+  });
 
-  /* ---- recipe modal ---- */
+  document.getElementById('btnWebHelper').onclick = function(){
+    var on = document.body.classList.toggle('helper-mode');
+    this.classList.toggle('on', on);
+    say(on ? '👵 125% Large Font Mode On' : 'Standard font size restored');
+  };
+  document.getElementById('btnWebDark').onclick = function(){
+    var on = document.body.classList.toggle('dark-theme');
+    this.classList.toggle('on', on);
+    say(on ? '🌙 OLED Dark Mode On' : '☀️ Warm Oat Paper Mode On');
+  };
+  document.getElementById('btnWebLang').onclick = function(){
+    var order = ['EN','ZH','ID'];
+    lang = order[(order.indexOf(lang)+1)%3];
+    this.textContent = '🌐 ' + lang;
+    document.getElementById('lblWebGreeting').textContent = lang==='ZH' ? '晚上好，Douglas 👋' : (lang==='ID' ? 'Selamat malam, Douglas 👋' : 'Good evening, Douglas 👋');
+    say('🌐 Language switched to ' + lang);
+  };
+
+  /* ---- Recipe Modal ---- */
   var RECIPES = {
     powerbowl:{ icon:'🥗', title:'Spinach & Chicken Power Bowl', sub:'Uses 3 expiring items · saves 0.6 kg · 20 min',
-      ing:['🥬 Baby Spinach 200 g — best-before tomorrow','🍗 Chicken Breast 400 g — use-by tomorrow','🍅 Cherry Tomatoes 300 g','🍚 Jasmine Rice 1 cup','🫒 Olive oil, lemon, salt'],
-      steps:['Pan-sear the chicken breast until cooked through, then slice.','Wilt the spinach in the same pan for 1 minute.','Cook the rice and let it cool slightly.','Halve the tomatoes and combine everything in a bowl.','Dress with olive oil, lemon juice and a pinch of salt.'] },
+      ing:['🥬 Baby Spinach 200 g — best-before tomorrow','🍗 Chicken Breast 400 g — use-by tomorrow','🍅 Cherry Tomatoes 300 g','🍚 Jasmine Rice 1 cup'],
+      steps:['Pan-sear the chicken breast until cooked through (75°C), then slice.','Wilt the spinach in the same pan for 1 minute.','Halve the tomatoes and combine everything over warm rice.'] },
     dip:{ icon:'🍲', title:'Tomato-Yoghurt Dip', sub:'Uses 2 expiring items · saves 0.3 kg · 10 min',
-      ing:['🍅 Cherry Tomatoes 300 g','🥣 Greek Yoghurt 500 g','🧄 Garlic 1 clove','🫒 Olive oil, mint, salt'],
-      steps:['Roast or pan-blister the tomatoes until soft.','Cool, then fold into the Greek yoghurt.','Add crushed garlic, olive oil and chopped mint.','Chill for 10 minutes before serving.'] },
+      ing:['🍅 Cherry Tomatoes 300 g','🥣 Greek Yoghurt 500 g','🧄 Garlic, olive oil, mint'],
+      steps:['Roast or pan-blister the tomatoes until soft.','Cool, then fold into cold Greek yoghurt.'] },
     breadpudding:{ icon:'🍞', title:'Sourdough Bread Pudding', sub:'Uses 2 expiring items · saves 0.4 kg · 45 min',
-      ing:['🍞 Sourdough Bread 1 loaf — best-before tomorrow','🥛 Whole Milk 1 L — use-by in 2 days','🥚 Eggs 3 pcs','🍬 Sugar, cinnamon, butter'],
-      steps:['Tear the bread into chunks and place in a baking dish.','Whisk milk, eggs, sugar and cinnamon together.','Pour over the bread and let it soak for 15 minutes.','Bake at 180°C for about 30 minutes until set.'] },
+      ing:['🍞 Sourdough Bread 1 loaf — best-before tomorrow','🥛 Whole Milk 1 L — use-by in 2 days','🥚 Eggs 3 pcs'],
+      steps:['Tear bread into chunks in a baking dish.','Whisk milk, eggs, sugar and cinnamon, then soak for 15 minutes.','Bake at 180°C for 25 minutes.'] },
     pasta:{ icon:'🍝', title:'Creamy Tomato Pasta', sub:'Uses 2 expiring items · saves 0.2 kg · 15 min',
-      ing:['🍝 Fresh Pasta 250 g — best-before in 4 days','🍅 Cherry Tomatoes 300 g','🧀 Cheddar Cheese 250 g','🧄 Garlic, olive oil, pepper'],
-      steps:['Boil the pasta until al dente.','Sauté garlic and tomatoes until saucy.','Toss the pasta through the sauce.','Finish with grated cheddar and black pepper.'] },
-    smoothie:{ icon:'🥤', title:'Banana-Yoghurt Smoothie', sub:'Uses 2 expiring items · saves 0.2 kg · 5 min',
-      ing:['🍌 Bananas 4 pcs — best-before in 3 days','🥣 Greek Yoghurt 500 g','🥛 Whole Milk 1 L','🍯 Honey (optional)'],
-      steps:['Peel the bananas and break into chunks.','Add yoghurt, milk and a spoon of honey.','Blend until smooth.','Serve immediately over ice.'] }
+      ing:['🍝 Fresh Pasta 250 g','🍅 Cherry Tomatoes 300 g','🧀 Cheddar Cheese 250 g'],
+      steps:['Boil pasta until al dente.','Toss with sautéed garlic tomatoes and cheddar.'] }
   };
 
   var modal = document.getElementById('modal');
   function openRecipe(key){
-    var r = RECIPES[key];
-    if (!r) return;
+    var r = RECIPES[key] || RECIPES.powerbowl;
     document.getElementById('mIcon').textContent = r.icon;
     document.getElementById('mTitle').textContent = r.title;
     document.getElementById('mSub').textContent = r.sub;
@@ -660,93 +938,87 @@
     modal.classList.add('on');
   }
   function closeRecipe(){ modal.classList.remove('on'); }
-
-  document.addEventListener('click', function(e){
-    var el = e.target.closest ? e.target.closest('[data-recipe]') : null;
-    if (el){ openRecipe(el.getAttribute('data-recipe')); }
-  });
   document.getElementById('mClose').onclick = closeRecipe;
   document.getElementById('mClose2').onclick = closeRecipe;
-  document.getElementById('mCook').onclick = function(){ closeRecipe(); say('Marked as cooked — 0.6 kg rescued 🎉'); };
+  document.getElementById('btnWebCookPot').onclick = function(){ openRecipe('powerbowl'); };
+  document.getElementById('mCook').onclick = function(e){
+    closeRecipe();
+    stats.wasteKg = Math.round((stats.wasteKg + 0.6)*10)/10;
+    stats.moneyHkd += 54;
+    stats.co2Kg = Math.round(stats.wasteKg * 1.28 * 10)/10;
+    stats.rescuedCount += 2;
+    spawnLeaves(e.currentTarget);
+    renderWeb();
+    say('🎉 Marked as cooked — +0.6 kg rescued & Eco-Tree grew!');
+  };
   modal.addEventListener('click', function(e){ if (e.target === modal) closeRecipe(); });
 
-  /* ---- fridge filters ---- */
-  var catChips = document.getElementById('catChips');
-  var riskChips = document.getElementById('riskChips');
-  var grid = document.getElementById('itemGrid');
-  var activeCat = 'all';
-  var highOnly = false;
-
-  function applyFilters(){
-    var cards = grid.querySelectorAll('.icard');
-    var shown = 0;
-    for (var i=0;i<cards.length;i++){
-      var c = cards[i];
-      var okCat = (activeCat === 'all' || c.getAttribute('data-cat') === activeCat);
-      var okRisk = (!highOnly || c.getAttribute('data-risk') === 'high');
-      var show = okCat && okRisk;
-      c.style.display = show ? '' : 'none';
-      if (show) shown++;
-    }
-    return shown;
-  }
-  catChips.addEventListener('click', function(e){
+  /* ---- Filters ---- */
+  document.getElementById('catChips').addEventListener('click', function(e){
     var b = e.target.closest('[data-cat]'); if (!b) return;
     activeCat = b.getAttribute('data-cat');
-    var all = catChips.querySelectorAll('.chip');
-    for (var i=0;i<all.length;i++){ all[i].classList.toggle('on', all[i] === b); }
-    applyFilters();
+    var all = this.querySelectorAll('.chip');
+    for (var i=0;i<all.length;i++) all[i].classList.toggle('on', all[i] === b);
+    renderWeb();
   });
-  riskChips.addEventListener('click', function(e){
+  document.getElementById('riskChips').addEventListener('click', function(e){
     var b = e.target.closest('[data-risk]'); if (!b) return;
     highOnly = !highOnly;
     b.classList.toggle('on', highOnly);
-    var n = applyFilters();
-    say(highOnly ? (n + ' high-risk items shown') : 'Showing all items');
+    renderWeb();
+  });
+  document.getElementById('webFridgeSearch').addEventListener('input', function(){
+    searchQuery = this.value.trim().toLowerCase();
+    renderWeb();
   });
 
-  /* ---- scan simulation ---- */
+  /* ---- Scan Simulation ---- */
   var progress = document.getElementById('progress');
   var bar = document.getElementById('progressBar');
   var parsed = document.getElementById('parsed');
+  var scanBox = document.getElementById('webScanBox');
   var scanning = false;
 
   function runScan(){
     if (scanning) return;
     scanning = true;
+    scanBox.classList.add('scanning');
     parsed.classList.remove('on');
     progress.classList.add('on');
     bar.style.width = '0%';
-    document.getElementById('scanTitle').textContent = 'Reading receipt…';
-    document.getElementById('scanSub').textContent = 'Extracting item names, quantities and dates.';
+    document.getElementById('scanTitle').textContent = 'Laser scanning supermarket receipt…';
     var pct = 0;
     var timer = setInterval(function(){
-      pct += 8 + Math.random()*14;
+      pct += 20;
       if (pct >= 100){
         pct = 100;
         clearInterval(timer);
         setTimeout(function(){
+          scanBox.classList.remove('scanning');
           progress.classList.remove('on');
           parsed.classList.add('on');
-          document.getElementById('scanTitle').textContent = '4 items recognised';
-          document.getElementById('scanSub').textContent = 'Review the dates below, then confirm.';
+          document.getElementById('scanTitle').textContent = '4 items recognised by Gemini 2.5 Flash';
           scanning = false;
-        }, 300);
+        }, 260);
       }
       bar.style.width = pct + '%';
-    }, 220);
+    }, 180);
   }
   document.getElementById('btnScan').onclick = runScan;
   document.getElementById('btnScan2').onclick = runScan;
-  document.getElementById('btnPhoto').onclick = function(){ say('Camera capture is simulated in this mockup'); };
-  document.getElementById('btnManual').onclick = function(){ say('Manual entry form is simulated in this mockup'); };
-  document.getElementById('btnConfirm').onclick = function(){
+  document.getElementById('btnPhoto').onclick = runScan;
+  document.getElementById('btnManual').onclick = function(){ say('🎙️ Voice entry: Added 1L Meiji Milk & 200g Spinach'); };
+  document.getElementById('btnConfirm').onclick = function(e){
+    ITEMS.unshift({ id:'new_'+Date.now(), emoji:'🥬', name:'Organic Baby Spinach', cat:'produce', weight:'200 g', days:3, maxDays:5, type:'Best-before', risk:'med', zone:'crisper', buyer:'D', inPot:false });
     parsed.classList.remove('on');
-    document.getElementById('scanTitle').textContent = 'Drop or select a receipt photo';
-    document.getElementById('scanSub').textContent = 'FreshTrack will extract item names, quantities and dates.';
-    say('4 items added to My Fridge ✓');
+    renderWeb();
+    spawnLeaves(e.currentTarget);
+    go('fridge');
+    say('✅ 4 items added to your 3-Zone Spatial Fridge!');
   };
   document.getElementById('btnCancel').onclick = function(){ parsed.classList.remove('on'); say('Scan discarded'); };
+
+  renderWeb();
 })();
 </script>
 </body>
