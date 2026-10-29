@@ -1,6 +1,46 @@
 <view wx:if="{{loading}}" class="page-loading">加载中…</view>
 
 <block wx:elif="{{hasData}}">
+  <!-- AI 主动触发区 -->
+  <view class="ai-box">
+    <view class="ai-title">AI 今晚怎么煮</view>
+    <input class="ai-input" placeholder="例如：鸡胸+菜心，10 分钟能做什么" value="{{query}}" bindinput="onQueryInput" bindconfirm="onAsk" confirm-type="search" />
+    <view class="ai-row">
+      <button class="btn-ai" bindtap="onAiTonight" disabled="{{aiLoading}}">{{aiLoading ? '生成中…' : '今晚怎么煮'}}</button>
+      <button class="btn-ai-ask" bindtap="onAsk" disabled="{{aiLoading}}">问 AI</button>
+    </view>
+    <view wx:if="{{aiError}}" class="ai-error">{{aiError}}</view>
+    <view wx:if="{{aiDisclaimer}}" class="ai-disclaimer">{{aiDisclaimer}}</view>
+  </view>
+
+  <!-- AI 结果 -->
+  <view class="card rcp ai" wx:for="{{aiRecipes}}" wx:for-index="aiIdx" wx:key="title">
+    <view class="row">
+      <view class="grow">
+        <view class="rcp-title">🤖 {{item.title}}</view>
+        <view class="muted rcp-meta">{{item.prep_time_min}} 分钟 · {{item.difficulty}} · {{item.servings}} 人份</view>
+      </view>
+      <view class="ai-badge">AI</view>
+    </view>
+    <view wx:if="{{item.reason}}" class="ai-reason">{{item.reason}}</view>
+    <view class="rcp-tags" wx:if="{{item.uses_expiring.length}}">
+      <text class="tag" wx:for="{{item.uses_expiring}}" wx:for-item="ue" wx:key="*this">临期 {{ue}}</text>
+    </view>
+    <view class="ai-actions">
+      <button class="btn-ghost mini" size="mini" data-idx="{{aiIdx}}" bindtap="save">收藏</button>
+      <button class="btn-ghost mini" size="mini" data-idx="{{aiIdx}}" bindtap="cookAi">下厨</button>
+      <button class="btn-ghost mini" size="mini" data-idx="{{aiIdx}}" bindtap="toggleAi">{{item._open ? '收起' : '详情'}}</button>
+    </view>
+    <view wx:if="{{item._open}}" class="detail">
+      <view class="sec">用料</view>
+      <view class="ing" wx:for="{{item.ingredients}}" wx:for-item="ing" wx:key="name">{{ing.name}}<text wx:if="{{ing.substitute}}" class="sub">（可替：{{ing.substitute}}）</text></view>
+      <view class="sec">步骤</view>
+      <view class="step" wx:for="{{item.steps}}" wx:for-item="s" wx:for-index="si" wx:key="*this">{{si + 1}}. {{s}}</view>
+    </view>
+  </view>
+
+  <!-- 本地轻量匹配（常驻 + 离线兜底） -->
+  <view class="section-title">本周抢救清单</view>
   <view class="card rcp" wx:for="{{recipes}}" wx:key="id">
     <view class="row" data-id="{{item.id}}" bindtap="toggle">
       <view class="grow">
