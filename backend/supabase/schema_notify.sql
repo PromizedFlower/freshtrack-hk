@@ -2,8 +2,17 @@
 -- A pluggable notification model: expiry alerts are enqueued as rows, then dispatched by
 -- the notify edge function across any channel (WeChat subscribe / Web Push / email / in-app).
 
-CREATE TYPE IF NOT EXISTS notification_channel AS ENUM ('wechat_subscribe', 'web_push', 'email', 'in_app');
-CREATE TYPE IF NOT EXISTS notification_status AS ENUM ('pending', 'sent', 'failed');
+-- NOTE: PostgreSQL does not support CREATE TYPE IF NOT EXISTS — use a DO block instead.
+DO $$ BEGIN
+    CREATE TYPE notification_channel AS ENUM ('wechat_subscribe', 'web_push', 'email', 'in_app');
+EXCEPTION
+    WHEN duplicate_object THEN NULL;
+END $$;
+DO $$ BEGIN
+    CREATE TYPE notification_status AS ENUM ('pending', 'sent', 'failed');
+EXCEPTION
+    WHEN duplicate_object THEN NULL;
+END $$;
 
 CREATE TABLE IF NOT EXISTS notifications (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
