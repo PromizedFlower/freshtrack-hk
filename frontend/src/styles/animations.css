@@ -1,0 +1,119 @@
+/* FreshTrack HK — Golden Fusion Lightweight Animations & Effects (Phase 4)
+   纯 CSS3 GPU 硬件加速动效，零重型第三方库依赖 */
+
+/* 1. 特效 1: Use-by 临期 24 小时高危食材「珊瑚红呼吸光晕」 */
+@keyframes ft-risk-halo {
+  0% {
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.45);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(239, 68, 68, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+  }
+}
+
+.ft-risk-card--critical {
+  animation: ft-risk-halo 2.4s infinite var(--ft-ease-soft);
+  border-color: rgba(239, 68, 68, 0.4) !important;
+}
+
+/* 2. 特效 2: 冰箱开门顶部「冰蓝冷气与顶灯柔光渐变」 */
+@keyframes ft-fridge-door-glow {
+  0% {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.ft-fridge-shelf-container::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 90px;
+  background: radial-gradient(ellipse at 50% 0%, rgba(186, 230, 253, 0.45), transparent 75%);
+  pointer-events: none;
+  animation: ft-fridge-door-glow 450ms var(--ft-ease-spring) forwards;
+}
+
+/* 3. 特效 3: 小票激光扫描线动画 */
+@keyframes ft-scanner-laser {
+  0% {
+    top: 5%;
+    opacity: 0.2;
+  }
+  50% {
+    top: 92%;
+    opacity: 0.95;
+  }
+  100% {
+    top: 5%;
+    opacity: 0.2;
+  }
+}
+
+.ft-scanner-laser-line {
+  position: absolute;
+  left: 6%;
+  right: 6%;
+  height: 3px;
+  background: var(--ft-brand-green);
+  box-shadow: 0 0 12px var(--ft-brand-green), 0 0 24px rgba(22, 163, 74, 0.6);
+  border-radius: 999px;
+  animation: ft-scanner-laser 1.6s infinite ease-in-out;
+}
+
+/* 4. 特效 4: 识别商品逐行向上微弹渐显 (Staggered Fade-in) */
+@keyframes ft-row-stagger-in {
+  0% {
+    opacity: 0;
+    transform: translateY(14px) scale(0.98);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.ft-stagger-row {
+  animation: ft-row-stagger-in 340ms var(--ft-ease-spring) forwards;
+}
+
+/* 5. 特效 5: 汤锅投料 Q 弹缩放与蒸汽气泡 */
+@keyframes ft-pot-bounce {
+  0% { transform: scale(1); }
+  35% { transform: scale(1.22); }
+  65% { transform: scale(0.95); }
+  100% { transform: scale(1); }
+}
+
+@keyframes ft-steam-float {
+  0% { opacity: 0; transform: translateY(0) scale(0.6); }
+  50% { opacity: 0.8; }
+  100% { opacity: 0; transform: translateY(-22px) scale(1.1); }
+}
+
+.ft-pot-active {
+  animation: ft-pot-bounce 450ms var(--ft-ease-spring);
+}
+
+.ft-steam-bubble {
+  animation: ft-steam-float 750ms ease-out infinite;
+}
+
+/* 6. 特效 6: 减弱动态效果兜底 (无障碍 Accessibility) */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
