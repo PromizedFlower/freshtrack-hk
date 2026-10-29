@@ -1,9 +1,10 @@
-// Shared Gemini 2.5 Flash helper for FreshTrack HK edge functions.
+// Shared Gemini Flash helper for FreshTrack HK edge functions.
 // Enforces strict JSON output and adds resilience against malformed model responses.
 
 const GEMINI_API_KEY = Deno.env.get("GEMINI_API_KEY") || "";
+// New API keys can only use the current generation model (gemini-2.5-flash is retired for them).
 const GEMINI_ENDPOINT =
-  `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+  `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=${GEMINI_API_KEY}`;
 
 export interface GeminiRequest {
   systemPrompt: string;
@@ -36,33 +37,51 @@ export async function callGemini(req: GeminiRequest): Promise<any> {
     throw new Error("GEMINI_API_KEY is not configured.");
   }
 
+  const parts: any[] = [{ text: req.promptText }];
+  if (req.imageBase64) {
+    parts.push({ inlineData: { mimeType: req.mimeType || "image/jpeg", data: req.imageBase64 } });
+  }
+
   const payload = {
     systemInstruction: { parts: [{ text: req.systemPrompt }] },
-    contents: [
-      {
-        parts: [
-          { text: req.promptText },
-          { inlineData: { mimeType: req.mimeType || "image/jpeg", data: req.imageBase64 } },
-        ],
-      },
-    ],
+    contents: [{ parts }],
     generationConfig: { responseMimeType: "application/json" },
   };
 
-  const resp = await fetch(GEMINI_ENDPOINT, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload),
-  });
-
-  if (!resp.ok) {
-    const txt = await resp.text();
-    throw new Error(`Gemini API ${resp.status}: ${txt}`);
+  // Resilience: cap each call at 30s and retry transient 503/429 (Gemini spikes).
+  const MAX_ATTEMPTS = 3;
+  for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 30_000);
+    try {
+      const resp = await fetch(GEMINI_ENDPOINT, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+        signal: controller.signal,
+      });
+      if (!resp.ok) {
+        const txt = await resp.text();
+        if (attempt < MAX_ATTEMPTS - 1 && (resp.status === 503 || resp.status === 429)) {
+          await new Promise((r) => setTimeout(r, 800 * (attempt + 1)));
+          continue;
+        }
+        throw new Error(`Gemini API ${resp.status}: ${txt}`);
+      }
+      const data = await resp.json();
+      const raw = data?.candidates?.[0]?.content?.parts?.[0]?.text || "{}";
+      return safeParseJson(raw);
+    } catch (err) {
+      if (attempt < MAX_ATTEMPTS - 1 && (err instanceof Error && (err.name === "AbortError" || /Gemini API (503|429)/.test(err.message)))) {
+        await new Promise((r) => setTimeout(r, 800 * (attempt + 1)));
+        continue;
+      }
+      throw err;
+    } finally {
+      clearTimeout(timer);
+    }
   }
-
-  const data = await resp.json();
-  const raw = data?.candidates?.[0]?.content?.parts?.[0]?.text || "{}";
-  return safeParseJson(raw);
+  throw new Error("Gemini API failed after retries.");
 }
 
 // Standard CORS preflight handler for all scan functions.
