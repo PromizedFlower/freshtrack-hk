@@ -14,7 +14,12 @@ CREATE TABLE IF NOT EXISTS profiles (
 );
 
 -- 2. household_members: enables invite-code sharing (V2) and RLS membership checks.
-CREATE TYPE IF NOT EXISTS household_role AS ENUM ('owner', 'editor', 'viewer');
+-- NOTE: PostgreSQL does not support CREATE TYPE IF NOT EXISTS — use a DO block instead.
+DO $$ BEGIN
+    CREATE TYPE household_role AS ENUM ('owner', 'editor', 'viewer');
+EXCEPTION
+    WHEN duplicate_object THEN NULL;
+END $$;
 
 CREATE TABLE IF NOT EXISTS household_members (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
