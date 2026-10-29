@@ -1,10 +1,21 @@
-:root {
-  /* FreshTrack HK v1.1 Semantic Color Tokens — Decoupled for easy future UI redesign */
-  --ft-deep-green: #0B3B2E;
-  --ft-brand-green: #16A34A;
-  --ft-soft-green: #E7F6ED;
+/* FreshTrack HK — Golden Fusion Tokens (Phase 1)
+   燕麦再生纸质感 + 北欧有机生态 + OLED碳黑低碳深色 + 物理弹簧动效 */
 
-  /* 3-Tier Spoilage Risk Semantic Colors (WCAG AA/AAA High-Contrast Dark Text on Soft Fill) */
+:root {
+  /* 1. 画布与卡片材质：从冷灰绿升级为温暖的燕麦再生纸与米白卡片 */
+  --ft-bg-canvas: #F7F5F0;             /* 燕麦再生纸底色 */
+  --ft-bg-surface: #FFFEFA;            /* 柔和米白卡片面 */
+  --ft-bg-subtle: #EFECE6;             /* 次级嵌套面板底色 */
+  --ft-border-line: #E6E2D8;           /* 亚麻灰结构边框 */
+
+  /* 2. 品牌与生态主色 */
+  --ft-deep-green: #0B3B2E;            /* 森林深绿 (主要标题/大屏侧栏) */
+  --ft-brand-green: #16A34A;           /* 品牌生态绿 (主要行动号召) */
+  --ft-soft-green: #E7F6ED;            /* 浅嫩芽绿 (正向底色/低风险徽章底) */
+  --ft-accent-amber: #D97706;          /* 温暖厨台琥珀色 */
+  --ft-soft-amber: #FEF3C7;            /* 暖阳黄底色 */
+
+  /* 3. 三档腐坏风险语义色 (WCAG AAA级高对比度：浅底深字) */
   --ft-risk-high-text: #991B1B;
   --ft-risk-high-dot: #EF4444;
   --ft-risk-high-bg: #FEE2E2;
@@ -17,11 +28,46 @@
   --ft-risk-low-dot: #16A34A;
   --ft-risk-low-bg: #E7F6ED;
 
-  /* Neutral & Surface Hierarchy */
-  --ft-bg-canvas: #EEF2F0;
-  --ft-bg-surface: #FFFFFF;
-  --ft-text-ink: #0F1F1A;
-  --ft-text-muted: #6B7D76;
-  --ft-border-line: #E4EBE8;
-  --ft-notice-bg: #FFFBEB;
+  /* 4. 文字层级 */
+  --ft-text-ink: #0F1F1A;              /* 主正文深墨绿 */
+  --ft-text-muted: #6B7D76;            /* 次级辅助文字 */
+  --ft-notice-bg: #FFFBEB;             /* 安全免责提示底色 */
+
+  /* 5. 极简与家庭圆角/阴影 */
+  --ft-radius-sm: 8px;
+  --ft-radius-md: 14px;
+  --ft-radius-card: 20px;             /* 柔和家庭大圆角 */
+  --ft-radius-full: 9999px;
+  --ft-shadow-card: 0 4px 18px rgba(11, 59, 46, 0.04);
+  --ft-shadow-float: 0 8px 30px rgba(11, 59, 46, 0.12);
+
+  /* 6. 物理弹簧动效阻尼曲线 */
+  --ft-ease-spring: cubic-bezier(0.22, 1, 0.36, 1);
+  --ft-ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
+  --ft-duration-fast: 200ms;
+  --ft-duration-normal: 320ms;
+
+  /* 7. 长辈/家政大字模式动态缩放基准 */
+  --ft-font-scale: 1.0;
+}
+
+/* 8. OLED 低碳节能深色模式 (真实降低手机屏幕功耗，呼应数字环保) */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ft-bg-canvas: #071712;
+    --ft-bg-surface: #0F2920;
+    --ft-bg-subtle: #14362B;
+    --ft-border-line: #1B4537;
+
+    --ft-text-ink: #ECFDF5;
+    --ft-text-muted: #8EABA0;
+    --ft-notice-bg: #1C2618;
+
+    --ft-shadow-card: 0 4px 20px rgba(0, 0, 0, 0.35);
+  }
+}
+
+/* 9. 长辈/家政助理大字模式类名 */
+.helper-mode {
+  --ft-font-scale: 1.25;
 }
