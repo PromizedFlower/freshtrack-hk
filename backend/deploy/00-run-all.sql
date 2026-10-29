@@ -70,6 +70,7 @@ CREATE TABLE IF NOT EXISTS recipes (
     ingredients JSONB NOT NULL, -- e.g. [{"name": "Baby Spinach", "category": "Produce", "weight_g": 200, "required": true}]
     steps JSONB NOT NULL,       -- e.g. ["Wash spinach...", "Pan-sear chicken breast..."]
     tags TEXT[] DEFAULT '{}',
+    source TEXT NOT NULL DEFAULT 'local' CHECK (source IN ('local', 'ai')),
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
@@ -1188,4 +1189,51 @@ INSERT INTO recipes (title, prep_time_min, difficulty, servings, ingredients, st
  '[{"name":"Miso","weight_g":40},{"name":"Firm Tofu","weight_g":100},{"name":"Spring Onion","weight_g":20}]'::jsonb,
  '["Warm dashi/water (do not boil).", "Dissolve miso; add cubed tofu.", "Scallion to finish."]'::jsonb,
  ARRAY['Light','Vegan']);
+
+-- ===================== schema_recipes_ai.sql =====================
+-- AI Recipe Write-back (recipes.source + save_recipe). Added for the "AI 主导" recipes feature.
+
+CREATE OR REPLACE FUNCTION save_recipe(
+    p_title TEXT,
+    p_prep_time_min INT,
+    p_difficulty TEXT,
+    p_servings INT,
+    p_ingredients JSONB,
+    p_steps JSONB,
+    p_tags TEXT[] DEFAULT '{}',
+    p_source TEXT DEFAULT 'ai'
+) RETURNS JSONB
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+DECLARE
+    v_id UUID := uuid_generate_v4();
+BEGIN
+    IF p_title IS NULL OR trim(p_title) = '' THEN
+        RAISE EXCEPTION 'title is required';
+    END IF;
+    IF p_source NOT IN ('local', 'ai') THEN
+        RAISE EXCEPTION 'source must be local or ai';
+    END IF;
+
+    INSERT INTO recipes (id, title, prep_time_min, difficulty, servings, ingredients, steps, tags, source)
+    VALUES (
+        v_id,
+        p_title,
+        COALESCE(p_prep_time_min, 15),
+        COALESCE(p_difficulty, 'Easy'),
+        COALESCE(p_servings, 2),
+        p_ingredients,
+        p_steps,
+        COALESCE(p_tags, '{}'::TEXT[]),
+        p_source
+    );
+
+    RETURN jsonb_build_object('id', v_id, 'title', p_title, 'source', p_source);
+END;
+$$;
+
+REVOKE EXECUTE ON FUNCTION save_recipe(TEXT, INT, TEXT, INT, JSONB, JSONB, TEXT[], TEXT) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION save_recipe(TEXT, INT, TEXT, INT, JSONB, JSONB, TEXT[], TEXT) TO authenticated;
 
