@@ -3,365 +3,509 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>FreshTrack HK — Mobile App Mockup</title>
+<title>FreshTrack HK — Golden Fusion Mobile &amp; Web Interactive Prototype v2.0</title>
 <style>
   :root{
-    --bg:#eef2f0; --panel:#ffffff; --ink:#0f1f1a; --muted:#6b7d76; --line:#e4ebe8;
-    --green:#16a34a; --green-soft:#e7f6ed; --deep:#0b3b2e;
-    --amber:#f59e0b; --amber-soft:#fef3c7;
-    --red:#ef4444; --red-soft:#fee2e2;
-    --blue:#0ea5e9; --blue-soft:#e0f2fe;
-    --purple:#7c3aed; --purple-soft:#ede9fe;
-    --r:14px;
+    /* Golden Fusion Tokens: Warm Oat Recycled Paper + Eco Forest + High-Contrast Semantic Risk */
+    --bg:#F7F5F0;
+    --panel:#FFFEFA;
+    --subtle:#EFECE4;
+    --ink:#0F1F1A;
+    --muted:#647870;
+    --line:#E5E0D5;
+    --green:#16A34A;
+    --green-soft:#E7F6ED;
+    --deep:#0B3B2E;
+    --amber:#D97706;
+    --amber-soft:#FEF3C7;
+    --red:#EF4444;
+    --red-soft:#FEE2E2;
+    --blue:#0EA5E9;
+    --blue-soft:#E0F2FE;
+    --purple:#7C3AED;
+    --purple-soft:#EDE9FE;
+    --r:18px;
+    --scale:1;
+    --ease-spring:cubic-bezier(0.22, 1, 0.36, 1);
   }
+
+  /* OLED Low-Carbon Dark Mode */
+  body.dark-theme{
+    --bg:#071712;
+    --panel:#0F2920;
+    --subtle:#14352A;
+    --ink:#ECFDF5;
+    --muted:#8EABA0;
+    --line:#1B4335;
+    --green-soft:rgba(22,163,74,0.18);
+    --amber-soft:rgba(245,158,11,0.18);
+    --red-soft:rgba(239,68,68,0.20);
+    --blue-soft:rgba(14,165,233,0.18);
+  }
+
+  /* Helper 125% Large Font Mode */
+  body.helper-mode{
+    --scale:1.18;
+  }
+
   *{box-sizing:border-box;margin:0;padding:0}
 
   body{
-    font-family:"Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,"Microsoft YaHei",sans-serif;
+    font-family:"Inter","Segoe UI",system-ui,-apple-system,"PingFang HK","Microsoft YaHei",sans-serif;
     background:
-      radial-gradient(circle at 50% 12%, rgba(22,163,74,.13), transparent 58%),
-      linear-gradient(170deg,#f3f7f5,#e6edea 70%,#e2eae6);
+      radial-gradient(circle at 50% 8%, rgba(22,163,74,.11), transparent 56%),
+      linear-gradient(175deg,var(--bg),var(--subtle));
     background-attachment:fixed;
-    color:var(--ink);-webkit-font-smoothing:antialiased;min-height:100vh;
+    color:var(--ink);
+    -webkit-font-smoothing:antialiased;
+    min-height:100vh;
+    transition:background .28s ease,color .28s ease;
   }
 
-  /* ============ page chrome ============ */
+  /* ============ Top Control Chrome ============ */
   .chrome{
-    display:flex;align-items:center;gap:14px;flex-wrap:wrap;
-    padding:16px 26px;border-bottom:1px solid rgba(15,31,26,.07);
-    background:rgba(255,255,255,.62);backdrop-filter:blur(10px);
+    display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+    padding:12px 22px;border-bottom:1px solid var(--line);
+    background:rgba(255,254,250,.82);backdrop-filter:blur(12px);
     position:sticky;top:0;z-index:100;
   }
-  .chrome-l{display:flex;align-items:baseline;gap:10px;min-width:0}
-  .chrome-l b{font-size:15px;font-weight:750;letter-spacing:-.2px}
-  .chrome-l span{font-size:11.5px;color:var(--muted)}
-  .chrome-l .dot{width:9px;height:9px;border-radius:50%;background:var(--green);flex:none;align-self:center}
-  .chrome-r{margin-left:auto;display:flex;gap:7px;background:rgba(15,31,26,.06);padding:4px;border-radius:11px}
+  body.dark-theme .chrome{background:rgba(11,34,26,.85)}
+  .chrome-l{display:flex;align-items:center;gap:9px;min-width:0}
+  .chrome-l b{font-size:15px;font-weight:760;letter-spacing:-.2px;color:var(--ink)}
+  .chrome-l .badge-gf{
+    font-size:10.5px;font-weight:700;padding:3px 9px;border-radius:99px;
+    background:var(--green-soft);color:var(--green);border:1px solid rgba(22,163,74,.25);
+  }
+  .chrome-l span.sub{font-size:11.5px;color:var(--muted)}
+  .chrome-l .dot{width:9px;height:9px;border-radius:50%;background:var(--green);flex:none}
+  .chrome-r{margin-left:auto;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .seg-group{display:flex;gap:4px;background:var(--subtle);padding:3.5px;border-radius:11px;border:1px solid var(--line)}
   .seg{
-    border:none;background:transparent;border-radius:8px;padding:7px 15px;
-    font-size:12.5px;font-weight:650;color:var(--muted);cursor:pointer;font-family:inherit;
-    transition:background .16s,color .16s;
+    border:none;background:transparent;border-radius:8px;padding:6px 12px;
+    font-size:12px;font-weight:660;color:var(--muted);cursor:pointer;font-family:inherit;
+    transition:background .16s,color .16s,transform .12s;
   }
   .seg:hover{color:var(--ink)}
-  .seg.on{background:#fff;color:var(--deep);box-shadow:0 1px 3px rgba(11,59,46,.13)}
+  .seg.on{background:var(--panel);color:var(--green);box-shadow:0 1px 4px rgba(11,59,46,.12)}
 
-  .stage{padding:44px 26px 70px;display:flex;justify-content:center}
+  .stage{padding:32px 20px 64px;display:flex;justify-content:center}
 
-  /* ============ device frame ============ */
+  /* ============ Device Frame ============ */
   .device{
-    width:390px;height:844px;flex:none;
-    background:linear-gradient(160deg,#20302a,#0b1a15 45%,#132119);
+    width:396px;height:856px;flex:none;
+    background:linear-gradient(160deg,#1F3029,#0A1914 48%,#13221B);
     border-radius:56px;padding:13px;position:relative;
     box-shadow:
-      0 2px 0 rgba(255,255,255,.14) inset,
-      0 0 0 1px rgba(0,0,0,.35),
-      0 34px 70px -18px rgba(11,59,46,.42),
-      0 12px 26px -10px rgba(11,59,46,.28);
+      0 2px 0 rgba(255,255,255,.15) inset,
+      0 0 0 1px rgba(0,0,0,.38),
+      0 34px 72px -18px rgba(11,59,46,.42),
+      0 12px 26px -10px rgba(11,59,46,.26);
   }
   .device::after{
     content:"";position:absolute;left:50%;transform:translateX(-50%);bottom:9px;
-    width:118px;height:4px;border-radius:3px;background:rgba(255,255,255,.28);
+    width:120px;height:4px;border-radius:3px;background:rgba(255,255,255,.28);
   }
   .frame{
     width:100%;height:100%;background:var(--bg);border-radius:44px;
     overflow:hidden;position:relative;display:flex;flex-direction:column;
+    transition:background .28s ease;
   }
   .island{
-    position:absolute;top:13px;left:50%;transform:translateX(-50%);
-    width:112px;height:28px;border-radius:16px;background:#05100c;z-index:60;
+    position:absolute;top:12px;left:50%;transform:translateX(-50%);
+    width:110px;height:27px;border-radius:16px;background:#05100C;z-index:60;
   }
   .statusbar{
-    height:56px;flex:none;display:flex;align-items:center;justify-content:space-between;
-    padding:0 30px;font-size:14px;font-weight:680;letter-spacing:.2px;position:relative;z-index:55;
+    height:54px;flex:none;display:flex;align-items:center;justify-content:space-between;
+    padding:0 28px;font-size:13.5px;font-weight:680;letter-spacing:.2px;position:relative;z-index:55;
   }
   .sb-r{display:flex;align-items:center;gap:6px;color:var(--ink)}
 
-  /* ============ app body ============ */
-  .appbody{flex:1;overflow-y:auto;overflow-x:hidden;padding:0 18px 104px;scrollbar-width:none}
+  /* ============ App Body ============ */
+  .appbody{flex:1;overflow-y:auto;overflow-x:hidden;padding:0 16px 108px;scrollbar-width:none;position:relative}
   .appbody::-webkit-scrollbar{width:0;height:0}
   .m-screen{display:none}
-  .m-screen.on{display:block;animation:pop .24s ease}
-  @keyframes pop{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:none}}
+  .m-screen.on{display:block;animation:pop .26s var(--ease-spring)}
+  @keyframes pop{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 
-  .mhead{display:flex;align-items:flex-start;gap:12px;padding:4px 0 14px}
-  .mhead h2{font-size:21px;font-weight:750;letter-spacing:-.4px;line-height:1.2}
-  .mhead p{font-size:12px;color:var(--muted);margin-top:4px}
+  /* Fridge Door Opening Top Ice Glow (Effect 6) */
+  #m-fridge.on::before{
+    content:"";position:absolute;top:-10px;left:-16px;right:-16px;height:95px;
+    background:radial-gradient(ellipse at 50% 0%, rgba(186,230,253,.52), transparent 76%);
+    pointer-events:none;z-index:0;animation:doorGlow .5s ease-out forwards;
+  }
+  @keyframes doorGlow{from{opacity:0}to{opacity:1}}
+
+  .mhead{display:flex;align-items:center;gap:10px;padding:4px 0 12px;position:relative;z-index:2}
+  .mhead h2{font-size:calc(20px * var(--scale));font-weight:760;letter-spacing:-.4px;line-height:1.2}
+  .mhead p{font-size:calc(11.8px * var(--scale));color:var(--muted);margin-top:3px}
   .mhead p b{color:var(--red)}
-  .avatar{
-    margin-left:auto;width:40px;height:40px;flex:none;border-radius:50%;border:none;cursor:pointer;
-    background:var(--deep);color:#fff;font-size:15px;font-weight:750;font-family:inherit;
+
+  /* Living Eco-Tree Widget in Top Header (Effect 3) */
+  .tree-pill{
+    margin-left:auto;display:flex;align-items:center;gap:6px;
+    background:var(--green-soft);border:1px solid rgba(22,163,74,.28);
+    padding:5px 10px;border-radius:99px;cursor:pointer;font-family:inherit;
+    transition:transform .2s var(--ease-spring),box-shadow .2s;
   }
-  .iconbtn{
-    margin-left:auto;width:36px;height:36px;flex:none;border-radius:11px;cursor:pointer;
-    border:1px solid var(--line);background:var(--panel);color:var(--muted);font-size:15px;font-family:inherit;
+  .tree-pill:hover{transform:scale(1.04);box-shadow:0 4px 12px rgba(22,163,74,.18)}
+  .tree-pill b{font-size:11px;color:var(--green);font-weight:750}
+  .tree-pill.pulse{animation:treeBounce .55s var(--ease-spring)}
+  @keyframes treeBounce{0%{transform:scale(1)}40%{transform:scale(1.24)}100%{transform:scale(1)}}
+
+  /* ============ Phase 2: Today's Rescue Trio Hero Card ============ */
+  .trio-card{
+    background:var(--panel);border:1.5px solid rgba(22,163,74,.28);
+    border-radius:20px;padding:13px 14px;margin-bottom:13px;
+    box-shadow:0 6px 20px rgba(11,59,46,.05);
+  }
+  .trio-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:9px}
+  .trio-head span.t-title{font-size:calc(12.5px * var(--scale));font-weight:760;color:var(--deep);display:flex;align-items:center;gap:6px}
+  body.dark-theme .trio-head span.t-title{color:#6EE7B7}
+  .trio-head span.t-hint{font-size:10px;color:var(--muted);background:var(--subtle);padding:2px 8px;border-radius:99px}
+  .trio-banner{
+    margin-top:9px;padding:9px 11px;border-radius:13px;
+    background:linear-gradient(125deg,var(--green-soft),rgba(254,243,199,.55));
+    border:1px solid rgba(22,163,74,.22);display:flex;align-items:center;gap:9px;cursor:pointer;
+    width:100%;text-align:left;font-family:inherit;transition:transform .15s;
+  }
+  .trio-banner:hover{transform:translateY(-1px)}
+  .trio-banner .tb-txt{flex:1;min-width:0;font-size:calc(11.5px * var(--scale));font-weight:680;color:var(--ink)}
+  .trio-banner .tb-txt small{display:block;font-size:10px;color:var(--muted);font-weight:500;margin-top:1px}
+  .trio-banner .tb-cta{
+    background:var(--green);color:#fff;font-size:10.5px;font-weight:750;
+    padding:5px 10px;border-radius:9px;flex:none;
   }
 
-  /* alert hero */
-  .alert{
-    display:flex;align-items:center;gap:12px;border-radius:16px;padding:14px 15px;margin-bottom:14px;
-    background:linear-gradient(120deg,var(--red-soft),#fff5e6);border:1px solid #fbd5d5;
-  }
-  .alert-i{font-size:22px;flex:none}
-  .alert-t{font-size:13.5px;font-weight:750}
-  .alert-s{font-size:11px;color:#8a5a3b;margin-top:3px;line-height:1.45}
-  .alert-b{
-    margin-left:auto;flex:none;border:none;border-radius:9px;padding:8px 13px;cursor:pointer;
-    background:var(--red);color:#fff;font-size:11.5px;font-weight:700;font-family:inherit;
-  }
-
-  /* mini stats */
-  .mini3{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-bottom:18px}
-  .mini{background:var(--panel);border:1px solid var(--line);border-radius:13px;padding:11px 10px;text-align:center}
-  .mini .ml{display:block;font-size:9.5px;font-weight:700;color:var(--muted);letter-spacing:.3px;text-transform:uppercase}
-  .mini .mv{display:block;font-size:18px;font-weight:750;margin-top:5px;letter-spacing:-.4px}
+  /* Mini KPI Odometer Stats */
+  .mini3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
+  .mini{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:10px 8px;text-align:center;transition:transform .2s}
+  .mini.bump{animation:treeBounce .45s var(--ease-spring)}
+  .mini .ml{display:block;font-size:9px;font-weight:700;color:var(--muted);letter-spacing:.3px;text-transform:uppercase}
+  .mini .mv{display:block;font-size:calc(17.5px * var(--scale));font-weight:780;margin-top:4px;letter-spacing:-.4px;color:var(--ink)}
   .mini .mv small{font-size:10px;font-weight:650}
 
-  /* section head */
-  .sechead{display:flex;align-items:baseline;gap:10px;margin:0 0 10px}
-  .sechead h3{font-size:14px;font-weight:750}
+  /* Section Header */
+  .sechead{display:flex;align-items:center;justify-content:space-between;margin:0 0 8px}
+  .sechead h3{font-size:calc(13.5px * var(--scale));font-weight:750}
   .link{
-    margin-left:auto;background:none;border:none;cursor:pointer;font-family:inherit;
+    background:none;border:none;cursor:pointer;font-family:inherit;
     font-size:11.5px;font-weight:700;color:var(--green);padding:0;
   }
 
-  /* horizontal cards */
-  .hscroll{
-    display:flex;gap:10px;overflow-x:auto;padding:2px 18px 6px;margin:0 -18px 18px;
-    scrollbar-width:none;
+  /* ============ Liquid Countdown Ring + Interactive Item Row ============ */
+  .ilist{display:flex;flex-direction:column;gap:8px}
+  .irow{
+    display:flex;align-items:center;gap:10px;background:var(--panel);
+    border:1px solid var(--line);border-radius:15px;padding:9px 11px;
+    position:relative;transition:transform .22s var(--ease-spring),opacity .22s,border-color .18s;
   }
-  .hscroll::-webkit-scrollbar{height:0}
-  .hcard{
-    flex:none;width:134px;text-align:left;cursor:pointer;font-family:inherit;
-    background:var(--panel);border:1px solid var(--line);border-radius:15px;padding:12px;
-    display:flex;flex-direction:column;gap:6px;transition:border-color .15s,transform .15s;
+  /* Effect 1: Critical Use-by Breathing Halo */
+  .irow.critical-halo{
+    animation:haloPulse 2.4s infinite ease-in-out;
+    border-color:rgba(239,68,68,.48);
   }
-  .hcard:hover{border-color:#c9dcd4;transform:translateY(-2px)}
-  .hcard .he{font-size:22px}
-  .hcard .hn{font-size:12.5px;font-weight:680;color:var(--ink)}
-  .hcard .hd{font-size:10px;color:var(--muted);line-height:1.4}
-  .hcard .pill{align-self:flex-start;margin-top:2px}
-
-  .pill{font-size:10px;font-weight:750;padding:3px 9px;border-radius:20px;display:inline-block}
-  .pill.high{background:var(--red-soft);color:#b91c1c}
-  .pill.med{background:var(--amber-soft);color:#b45309}
-  .pill.low{background:var(--green-soft);color:#15803d}
-
-  /* recipe row */
-  .rrow{
-    width:100%;display:flex;align-items:center;gap:11px;text-align:left;cursor:pointer;font-family:inherit;
-    background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:11px 12px;margin-bottom:9px;
-    transition:border-color .15s,box-shadow .15s;
+  @keyframes haloPulse{
+    0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,.38)}
+    50%{box-shadow:0 0 0 6px rgba(239,68,68,0)}
   }
-  .rrow:hover{border-color:#c9dcd4;box-shadow:0 3px 12px rgba(11,59,46,.07)}
-  .rrow .rr-i{width:40px;height:40px;flex:none;border-radius:11px;background:var(--green-soft);display:grid;place-items:center;font-size:19px}
-  .rrow .rr-t{flex:1;min-width:0;font-size:12.8px;font-weight:680;color:var(--ink)}
-  .rrow .rr-t small{display:block;font-size:10px;font-weight:500;color:var(--muted);margin-top:3px}
-  .rrow .rr-p{font-size:14px;font-weight:750;color:var(--green);flex:none}
 
-  /* search */
+  /* Effect 2: Liquid Countdown SVG Ring around emoji */
+  .ring-wrap{position:relative;width:42px;height:42px;flex:none;display:grid;place-items:center}
+  .ring-wrap svg{position:absolute;inset:0;width:42px;height:42px;transform:rotate(-90deg)}
+  .ring-wrap .em{font-size:18px;position:relative;z-index:2}
+  .ring-wrap .buyer{
+    position:absolute;right:-2px;bottom:-2px;width:15px;height:15px;border-radius:50%;
+    background:var(--deep);color:#fff;font-size:8.5px;font-weight:800;
+    display:grid;place-items:center;border:1.5px solid var(--panel);z-index:3;
+  }
+
+  .inm{flex:1;min-width:0}
+  .inm b{font-size:calc(12.6px * var(--scale));font-weight:690;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .inm small{font-size:calc(10px * var(--scale));color:var(--muted);display:block;margin-top:2px}
+
+  /* Quick One-Thumb Action Pills (Consume / Freeze / Pot) */
+  .qacts{display:flex;align-items:center;gap:4px;flex:none}
+  .qbtn{
+    border:1px solid var(--line);background:var(--subtle);border-radius:8px;
+    width:27px;height:27px;display:grid;place-items:center;cursor:pointer;
+    font-size:12px;transition:transform .14s,background .14s;padding:0;
+  }
+  .qbtn:hover{transform:scale(1.1)}
+  .qbtn.eat:hover{background:var(--green-soft);border-color:var(--green)}
+  .qbtn.frz:hover{background:var(--blue-soft);border-color:var(--blue)}
+  .qbtn.pot.in-pot{background:var(--amber-soft);border-color:var(--amber)}
+
+  .pill{font-size:9.5px;font-weight:750;padding:2.5px 8px;border-radius:20px;display:inline-block}
+  .pill.high{background:var(--red-soft);color:#B91C1C}
+  .pill.med{background:var(--amber-soft);color:#B45309}
+  .pill.low{background:var(--green-soft);color:#15803D}
+  body.dark-theme .pill.high{color:#FCA5A5}
+  body.dark-theme .pill.med{color:#FCD34D}
+  body.dark-theme .pill.low{color:#86EFAC}
+
+  /* ============ Phase 3: True Fridge 3-Zone Shelf View ============ */
+  .view-toggle{
+    display:flex;gap:3px;background:var(--subtle);padding:3px;border-radius:10px;border:1px solid var(--line);margin-left:auto;
+  }
+  .vbtn{
+    border:none;background:transparent;padding:4px 9px;border-radius:7px;
+    font-size:11px;font-weight:680;color:var(--muted);cursor:pointer;font-family:inherit;
+  }
+  .vbtn.on{background:var(--panel);color:var(--green);box-shadow:0 1px 3px rgba(0,0,0,.08)}
+
+  .shelf-box{
+    background:var(--panel);border:1.5px solid var(--line);border-radius:18px;
+    padding:11px 12px;margin-bottom:11px;
+    box-shadow:inset 0 6px 14px rgba(11,59,46,.03);
+    border-bottom:5px solid #D5E2DC;
+  }
+  body.dark-theme .shelf-box{border-bottom-color:#1E4638}
+  .shelf-box.freezer{background:linear-gradient(180deg,var(--panel),rgba(224,242,254,.35));border-bottom-color:#BAE6FD}
+  .shelf-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;font-size:11px;font-weight:750;color:var(--muted)}
+  .shelf-hd span.temp{font-size:10px;padding:2px 7px;border-radius:99px;background:var(--subtle);color:var(--ink)}
+  .shelf-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:7px}
+  .scard{
+    display:flex;align-items:center;gap:8px;padding:7px 8px;border-radius:12px;
+    background:var(--bg);border:1px solid var(--line);cursor:pointer;transition:transform .14s;
+  }
+  .scard:hover{transform:translateY(-1px);border-color:var(--green)}
+  .scard .snm{flex:1;min-width:0}
+  .scard .snm b{font-size:11.5px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .scard .snm small{font-size:9.5px;color:var(--muted);display:block}
+
+  /* Floating Boiling Pot Bar (Phase 3 Drag/Tap-to-Pot) */
+  .pot-bar{
+    position:sticky;bottom:8px;z-index:40;margin-top:10px;
+    background:linear-gradient(135deg,var(--deep),#14533E);color:#fff;
+    border-radius:16px;padding:10px 13px;display:flex;align-items:center;gap:10px;
+    box-shadow:0 10px 24px rgba(11,59,46,.28);cursor:pointer;
+    transition:transform .25s var(--ease-spring);
+  }
+  .pot-bar.bounce{animation:treeBounce .45s var(--ease-spring)}
+  .pot-icon{font-size:22px;position:relative}
+  .pot-txt{flex:1;font-size:11.5px;font-weight:650}
+  .pot-txt small{display:block;font-size:10px;color:#A7F3D0;margin-top:1px}
+  .pot-cta{background:var(--green);color:#fff;border:none;border-radius:9px;padding:6px 11px;font-size:11px;font-weight:750;cursor:pointer;font-family:inherit}
+
+  /* Search & Filter Chips */
   .msearch{
-    display:flex;align-items:center;gap:9px;background:var(--panel);border:1px solid var(--line);
-    border-radius:13px;padding:11px 14px;margin-bottom:12px;font-size:14px;color:var(--muted);
+    display:flex;align-items:center;gap:8px;background:var(--panel);border:1px solid var(--line);
+    border-radius:13px;padding:9px 13px;margin-bottom:10px;font-size:13px;color:var(--muted);
   }
-  .msearch input{border:none;outline:none;background:transparent;font-family:inherit;font-size:13.5px;width:100%;color:var(--ink)}
-
-  /* chips */
-  .chiprow{display:flex;gap:7px;overflow-x:auto;padding:2px 18px 4px;margin:0 -18px 10px;scrollbar-width:none}
+  .msearch input{border:none;outline:none;background:transparent;font-family:inherit;font-size:13px;width:100%;color:var(--ink)}
+  .chiprow{display:flex;gap:6px;overflow-x:auto;padding:2px 16px 4px;margin:0 -16px 9px;scrollbar-width:none}
   .chiprow::-webkit-scrollbar{height:0}
   .chip{
     flex:none;border:1px solid var(--line);background:var(--panel);border-radius:20px;
-    padding:8px 14px;font-size:12px;font-weight:650;color:var(--muted);cursor:pointer;font-family:inherit;
-    transition:background .15s,color .15s,border-color .15s;
+    padding:6.5px 12px;font-size:11.5px;font-weight:660;color:var(--muted);cursor:pointer;font-family:inherit;
+    transition:background .15s,color .15s;
   }
   .chip.on{background:var(--deep);color:#fff;border-color:var(--deep)}
   .chip.warn.on{background:var(--red);border-color:var(--red);color:#fff}
 
-  /* item list */
-  .ilist{display:flex;flex-direction:column;gap:9px;margin-top:4px}
-  .irow{
-    display:flex;align-items:center;gap:11px;background:var(--panel);
-    border:1px solid var(--line);border-radius:14px;padding:11px 12px;
+  /* Recipe Rows & Cards */
+  .rrow{
+    width:100%;display:flex;align-items:center;gap:11px;text-align:left;cursor:pointer;font-family:inherit;
+    background:var(--panel);border:1px solid var(--line);border-radius:15px;padding:10px 12px;margin-bottom:8px;
+    transition:border-color .15s,transform .15s;
   }
-  .irow .ie{width:40px;height:40px;flex:none;border-radius:11px;background:var(--bg);display:grid;place-items:center;font-size:19px}
-  .irow .inm{flex:1;min-width:0}
-  .irow .inm b{font-size:12.8px;font-weight:680;display:block}
-  .irow .inm small{font-size:10px;color:var(--muted);display:block;margin-top:3px}
-  .irow .iday{text-align:right;flex:none;font-size:12px;font-weight:700}
-  .irow .iday small{display:block;font-size:9.5px;font-weight:550;color:var(--muted);margin-top:2px}
+  .rrow:hover{border-color:var(--green);transform:translateY(-1px)}
+  .rrow .rr-i{width:40px;height:40px;flex:none;border-radius:12px;background:var(--green-soft);display:grid;place-items:center;font-size:19px}
+  .rrow .rr-t{flex:1;min-width:0;font-size:calc(12.5px * var(--scale));font-weight:680;color:var(--ink)}
+  .rrow .rr-t small{display:block;font-size:10px;font-weight:500;color:var(--muted);margin-top:2px}
+  .rrow .rr-p{font-size:13.5px;font-weight:780;color:var(--green);flex:none}
 
-  /* recipe cards */
   .rcard{
     width:100%;text-align:left;cursor:pointer;font-family:inherit;padding:0;overflow:hidden;
-    background:var(--panel);border:1px solid var(--line);border-radius:17px;margin-bottom:12px;
+    background:var(--panel);border:1px solid var(--line);border-radius:17px;margin-bottom:11px;
     transition:box-shadow .15s,transform .15s;
   }
   .rcard:hover{box-shadow:0 7px 20px rgba(11,59,46,.11);transform:translateY(-2px)}
-  .rcard .rhero{height:96px;display:grid;place-items:center;font-size:44px;background:var(--green-soft)}
-  .rcard .rbody{padding:12px 14px 13px}
-  .rcard .rt{font-size:14px;font-weight:730;color:var(--ink)}
-  .rcard .rs{font-size:11px;color:var(--muted);margin-top:5px;line-height:1.5}
-  .rcard .rfoot{display:flex;align-items:center;gap:8px;margin-top:11px;padding-top:10px;border-top:1px solid var(--line);font-size:10.5px;color:var(--muted)}
-  .rcard .rfoot .pct{margin-left:auto;font-size:14px;font-weight:780;color:var(--green)}
+  .rcard .rhero{height:84px;display:grid;place-items:center;font-size:40px;background:var(--green-soft)}
+  .rcard .rbody{padding:11px 14px 12px}
+  .rcard .rt{font-size:calc(13.8px * var(--scale));font-weight:740;color:var(--ink)}
+  .rcard .rs{font-size:11px;color:var(--muted);margin-top:4px;line-height:1.45}
+  .rcard .rfoot{display:flex;align-items:center;gap:8px;margin-top:9px;padding-top:9px;border-top:1px solid var(--line);font-size:10.5px;color:var(--muted)}
+  .rcard .rfoot .pct{margin-left:auto;font-size:13.5px;font-weight:780;color:var(--green)}
   .mtip{
-    font-size:11.5px;color:var(--muted);background:var(--panel);border:1px dashed var(--line);
-    border-radius:12px;padding:10px 13px;margin-bottom:14px;line-height:1.6;
+    font-size:11px;color:var(--muted);background:var(--panel);border:1px dashed var(--line);
+    border-radius:12px;padding:9px 12px;margin-bottom:12px;line-height:1.55;
   }
 
-  /* add item */
+  /* Add Item & Laser Scanner Effect (Effect 5) */
   .scanhero{
-    width:100%;cursor:pointer;font-family:inherit;border:2px dashed #c9dcd4;border-radius:18px;
-    background:linear-gradient(140deg,var(--green-soft),#f7fdf9);
-    padding:26px 18px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:7px;
-    margin-bottom:14px;transition:border-color .15s,background .15s;
+    width:100%;cursor:pointer;font-family:inherit;border:2px dashed rgba(22,163,74,.45);border-radius:18px;
+    background:linear-gradient(140deg,var(--green-soft),var(--panel));
+    padding:22px 16px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:6px;
+    margin-bottom:12px;position:relative;overflow:hidden;transition:border-color .15s;
   }
   .scanhero:hover{border-color:var(--green)}
-  .scanhero .sh-i{font-size:36px}
-  .scanhero .sh-t{font-size:15px;font-weight:750;color:var(--deep)}
-  .scanhero .sh-s{font-size:11px;color:var(--muted);line-height:1.5;max-width:210px}
+  .scanhero .laser{
+    display:none;position:absolute;left:6%;right:6%;height:3px;
+    background:var(--green);box-shadow:0 0 12px var(--green),0 0 22px var(--green);
+    border-radius:99px;animation:laserScan 1.3s infinite ease-in-out;
+  }
+  .scanhero.scanning .laser{display:block}
+  @keyframes laserScan{0%{top:10%}50%{top:88%}100%{top:10%}}
+  .scanhero .sh-i{font-size:34px}
+  .scanhero .sh-t{font-size:14.5px;font-weight:760;color:var(--deep)}
+  body.dark-theme .scanhero .sh-t{color:#6EE7B7}
+  .scanhero .sh-s{font-size:11px;color:var(--muted);line-height:1.45;max-width:220px}
 
-  .mlist{display:flex;flex-direction:column;gap:9px;margin-bottom:16px}
+  .mlist{display:flex;flex-direction:column;gap:8px;margin-bottom:14px}
   .mrow{
-    width:100%;display:flex;align-items:center;gap:12px;text-align:left;cursor:pointer;font-family:inherit;
-    background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:12px 13px;
+    width:100%;display:flex;align-items:center;gap:11px;text-align:left;cursor:pointer;font-family:inherit;
+    background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:11px 12px;
     transition:border-color .15s,background .15s;
   }
   .mrow:hover{border-color:var(--green);background:var(--green-soft)}
-  .mrow .mi{width:36px;height:36px;flex:none;border-radius:11px;background:var(--blue-soft);display:grid;place-items:center;font-size:17px}
-  .mrow b{font-size:12.8px;font-weight:680;display:block;color:var(--ink)}
-  .mrow small{font-size:10.5px;color:var(--muted);display:block;margin-top:2px}
+  .mrow .mi{width:35px;height:35px;flex:none;border-radius:10px;background:var(--blue-soft);display:grid;place-items:center;font-size:16px}
+  .mrow b{font-size:12.5px;font-weight:680;display:block;color:var(--ink)}
+  .mrow small{font-size:10px;color:var(--muted);display:block;margin-top:2px}
 
-  .progress{height:8px;border-radius:6px;background:var(--line);overflow:hidden;margin:14px 0;display:none}
+  .progress{height:7px;border-radius:6px;background:var(--line);overflow:hidden;margin:12px 0;display:none}
   .progress.on{display:block}
-  .progress i{display:block;height:100%;width:0;background:var(--green);border-radius:6px;transition:width .34s}
+  .progress i{display:block;height:100%;width:0;background:var(--green);border-radius:6px;transition:width .3s}
   .parsed{display:none;margin-top:6px}
-  .parsed.on{display:block;animation:pop .25s ease}
+  .parsed.on{display:block}
   .prow{
     display:flex;align-items:center;gap:10px;background:var(--panel);border:1px solid var(--line);
-    border-radius:12px;padding:10px 12px;margin-bottom:8px;
+    border-radius:12px;padding:9px 11px;margin-bottom:7px;
+    opacity:0;animation:staggerIn .32s var(--ease-spring) forwards;
   }
+  @keyframes staggerIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
   .prow .pe{font-size:17px;flex:none}
   .prow .pn{flex:1;min-width:0}
-  .prow .pn b{font-size:12.3px;font-weight:670;display:block}
-  .prow .pn small{font-size:9.8px;color:var(--muted);display:block;margin-top:2px}
-  .prow .pd{font-size:10.5px;font-weight:680;color:var(--muted);text-align:right;flex:none}
-  .prow .pd b{display:block;color:var(--ink);font-size:11.5px}
-  .pacts{display:flex;gap:9px;margin-top:12px}
+  .prow .pn b{font-size:12px;font-weight:680;display:block}
+  .prow .pn small{font-size:9.8px;color:var(--muted);display:block}
+  .prow .pd{font-size:10px;font-weight:680;color:var(--muted);text-align:right;flex:none}
+  .prow .pd b{display:block;color:var(--ink);font-size:11px}
+  .pacts{display:flex;gap:8px;margin-top:10px}
 
-  .btn{border:none;border-radius:12px;padding:13px 16px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;transition:filter .15s}
+  .btn{border:none;border-radius:12px;padding:12px 15px;font-size:12.5px;font-weight:720;cursor:pointer;font-family:inherit;transition:filter .15s,transform .12s}
   .btn:hover{filter:brightness(1.06)}
+  .btn:active{transform:scale(.98)}
   .btn.primary{background:var(--green);color:#fff;flex:1}
   .btn.ghost{background:var(--panel);color:var(--ink);border:1px solid var(--line)}
-  .btn.block{width:100%}
 
-  /* impact */
+  /* Impact & Living Eco-Tree Showcase */
   .hero-impact{
-    background:linear-gradient(150deg,var(--deep),#12664a);color:#fff;border-radius:20px;
-    padding:22px 20px;margin-bottom:14px;display:flex;align-items:center;gap:18px;
+    background:linear-gradient(150deg,var(--deep),#135D43);color:#fff;border-radius:20px;
+    padding:18px 18px;margin-bottom:13px;display:flex;align-items:center;gap:15px;position:relative;overflow:hidden;
   }
-  .ring{
-    width:88px;height:88px;flex:none;border-radius:50%;display:grid;place-items:center;
-    background:conic-gradient(#4ade80 0 68%, rgba(255,255,255,.16) 68% 100%);
+  .tree-stage-box{
+    width:82px;height:82px;flex:none;border-radius:18px;background:rgba(255,255,255,.1);
+    display:grid;place-items:center;position:relative;
   }
-  .ring span{width:66px;height:66px;border-radius:50%;background:#0e3529;display:grid;place-items:center;font-size:14px;font-weight:750}
-  .hi-n{font-size:31px;font-weight:780;letter-spacing:-1px;line-height:1}
-  .hi-n small{font-size:14px;font-weight:650}
-  .hi-l{font-size:11.5px;color:#a7d6c4;margin-top:6px;line-height:1.5}
-  .hi-d{font-size:11px;font-weight:700;color:#6ee7a0;margin-top:7px}
+  .hi-n{font-size:28px;font-weight:790;letter-spacing:-.8px;line-height:1}
+  .hi-n small{font-size:13px;font-weight:650}
+  .hi-l{font-size:11px;color:#A7D6C4;margin-top:5px}
+  .hi-d{font-size:10.5px;font-weight:700;color:#6EE7A0;margin-top:5px}
 
-  .card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:15px 16px;margin-bottom:13px}
-  .card h3{font-size:13px;font-weight:730;margin-bottom:12px;display:flex;align-items:center;gap:8px}
-  .card h3 .tag{margin-left:auto;font-size:9.5px;font-weight:650;color:var(--muted);background:var(--bg);padding:3px 8px;border-radius:20px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:14px 15px;margin-bottom:12px}
+  .card h3{font-size:12.8px;font-weight:740;margin-bottom:11px;display:flex;align-items:center;gap:7px}
+  .card h3 .tag{margin-left:auto;font-size:9.5px;font-weight:650;color:var(--muted);background:var(--subtle);padding:2.5px 8px;border-radius:20px}
 
-  .chart{display:flex;align-items:flex-end;gap:9px;height:112px}
-  .chart .bar{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;height:100%;justify-content:flex-end}
-  .chart .bar i{width:100%;max-width:30px;background:linear-gradient(180deg,#22c55e,#16a34a);border-radius:6px 6px 0 0;display:block}
+  .chart{display:flex;align-items:flex-end;gap:8px;height:104px}
+  .chart .bar{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;height:100%;justify-content:flex-end}
+  .chart .bar i{width:100%;max-width:28px;background:linear-gradient(180deg,#22C55E,#16A34A);border-radius:6px 6px 0 0;display:block;transition:height .4s var(--ease-spring)}
   .chart .bar b{font-size:9.5px;font-weight:700}
-  .chart .bar span{font-size:9.5px;color:var(--muted)}
+  .chart .bar span{font-size:9px;color:var(--muted)}
 
   .sdg{
-    display:flex;align-items:center;gap:9px;border-radius:11px;padding:10px 12px;margin-bottom:8px;
-    background:var(--deep);color:#fff;font-size:11.3px;font-weight:600;line-height:1.4;
+    display:flex;align-items:center;gap:9px;border-radius:11px;padding:9px 11px;margin-bottom:7px;
+    background:var(--deep);color:#fff;font-size:11px;font-weight:600;line-height:1.35;
   }
-  .sdg .num{background:#bf8b2e;border-radius:6px;padding:2px 7px;font-weight:800;font-size:10.5px;flex:none}
-  .sdg.b{background:#1e3a8a}
+  .sdg .num{background:#BF8B2E;border-radius:6px;padding:2px 6.5px;font-weight:800;font-size:10px;flex:none}
+  .sdg.b{background:#1E3A8A}
 
   .disclaim{
-    margin-top:12px;background:#fffbeb;border:1px solid #fde68a;border-radius:13px;padding:11px 13px;
-    font-size:10.5px;color:#92400e;line-height:1.6;
+    margin-top:10px;background:#FFFBEB;border:1px solid #FDE68A;border-radius:13px;padding:10px 12px;
+    font-size:10px;color:#92400E;line-height:1.55;
   }
-  .disclaim b{color:#78350f}
+  body.dark-theme .disclaim{background:#231F12;border-color:#78350F;color:#FCD34D}
 
-  /* ============ tab bar ============ */
+  /* ============ Tab Bar with Super Shutter Button ============ */
   .tabbar{
-    position:absolute;left:0;right:0;bottom:0;height:84px;z-index:50;
-    display:grid;grid-template-columns:repeat(5,1fr);align-items:start;padding-top:9px;
-    background:rgba(255,255,255,.93);backdrop-filter:blur(14px);border-top:1px solid var(--line);
+    position:absolute;left:0;right:0;bottom:0;height:82px;z-index:50;
+    display:grid;grid-template-columns:repeat(5,1fr);align-items:center;padding-bottom:8px;
+    background:rgba(255,254,250,.94);backdrop-filter:blur(14px);border-top:1px solid var(--line);
   }
+  body.dark-theme .tabbar{background:rgba(15,41,32,.95)}
   .tabbar button{
     border:none;background:none;cursor:pointer;font-family:inherit;
-    display:flex;flex-direction:column;align-items:center;gap:4px;
-    font-size:9.5px;font-weight:650;color:#9aa9a3;padding:0;transition:color .16s;
+    display:flex;flex-direction:column;align-items:center;gap:3px;
+    font-size:9.5px;font-weight:660;color:#8D9E97;padding:0;transition:color .16s,transform .14s;
   }
-  .tabbar button svg{width:23px;height:23px;display:block}
+  .tabbar button svg{width:22px;height:22px;display:block}
   .tabbar button.on{color:var(--green)}
-  .tabbar button:hover{color:var(--deep)}
+  /* Super Shutter Center Add Button (Phase 2 Task 2.3) */
+  .tabbar button.shutter-btn .shutter-circle{
+    width:44px;height:44px;border-radius:50%;
+    background:linear-gradient(135deg,var(--green),var(--deep));
+    color:#fff;display:grid;place-items:center;
+    box-shadow:0 6px 16px rgba(22,163,74,.36);margin-top:-14px;
+    border:3px solid var(--panel);
+  }
 
-  /* ============ bottom sheet ============ */
+  /* Bottom Sheet */
   .backdrop{
-    position:absolute;inset:0;background:rgba(11,59,46,.45);opacity:0;pointer-events:none;
+    position:absolute;inset:0;background:rgba(11,59,46,.48);opacity:0;pointer-events:none;
     transition:opacity .26s;z-index:70;
   }
   .backdrop.on{opacity:1;pointer-events:auto}
   .sheet{
     position:absolute;left:0;right:0;bottom:0;max-height:82%;z-index:80;
-    background:var(--panel);border-radius:26px 26px 0 0;padding:10px 20px 30px;
-    transform:translateY(103%);transition:transform .3s cubic-bezier(.32,.72,0,1);
+    background:var(--panel);border-radius:26px 26px 0 0;padding:10px 18px 28px;
+    transform:translateY(103%);transition:transform .32s var(--ease-spring);
     overflow-y:auto;scrollbar-width:none;
   }
   .sheet::-webkit-scrollbar{width:0}
   .sheet.on{transform:translateY(0)}
-  .sheet .grab{width:38px;height:4px;border-radius:3px;background:var(--line);margin:0 auto 16px}
-  .sheet .shd{display:flex;align-items:flex-start;gap:12px;margin-bottom:16px}
-  .sheet .shd .e{width:52px;height:52px;flex:none;border-radius:15px;background:var(--green-soft);display:grid;place-items:center;font-size:26px}
-  .sheet .shd h4{font-size:15.5px;font-weight:750}
-  .sheet .shd p{font-size:11px;color:var(--muted);margin-top:4px}
+  .sheet .grab{width:38px;height:4px;border-radius:3px;background:var(--line);margin:0 auto 14px}
+  .sheet .shd{display:flex;align-items:flex-start;gap:11px;margin-bottom:14px}
+  .sheet .shd .e{width:48px;height:48px;flex:none;border-radius:14px;background:var(--green-soft);display:grid;place-items:center;font-size:24px}
+  .sheet .shd h4{font-size:15px;font-weight:750}
+  .sheet .shd p{font-size:11px;color:var(--muted);margin-top:3px}
   .sheet .close{
-    margin-left:auto;flex:none;width:30px;height:30px;border-radius:9px;border:none;cursor:pointer;
-    background:var(--bg);color:var(--muted);font-size:14px;font-family:inherit;
+    margin-left:auto;flex:none;width:29px;height:29px;border-radius:9px;border:none;cursor:pointer;
+    background:var(--subtle);color:var(--muted);font-size:13px;font-family:inherit;
   }
-  .sheet h5{font-size:11.5px;font-weight:730;color:var(--deep);margin:15px 0 7px}
-  .sheet ul,.sheet ol{padding-left:19px;font-size:12.3px;line-height:1.8;color:#2b3d37}
-  .sheet .sacts{display:flex;gap:9px;margin-top:18px}
+  .sheet h5{font-size:11.5px;font-weight:740;color:var(--green);margin:13px 0 6px}
+  .sheet ul,.sheet ol{padding-left:18px;font-size:12px;line-height:1.75;color:var(--ink)}
+  .sheet .sacts{display:flex;gap:8px;margin-top:16px}
 
-  /* toast */
+  /* Toast */
   .toast{
-    position:absolute;left:20px;right:20px;bottom:104px;z-index:90;text-align:center;
-    background:var(--deep);color:#fff;padding:12px 16px;border-radius:13px;
-    font-size:12.3px;font-weight:650;line-height:1.45;
-    opacity:0;transform:translateY(10px);pointer-events:none;transition:opacity .26s,transform .26s;
+    position:absolute;left:18px;right:18px;bottom:94px;z-index:90;text-align:center;
+    background:var(--deep);color:#fff;padding:11px 14px;border-radius:13px;
+    font-size:12px;font-weight:660;line-height:1.4;
+    box-shadow:0 8px 24px rgba(0,0,0,.25);
+    opacity:0;transform:translateY(10px);pointer-events:none;transition:opacity .24s,transform .24s;
   }
   .toast.on{opacity:1;transform:none}
 
-  /* ============ gallery mode ============ */
-  .stage.gallery{display:block;padding:34px 20px 60px}
-  .gwrap{display:flex;flex-wrap:wrap;gap:30px 26px;justify-content:center;align-items:flex-start}
-  .gcell{position:relative;width:250px;height:576px;cursor:pointer}
+  /* Flying Eco Leaf Particle (Effect 4) */
+  .leaf-particle{
+    position:fixed;pointer-events:none;z-index:999;font-size:16px;
+    transition:transform .68s cubic-bezier(.2,.9,.3,1),opacity .68s ease;
+  }
+
+  /* Gallery Mode */
+  .stage.gallery{display:block;padding:28px 18px 56px}
+  .gwrap{display:flex;flex-wrap:wrap;gap:28px 24px;justify-content:center;align-items:flex-start}
+  .gcell{position:relative;width:254px;height:584px;cursor:pointer}
   .gcell .device{position:absolute;top:0;left:0;transform:scale(.641);transform-origin:top left}
   .gcell .device::after{display:none}
   .gcell .gcap{
     position:absolute;left:0;right:0;bottom:0;text-align:center;
-    font-size:12px;font-weight:700;color:var(--deep);letter-spacing:.2px;
+    font-size:11.8px;font-weight:720;color:var(--ink);
   }
   .gcell .gnum{
     display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;
-    background:var(--green);color:#fff;font-size:10.5px;font-weight:800;margin-right:7px;vertical-align:1px;
+    background:var(--green);color:#fff;font-size:10px;font-weight:800;margin-right:6px;
   }
-  .gcell:hover .device{box-shadow:0 2px 0 rgba(255,255,255,.14) inset,0 0 0 1px rgba(0,0,0,.35),0 40px 80px -18px rgba(11,59,46,.5)}
-  .gnote{
-    max-width:1080px;margin:0 auto 30px;text-align:center;
-    font-size:12.5px;color:var(--muted);line-height:1.7;
-  }
-  .gnote b{color:var(--deep)}
+  .gnote{max-width:980px;margin:0 auto 24px;text-align:center;font-size:12.5px;color:var(--muted);line-height:1.6}
 </style>
 </head>
 <body>
@@ -370,17 +514,26 @@
   <div class="chrome-l">
     <span class="dot"></span>
     <b>FreshTrack HK</b>
-    <span>Mobile App Mockup · COMP7950 · Douglas &amp; Cyanblue</span>
+    <span class="badge-gf">✨ Golden Fusion v2.0</span>
+    <span class="sub">Eco-Paper Theme · 3-Zone Shelf · Micro-Animations</span>
   </div>
   <div class="chrome-r">
-    <button class="seg on" data-mode="single">Single device</button>
-    <button class="seg" data-mode="gallery">All 5 screens</button>
+    <!-- Helper Large Font & Tri-lingual Switcher (Phase 1 Task 1.3) -->
+    <div class="seg-group">
+      <button class="seg" id="btnHelperMode" title="125% Large Font Mode for Seniors &amp; Helpers">👵 Aa 大字</button>
+      <button class="seg" id="btnLangSwitch" title="Switch Language (EN / 繁中 / ID)">🌐 EN</button>
+      <button class="seg" id="btnDarkTheme" title="OLED Low-Carbon Dark Mode">🌙 OLED</button>
+    </div>
+    <div class="seg-group">
+      <button class="seg on" data-mode="single">Single device</button>
+      <button class="seg" data-mode="gallery">All 5 screens</button>
+    </div>
   </div>
 </div>
 
 <div class="stage" id="stage">
 
-  <!-- ======================= DEVICE ======================= -->
+  <!-- ======================= MOBILE DEVICE ======================= -->
   <div class="device" id="deviceSingle">
     <div class="frame">
       <div class="island"></div>
@@ -388,50 +541,56 @@
       <div class="statusbar">
         <span>9:41</span>
         <span class="sb-r">
-          <svg width="18" height="12" viewBox="0 0 18 12" fill="currentColor"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="6" width="3" height="6" rx="1"/><rect x="10" y="3" width="3" height="9" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg>
-          <svg width="16" height="12" viewBox="0 0 16 12" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M1.2 4.3a10 10 0 0 1 13.6 0"/><path d="M4 7a6.1 6.1 0 0 1 8 0"/><circle cx="8" cy="10.1" r="1.05" fill="currentColor" stroke="none"/></svg>
-          <svg width="25" height="12" viewBox="0 0 25 12" fill="none"><rect x=".6" y=".6" width="21" height="10.8" rx="3.2" stroke="currentColor" stroke-opacity=".38"/><rect x="2.3" y="2.3" width="15" height="7.4" rx="1.9" fill="currentColor"/><path d="M23.3 4.1v3.8a1.95 1.95 0 0 0 0-3.8z" fill="currentColor" fill-opacity=".38"/></svg>
+          <svg width="17" height="11" viewBox="0 0 18 12" fill="currentColor"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="6" width="3" height="6" rx="1"/><rect x="10" y="3" width="3" height="9" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg>
+          <svg width="15" height="11" viewBox="0 0 16 12" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M1.2 4.3a10 10 0 0 1 13.6 0"/><path d="M4 7a6.1 6.1 0 0 1 8 0"/><circle cx="8" cy="10.1" r="1.05" fill="currentColor" stroke="none"/></svg>
+          <svg width="24" height="11" viewBox="0 0 25 12" fill="none"><rect x=".6" y=".6" width="21" height="10.8" rx="3.2" stroke="currentColor" stroke-opacity=".38"/><rect x="2.3" y="2.3" width="16" height="7.4" rx="1.9" fill="currentColor"/></svg>
         </span>
       </div>
 
       <div class="appbody" id="appbody">
 
-        <!-- ---------- 1. HOME ---------- -->
+        <!-- ---------- 1. HOME (Golden Fusion Timeline & Rescue Trio) ---------- -->
         <section class="m-screen on" id="m-home">
           <div class="mhead">
             <div>
-              <h2>Good evening, Douglas</h2>
-              <p><b>6 items</b> need your attention soon</p>
+              <h2 id="lblGreeting">Good evening, Douglas</h2>
+              <p><b id="urgentCountTxt">6 items</b> <span id="lblSubGreet">need your attention soon</span></p>
             </div>
-            <button class="avatar" data-toast="Profile screen is outside this mockup">D</button>
+            <!-- Living Eco-Tree Header Badge (Effect 3) -->
+            <button class="tree-pill" id="headerTreeBtn" data-go="impact" title="Household Living Eco-Tree">
+              <span>🌱</span>
+              <b id="treeStageBadge">Lv.3 Tree</b>
+            </button>
           </div>
 
-          <div class="alert">
-            <span class="alert-i">⚠️</span>
-            <div>
-              <div class="alert-t">2 items at high risk</div>
-              <div class="alert-s">Chicken Breast and Baby Spinach expire tomorrow</div>
+          <!-- Phase 2 Task 2.1: Today's Rescue Trio Hero Card -->
+          <div class="trio-card">
+            <div class="trio-head">
+              <span class="t-title">🔥 <span id="lblTrioTitle">Today's Top 3 Rescue</span></span>
+              <span class="t-hint">✓ Eat · ❄️ Freeze · 🍲 Pot</span>
             </div>
-            <button class="alert-b" data-go="fridge">Review</button>
+            <div class="ilist" id="homeTrioList"></div>
+            <button class="trio-banner" data-recipe="powerbowl">
+              <span style="font-size:22px">🥗</span>
+              <span class="tb-txt">
+                Spinach &amp; Chicken Power Bowl
+                <small>Rescues 2 urgent items above · 20 min · 92% match</small>
+              </span>
+              <span class="tb-cta">Cook Now</span>
+            </button>
           </div>
 
+          <!-- Dynamic Odometer KPIs -->
           <div class="mini3">
-            <div class="mini"><span class="ml">Tracked</span><span class="mv">42</span></div>
-            <div class="mini"><span class="ml">Waste saved</span><span class="mv">3.2<small>kg</small></span></div>
-            <div class="mini"><span class="ml">Money saved</span><span class="mv">$486</span></div>
+            <div class="mini" id="kpiCardTracked"><span class="ml" id="lblTracked">Tracked</span><span class="mv" id="kpiTracked">12</span></div>
+            <div class="mini" id="kpiCardWaste"><span class="ml" id="lblWasteSaved">Waste saved</span><span class="mv"><span id="kpiWaste">3.2</span><small>kg</small></span></div>
+            <div class="mini" id="kpiCardMoney"><span class="ml" id="lblMoneySaved">Money saved</span><span class="mv">HK$<span id="kpiMoney">486</span></span></div>
           </div>
 
-          <div class="sechead"><h3>Use Soon</h3><button class="link" data-go="fridge">See all</button></div>
-          <div class="hscroll">
-            <button class="hcard" data-go="fridge"><span class="he">🥬</span><span class="hn">Baby Spinach</span><span class="hd">1 day · best-before</span><span class="pill high">High</span></button>
-            <button class="hcard" data-go="fridge"><span class="he">🍗</span><span class="hn">Chicken Breast</span><span class="hd">1 day · use-by</span><span class="pill high">High</span></button>
-            <button class="hcard" data-go="fridge"><span class="he">🥛</span><span class="hn">Whole Milk</span><span class="hd">2 days · use-by</span><span class="pill med">Medium</span></button>
-            <button class="hcard" data-go="fridge"><span class="he">🥣</span><span class="hn">Greek Yoghurt</span><span class="hd">2 days · best-before</span><span class="pill med">Medium</span></button>
-            <button class="hcard" data-go="fridge"><span class="he">🍅</span><span class="hn">Cherry Tomatoes</span><span class="hd">3 days · best-before</span><span class="pill low">Low</span></button>
-            <button class="hcard" data-go="fridge"><span class="he">🍌</span><span class="hn">Bananas</span><span class="hd">3 days · best-before</span><span class="pill med">Medium</span></button>
+          <div class="sechead">
+            <h3 id="lblRescueTonight">Rescue tonight</h3>
+            <button class="link" data-go="recipes">All recipes →</button>
           </div>
-
-          <div class="sechead"><h3>Rescue tonight</h3><button class="link" data-go="recipes">All recipes</button></div>
           <button class="rrow" data-recipe="powerbowl">
             <span class="rr-i">🥗</span>
             <span class="rr-t">Spinach &amp; Chicken Power Bowl<small>Uses 3 expiring items · saves 0.6 kg</small></span>
@@ -448,17 +607,24 @@
             <span class="rr-p">74%</span>
           </button>
 
-          <div class="disclaim"><b>Note:</b> FreshTrack estimates <b>spoilage risk</b> only. An AI image cannot certify that food is safe to eat — <b>use-by</b> dates and food-safety guidance always take priority.</div>
+          <div class="disclaim"><b>Important:</b> FreshTrack estimates <b>spoilage risk</b> from storage rules and <b>best-before</b> dates. An AI image cannot certify whether food is safe to eat — <b>use-by</b> dates always take priority.</div>
         </section>
 
-        <!-- ---------- 2. FRIDGE ---------- -->
+        <!-- ---------- 2. FRIDGE (List + 3-Zone Spatial Shelf View + Boiling Pot) ---------- -->
         <section class="m-screen" id="m-fridge">
           <div class="mhead">
-            <div><h2>My Fridge</h2><p>42 items tracked · sorted by spoilage risk</p></div>
-            <button class="iconbtn" data-toast="Sort options are simulated">⇅</button>
+            <div>
+              <h2 id="lblFridgeTitle">My Fridge</h2>
+              <p><span id="fridgeSubCount">12</span> items · tap ✓ to eat, ❄️ to freeze (+30d)</p>
+            </div>
+            <!-- Phase 3 Task 3.1: Segmented List / 3-Zone Shelf Toggle -->
+            <div class="view-toggle" id="fridgeViewToggle">
+              <button class="vbtn on" data-view="shelf">🧊 Shelf</button>
+              <button class="vbtn" data-view="list">📋 List</button>
+            </div>
           </div>
 
-          <div class="msearch">🔍 <input placeholder="Search my fridge…"></div>
+          <div class="msearch">🔍 <input id="fridgeSearchInput" placeholder="Search spinach, milk, chicken…"></div>
 
           <div class="chiprow" id="catChips">
             <button class="chip on" data-cat="all">All</button>
@@ -472,35 +638,36 @@
             <button class="chip warn" data-risk="high">⚠ High risk only</button>
           </div>
 
-          <div class="ilist" id="itemList">
-            <div class="irow" data-cat="produce" data-risk="high"><span class="ie">🥬</span><span class="inm"><b>Baby Spinach</b><small>Produce · 200 g</small></span><span class="iday">1 day<small>Best-before</small></span><span class="pill high">High</span></div>
-            <div class="irow" data-cat="meat" data-risk="high"><span class="ie">🍗</span><span class="inm"><b>Chicken Breast</b><small>Meat · 400 g</small></span><span class="iday">1 day<small>Use-by</small></span><span class="pill high">High</span></div>
-            <div class="irow" data-cat="bakery" data-risk="high"><span class="ie">🍞</span><span class="inm"><b>Sourdough Bread</b><small>Bakery · 1 loaf</small></span><span class="iday">1 day<small>Best-before</small></span><span class="pill high">High</span></div>
-            <div class="irow" data-cat="dairy" data-risk="med"><span class="ie">🥛</span><span class="inm"><b>Whole Milk</b><small>Dairy · 1 L</small></span><span class="iday">2 days<small>Use-by</small></span><span class="pill med">Medium</span></div>
-            <div class="irow" data-cat="dairy" data-risk="med"><span class="ie">🥣</span><span class="inm"><b>Greek Yoghurt</b><small>Dairy · 500 g</small></span><span class="iday">2 days<small>Best-before</small></span><span class="pill med">Medium</span></div>
-            <div class="irow" data-cat="produce" data-risk="med"><span class="ie">🍌</span><span class="inm"><b>Bananas</b><small>Produce · 4 pcs</small></span><span class="iday">3 days<small>Best-before</small></span><span class="pill med">Medium</span></div>
-            <div class="irow" data-cat="produce" data-risk="low"><span class="ie">🍅</span><span class="inm"><b>Cherry Tomatoes</b><small>Produce · 300 g</small></span><span class="iday">3 days<small>Best-before</small></span><span class="pill low">Low</span></div>
-            <div class="irow" data-cat="pantry" data-risk="med"><span class="ie">🍝</span><span class="inm"><b>Fresh Pasta</b><small>Pantry · 250 g</small></span><span class="iday">4 days<small>Best-before</small></span><span class="pill med">Medium</span></div>
-            <div class="irow" data-cat="produce" data-risk="low"><span class="ie">🥕</span><span class="inm"><b>Carrots</b><small>Produce · 500 g</small></span><span class="iday">6 days<small>Best-before</small></span><span class="pill low">Low</span></div>
-            <div class="irow" data-cat="dairy" data-risk="low"><span class="ie">🧀</span><span class="inm"><b>Cheddar Cheese</b><small>Dairy · 250 g</small></span><span class="iday">9 days<small>Best-before</small></span><span class="pill low">Low</span></div>
-            <div class="irow" data-cat="meat" data-risk="low"><span class="ie">🥚</span><span class="inm"><b>Eggs (6)</b><small>Meat · 6 pcs</small></span><span class="iday">11 days<small>Best-before</small></span><span class="pill low">Low</span></div>
-            <div class="irow" data-cat="pantry" data-risk="low"><span class="ie">🍚</span><span class="inm"><b>Jasmine Rice</b><small>Pantry · 1 kg</small></span><span class="iday">120 days<small>Best-before</small></span><span class="pill low">Low</span></div>
+          <!-- 3-Zone Spatial Shelf Container (Phase 3 Task 3.2) -->
+          <div id="shelfViewContainer"></div>
+
+          <!-- Classic List Container with Liquid Countdown Rings -->
+          <div class="ilist" id="itemList" style="display:none"></div>
+
+          <!-- Phase 3 Task 3.4: Floating Boiling Pot Bar -->
+          <div class="pot-bar" id="potBar">
+            <span class="pot-icon">🍲</span>
+            <div class="pot-txt">
+              <b>Rescue Cooking Pot (<span id="potCount">0</span> items)</b>
+              <small id="potSubTxt">Tap 🍲 on any item above to match recipes</small>
+            </div>
+            <button class="pot-cta" id="btnOpenPotRecipe">Cook →</button>
           </div>
         </section>
 
         <!-- ---------- 3. RECIPES ---------- -->
         <section class="m-screen" id="m-recipes">
           <div class="mhead">
-            <div><h2>Recipes</h2><p>Ranked by how many expiring items they rescue</p></div>
+            <div><h2>Rescue Recipes</h2><p>Ranked by expiring items rescued</p></div>
           </div>
-          <p class="mtip">💡 Recipes with a higher match % use more of your soon-to-expire items. Tap any card for ingredients and steps.</p>
+          <p class="mtip">💡 Recipes with a higher match % use more of your soon-to-expire items. Tap any card to cook and grow your household Eco-Tree.</p>
 
           <button class="rcard" data-recipe="powerbowl">
             <div class="rhero">🥗</div>
             <div class="rbody">
               <div class="rt">Spinach &amp; Chicken Power Bowl</div>
-              <div class="rs">Uses 3 expiring items · saves 0.6 kg · 20 min</div>
-              <div class="rfoot"><span>Easy</span><span>·</span><span>2 servings</span><span class="pct">92%</span></div>
+              <div class="rs">Uses Baby Spinach, Chicken Breast, Cherry Tomatoes · saves 0.6 kg</div>
+              <div class="rfoot"><span>Easy · 20 min</span><span>·</span><span>2 servings</span><span class="pct">92%</span></div>
             </div>
           </button>
 
@@ -508,8 +675,8 @@
             <div class="rhero" style="background:var(--amber-soft)">🍲</div>
             <div class="rbody">
               <div class="rt">Tomato-Yoghurt Dip</div>
-              <div class="rs">Uses 2 expiring items · saves 0.3 kg · 10 min</div>
-              <div class="rfoot"><span>Easy</span><span>·</span><span>4 servings</span><span class="pct">78%</span></div>
+              <div class="rs">Uses Greek Yoghurt, Cherry Tomatoes · saves 0.3 kg</div>
+              <div class="rfoot"><span>Easy · 10 min</span><span>·</span><span>4 servings</span><span class="pct">78%</span></div>
             </div>
           </button>
 
@@ -517,8 +684,8 @@
             <div class="rhero" style="background:var(--purple-soft)">🍞</div>
             <div class="rbody">
               <div class="rt">Sourdough Bread Pudding</div>
-              <div class="rs">Uses 2 expiring items · saves 0.4 kg · 45 min</div>
-              <div class="rfoot"><span>Medium</span><span>·</span><span>6 servings</span><span class="pct">74%</span></div>
+              <div class="rs">Uses Sourdough Bread, Whole Milk, Eggs · saves 0.4 kg</div>
+              <div class="rfoot"><span>Medium · 45 min</span><span>·</span><span>4 servings</span><span class="pct">74%</span></div>
             </div>
           </button>
 
@@ -526,71 +693,73 @@
             <div class="rhero" style="background:var(--blue-soft)">🍝</div>
             <div class="rbody">
               <div class="rt">Creamy Tomato Pasta</div>
-              <div class="rs">Uses 2 expiring items · saves 0.2 kg · 15 min</div>
-              <div class="rfoot"><span>Easy</span><span>·</span><span>2 servings</span><span class="pct">68%</span></div>
-            </div>
-          </button>
-
-          <button class="rcard" data-recipe="smoothie">
-            <div class="rhero" style="background:#dcfce7">🥤</div>
-            <div class="rbody">
-              <div class="rt">Banana-Yoghurt Smoothie</div>
-              <div class="rs">Uses 2 expiring items · saves 0.2 kg · 5 min</div>
-              <div class="rfoot"><span>Easy</span><span>·</span><span>1 serving</span><span class="pct">65%</span></div>
+              <div class="rs">Uses Fresh Pasta, Cherry Tomatoes, Cheddar · saves 0.2 kg</div>
+              <div class="rfoot"><span>Easy · 15 min</span><span>·</span><span>2 servings</span><span class="pct">68%</span></div>
             </div>
           </button>
         </section>
 
-        <!-- ---------- 4. ADD ---------- -->
+        <!-- ---------- 4. ADD ITEM (Laser Receipt Scan & Staggered Peel-off) ---------- -->
         <section class="m-screen" id="m-add">
           <div class="mhead">
-            <div><h2>Add Item</h2><p>Three ways to get groceries into your fridge</p></div>
+            <div><h2>Add Groceries</h2><p>3-second AI capture into your household fridge</p></div>
           </div>
 
           <button class="scanhero" id="btnScanM">
+            <div class="laser"></div>
             <span class="sh-i">🧾</span>
-            <span class="sh-t">Scan receipt</span>
-            <span class="sh-s">Tap to parse item names, quantities and dates automatically</span>
+            <span class="sh-t" id="scanHeroTitle">Scan Supermarket Receipt</span>
+            <span class="sh-s">Auto-parses PARKnSHOP / Wellcome items, weights &amp; best-before dates</span>
           </button>
 
           <div class="mlist">
-            <button class="mrow" id="btnPhotoM"><span class="mi">📷</span><span><b>Photo recognition</b><small>Snap a shelf or a single item</small></span></button>
-            <button class="mrow" id="btnManualM"><span class="mi">✍️</span><span><b>Manual entry</b><small>Type item name + best-before date</small></span></button>
+            <button class="mrow" id="btnPhotoM"><span class="mi">📷</span><span><b>AI Photo &amp; Expiry Label Scan</b><small>Distinguishes best-before vs safety use-by</small></span></button>
+            <button class="mrow" id="btnManualM"><span class="mi">🎙️</span><span><b>Voice / Quick Chip Entry</b><small>Say "Bought 1L fresh milk and 300g spinach"</small></span></button>
           </div>
 
           <div class="progress" id="progressM"><i id="progressBarM"></i></div>
 
           <div class="parsed" id="parsedM">
-            <p class="mtip" style="margin-bottom:10px">✅ 4 items recognised — please confirm the dates before saving.</p>
-            <div class="prow"><span class="pe">🥬</span><span class="pn"><b>Baby Spinach</b><small>200 g</small></span><span class="pd">Best-before<b>2026-10-15</b></span></div>
-            <div class="prow"><span class="pe">🍗</span><span class="pn"><b>Chicken Breast</b><small>400 g</small></span><span class="pd">Use-by<b>2026-10-15</b></span></div>
-            <div class="prow"><span class="pe">🥛</span><span class="pn"><b>Whole Milk</b><small>1 L</small></span><span class="pd">Use-by<b>2026-10-16</b></span></div>
-            <div class="prow"><span class="pe">🍞</span><span class="pn"><b>Sourdough Bread</b><small>1 loaf</small></span><span class="pd">Best-before<b>2026-10-15</b></span></div>
+            <p class="mtip" style="margin-bottom:9px">✅ <b>4 items recognised</b> from PARKnSHOP receipt — confirm before saving:</p>
+            <div class="prow" style="animation-delay:0ms"><span class="pe">🥬</span><span class="pn"><b>Organic Baby Spinach</b><small>Produce · 200 g · HK$24</small></span><span class="pd">Best-before<b>+3 days</b></span></div>
+            <div class="prow" style="animation-delay:80ms"><span class="pe">🍗</span><span class="pn"><b>Chilled Chicken Breast</b><small>Meat · 400 g · HK$38</small></span><span class="pd" style="color:var(--red)">Use-by ⚠<b>+2 days</b></span></div>
+            <div class="prow" style="animation-delay:160ms"><span class="pe">🥛</span><span class="pn"><b>Meiji Fresh Milk</b><small>Dairy · 1 L · HK$26</small></span><span class="pd" style="color:var(--red)">Use-by ⚠<b>+4 days</b></span></div>
+            <div class="prow" style="animation-delay:240ms"><span class="pe">🍞</span><span class="pn"><b>Sourdough Loaf</b><small>Bakery · 1 loaf · HK$32</small></span><span class="pd">Best-before<b>+3 days</b></span></div>
             <div class="pacts">
-              <button class="btn primary" id="btnConfirmM">Confirm &amp; add</button>
+              <button class="btn primary" id="btnConfirmM">Confirm &amp; Add All (4)</button>
               <button class="btn ghost" id="btnCancelM">Cancel</button>
             </div>
           </div>
         </section>
 
-        <!-- ---------- 5. IMPACT ---------- -->
+        <!-- ---------- 5. IMPACT (Living Eco-Tree + SDG 12.3 Metrics) ---------- -->
         <section class="m-screen" id="m-impact">
           <div class="mhead">
-            <div><h2>Impact</h2><p>How your household maps to SDG 12.3</p></div>
+            <div><h2>Household Impact</h2><p>Your family Eco-Tree &amp; UN SDG 12.3 progress</p></div>
           </div>
 
+          <!-- Living Eco-Tree Hero Card (Phase 4 Task 4.3) -->
           <div class="hero-impact">
-            <div class="ring"><span>68%</span></div>
+            <div class="tree-stage-box" id="impactTreeSvgBox">
+              <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
+                <path d="M32 56V30" stroke="#A7F3D0" stroke-width="4" stroke-linecap="round"/>
+                <circle cx="32" cy="24" r="14" fill="#22C55E"/>
+                <circle cx="22" cy="30" r="10" fill="#16A34A"/>
+                <circle cx="42" cy="30" r="10" fill="#4ADE80"/>
+                <circle cx="36" cy="18" r="3.5" fill="#F59E0B" id="treeFruit1"/>
+                <circle cx="25" cy="24" r="3" fill="#EF4444" id="treeFruit2"/>
+              </svg>
+            </div>
             <div>
-              <div class="hi-n">3.2 <small>kg</small></div>
+              <div class="hi-n"><span id="impactKgVal">3.2</span> <small>kg</small></div>
               <div class="hi-l">food waste saved this month</div>
-              <div class="hi-d">↑ 18% vs last month</div>
+              <div class="hi-d" id="treeLevelDesc">🌳 Stage 3 Lush Eco-Tree · 0.8kg to Stage 4!</div>
             </div>
           </div>
 
           <div class="mini3">
-            <div class="mini"><span class="ml">CO₂e avoided</span><span class="mv">4.1<small>kg</small></span></div>
-            <div class="mini"><span class="ml">Items rescued</span><span class="mv">11</span></div>
+            <div class="mini"><span class="ml">CO₂e avoided</span><span class="mv"><span id="impactCo2Val">4.1</span><small>kg</small></span></div>
+            <div class="mini"><span class="ml">Items rescued</span><span class="mv" id="impactRescuedVal">11</span></div>
             <div class="mini"><span class="ml">Avg. risk</span><span class="mv" style="color:var(--green)">Low</span></div>
           </div>
 
@@ -602,47 +771,49 @@
               <div class="bar"><b>2.1</b><i style="height:63%"></i><span>Jul</span></div>
               <div class="bar"><b>2.4</b><i style="height:72%"></i><span>Aug</span></div>
               <div class="bar"><b>2.7</b><i style="height:81%"></i><span>Sep</span></div>
-              <div class="bar"><b>3.2</b><i style="height:96%"></i><span>Oct</span></div>
+              <div class="bar"><b id="octBarLbl">3.2</b><i id="octBarFill" style="height:92%"></i><span>Oct</span></div>
             </div>
           </div>
 
           <div class="card">
-            <h3>SDG alignment</h3>
+            <h3>UN SDG Alignment</h3>
             <div class="sdg"><span class="num">12.3</span> Halve per-capita global food waste by 2030</div>
-            <div class="sdg" style="background:#134e4a"><span class="num">12.5</span> Substantially reduce waste generation</div>
-            <div class="sdg b"><span class="num">13.3</span> Improve climate-change awareness</div>
+            <div class="sdg" style="background:#134E4A"><span class="num">12.5</span> Substantially reduce waste generation</div>
+            <div class="sdg b"><span class="num">13.3</span> Improve household climate-change action</div>
           </div>
 
-          <div class="disclaim"><b>Method note:</b> savings are estimated from rescued item weight and average Hong Kong retail prices. FreshTrack estimates <b>spoilage risk</b> only — it never certifies that food is safe to eat.</div>
+          <div class="disclaim"><b>Method note:</b> CO₂e is calculated at 1.28 kg per kg of rescued food. FreshTrack estimates <b>spoilage risk</b> only — never food safety.</div>
         </section>
 
       </div><!-- /appbody -->
 
-      <!-- tab bar -->
+      <!-- Bottom Navigation Bar with Center Super Shutter -->
       <nav class="tabbar" id="tabbar">
         <button class="on" data-go="home">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5.6 9.4V20h12.8V9.4"/><path d="M10 20v-5.2h4V20"/></svg>
-          Home
+          <span data-i18n="navHome">Home</span>
         </button>
         <button data-go="fridge">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2.6" width="12" height="18.8" rx="3"/><path d="M6 10h12"/><path d="M9.6 6.2v1.8"/><path d="M9.6 13.2v2.6"/></svg>
-          Fridge
+          <span data-i18n="navFridge">Fridge</span>
+        </button>
+        <button class="shutter-btn" data-go="add" title="Quick Scan / Voice Entry">
+          <div class="shutter-circle">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 5.4v13.2"/><path d="M5.4 12h13.2"/></svg>
+          </div>
+          <span data-i18n="navAdd">Scan</span>
         </button>
         <button data-go="recipes">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3.4 10.8h17.2"/><path d="M5 10.8a7 7 0 0 0 14 0"/><path d="M9.4 7.2c0-1.3 1-1.6 1-2.8"/><path d="M13.6 7.2c0-1.3 1-1.6 1-2.8"/></svg>
-          Recipes
-        </button>
-        <button data-go="add">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5.4v13.2"/><path d="M5.4 12h13.2"/></svg>
-          Add
+          <span data-i18n="navRecipes">Recipes</span>
         </button>
         <button data-go="impact">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><circle cx="12" cy="12" r="9"/><path d="M3.2 12h17.6"/><path d="M12 3c3 3.6 3 14.4 0 18"/><path d="M12 3c-3 3.6-3 14.4 0 18"/></svg>
-          Impact
+          <span data-i18n="navImpact">Impact</span>
         </button>
       </nav>
 
-      <!-- recipe bottom sheet -->
+      <!-- Recipe Detail Bottom Sheet -->
       <div class="backdrop" id="backdrop"></div>
       <div class="sheet" id="sheet">
         <div class="grab"></div>
@@ -654,12 +825,12 @@
           </div>
           <button class="close" id="mClose">✕</button>
         </div>
-        <h5>Ingredients</h5>
+        <h5>Ingredients (Expiring items highlighted)</h5>
         <ul id="mIng"></ul>
-        <h5>Steps</h5>
+        <h5>Cooking Steps</h5>
         <ol id="mSteps"></ol>
         <div class="sacts">
-          <button class="btn primary" id="mCook">Mark as cooked</button>
+          <button class="btn primary" id="mCook">🍳 Mark as cooked (+0.6kg Eco)</button>
           <button class="btn ghost" id="mClose2">Close</button>
         </div>
       </div>
@@ -673,32 +844,253 @@
 
 <script>
 (function(){
-  var stage   = document.getElementById('stage');
-  var base    = document.getElementById('deviceSingle');
+  /* ============ 1. Reactive In-Memory State (Golden Fusion Store) ============ */
+  var ITEMS = [
+    { id:'sp1', emoji:'🥬', name:'Baby Spinach', cat:'produce', weight:'200 g', days:1, maxDays:5, type:'Best-before', risk:'high', zone:'crisper', buyer:'M', inPot:false },
+    { id:'ck1', emoji:'🍗', name:'Chicken Breast', cat:'meat', weight:'400 g', days:1, maxDays:3, type:'Use-by', risk:'high', zone:'chiller', buyer:'D', inPot:false },
+    { id:'sd1', emoji:'🍞', name:'Sourdough Bread', cat:'bakery', weight:'1 loaf', days:1, maxDays:4, type:'Best-before', risk:'high', zone:'chiller', buyer:'D', inPot:false },
+    { id:'mk1', emoji:'🥛', name:'Whole Milk', cat:'dairy', weight:'1 L', days:2, maxDays:6, type:'Use-by', risk:'med', zone:'chiller', buyer:'M', inPot:false },
+    { id:'yg1', emoji:'🥣', name:'Greek Yoghurt', cat:'dairy', weight:'500 g', days:2, maxDays:10, type:'Best-before', risk:'med', zone:'chiller', buyer:'D', inPot:false },
+    { id:'bn1', emoji:'🍌', name:'Bananas', cat:'produce', weight:'4 pcs', days:3, maxDays:5, type:'Best-before', risk:'med', zone:'crisper', buyer:'M', inPot:false },
+    { id:'tm1', emoji:'🍅', name:'Cherry Tomatoes', cat:'produce', weight:'300 g', days:3, maxDays:7, type:'Best-before', risk:'low', zone:'crisper', buyer:'D', inPot:false },
+    { id:'ps1', emoji:'🍝', name:'Fresh Pasta', cat:'pantry', weight:'250 g', days:4, maxDays:14, type:'Best-before', risk:'med', zone:'chiller', buyer:'D', inPot:false },
+    { id:'cr1', emoji:'🥕', name:'Carrots', cat:'produce', weight:'500 g', days:6, maxDays:14, type:'Best-before', risk:'low', zone:'crisper', buyer:'M', inPot:false },
+    { id:'ch1', emoji:'🧀', name:'Cheddar Cheese', cat:'dairy', weight:'250 g', days:9, maxDays:21, type:'Best-before', risk:'low', zone:'chiller', buyer:'D', inPot:false },
+    { id:'eg1', emoji:'🥚', name:'Eggs (6 pcs)', cat:'meat', weight:'6 pcs', days:11, maxDays:21, type:'Best-before', risk:'low', zone:'chiller', buyer:'M', inPot:false },
+    { id:'dm1', emoji:'🥟', name:'Frozen Pork Dumplings', cat:'meat', weight:'500 g', days:45, maxDays:60, type:'Best-before', risk:'low', zone:'freezer', buyer:'M', inPot:false }
+  ];
+
+  var stats = { wasteKg: 3.2, moneyHkd: 486, co2Kg: 4.1, rescuedCount: 11 };
+  var activeCat = 'all';
+  var highOnly = false;
+  var searchQuery = '';
+  var fridgeViewMode = 'shelf'; // 'shelf' | 'list'
+  var currentLang = 'EN'; // 'EN' | 'ZH' | 'ID'
+
+  var I18N = {
+    EN: { greet:'Good evening, Douglas', sub:'need your attention soon', trio:'Today\'s Top 3 Rescue', rescueTonight:'Rescue tonight', fridge:'My Fridge' },
+    ZH: { greet:'晚上好，Douglas 👋', sub:'件臨期食材需優先處理', trio:'今日優先搶救三件事', rescueTonight:'今晚搶救菜譜', fridge:'我的家庭雪櫃' },
+    ID: { greet:'Selamat malam, Douglas', sub:'bahan perlu segera dimasak', trio:'3 Bahan Prioritas Hari Ini', rescueTonight:'Resep Penyelamat Malam Ini', fridge:'Kulkas Keluarga' }
+  };
+
+  var stage = document.getElementById('stage');
+  var base = document.getElementById('deviceSingle');
   var appbody = document.getElementById('appbody');
-  var tabbar  = document.getElementById('tabbar');
-  var toast   = document.getElementById('toast');
-  var modal   = document.getElementById('sheet');
-  var backdrop= document.getElementById('backdrop');
+  var tabbar = document.getElementById('tabbar');
+  var toast = document.getElementById('toast');
+  var modal = document.getElementById('sheet');
+  var backdrop = document.getElementById('backdrop');
 
-  var SCREENS = ['home','fridge','recipes','add','impact'];
-  var CAPS = ['Home — overview &amp; alerts','My Fridge — inventory','Recipes — rescue suggestions','Add Item — 3 capture methods','Impact — SDG 12.3 alignment'];
-
-  /* ---------------- toast ---------------- */
+  /* ============ 2. Toast & Eco Leaf Particle Effect ============ */
   var tTimer = null;
   function say(msg){
     toast.textContent = msg;
     toast.classList.add('on');
     if (tTimer) clearTimeout(tTimer);
-    tTimer = setTimeout(function(){ toast.classList.remove('on'); }, 2300);
+    tTimer = setTimeout(function(){ toast.classList.remove('on'); }, 2400);
   }
 
-  /* ---------------- tab switching ---------------- */
+  function spawnEcoLeaves(sourceEl){
+    var rect = sourceEl ? sourceEl.getBoundingClientRect() : { left: window.innerWidth/2, top: window.innerHeight/2 };
+    var targetEl = document.getElementById('headerTreeBtn');
+    var tRect = targetEl ? targetEl.getBoundingClientRect() : { left: rect.left, top: 80 };
+
+    for (var i=0;i<5;i++){
+      (function(idx){
+        var leaf = document.createElement('div');
+        leaf.className = 'leaf-particle';
+        leaf.textContent = idx % 2 === 0 ? '🍃' : '✨';
+        leaf.style.left = (rect.left + 12 + idx*6) + 'px';
+        leaf.style.top = (rect.top + 6) + 'px';
+        document.body.appendChild(leaf);
+        requestAnimationFrame(function(){
+          var dx = (tRect.left - rect.left) + (Math.random()*24 - 12);
+          var dy = (tRect.top - rect.top) + (Math.random()*16 - 8);
+          leaf.style.transform = 'translate(' + dx + 'px,' + dy + 'px) scale(0.4) rotate(140deg)';
+          leaf.style.opacity = '0';
+        });
+        setTimeout(function(){ if (leaf.parentNode) leaf.parentNode.removeChild(leaf); }, 700);
+      })(i);
+    }
+    if (targetEl){
+      targetEl.classList.remove('pulse');
+      void targetEl.offsetWidth;
+      targetEl.classList.add('pulse');
+    }
+  }
+
+  function rewardRescue(kgAdd, hkdAdd, sourceEl){
+    stats.wasteKg = Math.round((stats.wasteKg + kgAdd) * 10) / 10;
+    stats.moneyHkd = Math.round(stats.moneyHkd + hkdAdd);
+    stats.co2Kg = Math.round(stats.wasteKg * 1.28 * 10) / 10;
+    stats.rescuedCount += 1;
+    spawnEcoLeaves(sourceEl);
+    updateStatsUI();
+  }
+
+  function updateStatsUI(){
+    document.getElementById('kpiTracked').textContent = ITEMS.length;
+    document.getElementById('fridgeSubCount').textContent = ITEMS.length;
+    document.getElementById('kpiWaste').textContent = stats.wasteKg.toFixed(1);
+    document.getElementById('kpiMoney').textContent = stats.moneyHkd;
+    document.getElementById('impactKgVal').textContent = stats.wasteKg.toFixed(1);
+    document.getElementById('impactCo2Val').textContent = stats.co2Kg.toFixed(1);
+    document.getElementById('impactRescuedVal').textContent = stats.rescuedCount;
+    document.getElementById('octBarLbl').textContent = stats.wasteKg.toFixed(1);
+
+    var highCount = ITEMS.filter(function(x){ return x.risk !== 'low'; }).length;
+    document.getElementById('urgentCountTxt').textContent = highCount + ' items';
+
+    var treeLv = Math.min(5, Math.floor(stats.wasteKg / 1.2) + 1);
+    document.getElementById('treeStageBadge').textContent = 'Lv.' + treeLv + ' Tree';
+    document.getElementById('treeLevelDesc').textContent = '🌳 Stage ' + treeLv + ' Lush Eco-Tree · ' + stats.rescuedCount + ' items rescued!';
+
+    var wCard = document.getElementById('kpiCardWaste');
+    if (wCard){ wCard.classList.remove('bump'); void wCard.offsetWidth; wCard.classList.add('bump'); }
+  }
+
+  /* ============ 3. Liquid Countdown Ring SVG Builder (Effect 2) ============ */
+  function buildRingHTML(item){
+    var ratio = Math.max(0.08, Math.min(1, item.days / (item.maxDays || 7)));
+    var circ = 106.8;
+    var offset = (circ * (1 - ratio)).toFixed(1);
+    var strokeColor = item.risk === 'high' ? '#EF4444' : (item.risk === 'med' ? '#F59E0B' : '#16A34A');
+    return '<div class="ring-wrap">' +
+      '<svg viewBox="0 0 40 40">' +
+        '<circle cx="20" cy="20" r="17" fill="none" stroke="var(--line)" stroke-width="3"/>' +
+        '<circle cx="20" cy="20" r="17" fill="none" stroke="' + strokeColor + '" stroke-width="3" stroke-linecap="round" stroke-dasharray="' + circ + '" stroke-dashoffset="' + offset + '"/>' +
+      '</svg>' +
+      '<span class="em">' + item.emoji + '</span>' +
+      '<span class="buyer" title="Added by household member ' + item.buyer + '">' + item.buyer + '</span>' +
+    '</div>';
+  }
+
+  function buildItemRowHTML(item){
+    var isCritical = (item.type === 'Use-by' && item.days <= 1);
+    var dayLabel = item.days === 1 ? '1 day' : (item.days + ' days');
+    return '<div class="irow ' + (isCritical ? 'critical-halo' : '') + '" data-id="' + item.id + '">' +
+      buildRingHTML(item) +
+      '<div class="inm">' +
+        '<b>' + item.name + '</b>' +
+        '<small>' + item.weight + ' · ' + item.type + ' (' + dayLabel + ')</small>' +
+      '</div>' +
+      '<span class="pill ' + item.risk + '">' + (item.risk === 'high' ? 'High' : (item.risk === 'med' ? 'Med' : 'Low')) + '</span>' +
+      '<div class="qacts">' +
+        '<button class="qbtn eat" data-act="eat" data-id="' + item.id + '" title="One-tap Eat &amp; Rescue">✓</button>' +
+        '<button class="qbtn frz" data-act="freeze" data-id="' + item.id + '" title="Move to Freezer (+30 days)">❄️</button>' +
+        '<button class="qbtn pot ' + (item.inPot ? 'in-pot' : '') + '" data-act="pot" data-id="' + item.id + '" title="Add to Cooking Pot">🍲</button>' +
+      '</div>' +
+    '</div>';
+  }
+
+  /* ============ 4. Render Home Trio & Fridge Views ============ */
+  function renderAll(){
+    // 1. Render Home Top 3 Urgent Trio
+    var sorted = ITEMS.slice().sort(function(a,b){ return a.days - b.days; });
+    var top3 = sorted.slice(0, 3);
+    var trioEl = document.getElementById('homeTrioList');
+    if (trioEl){
+      trioEl.innerHTML = top3.map(buildItemRowHTML).join('');
+    }
+
+    // 2. Filter items for My Fridge
+    var filtered = ITEMS.filter(function(item){
+      var okCat = (activeCat === 'all' || item.cat === activeCat);
+      var okRisk = (!highOnly || item.risk === 'high');
+      var okSearch = (!searchQuery || item.name.toLowerCase().indexOf(searchQuery) !== -1);
+      return okCat && okRisk && okSearch;
+    });
+
+    // 3. Render List View
+    var listEl = document.getElementById('itemList');
+    if (listEl){
+      listEl.innerHTML = filtered.map(buildItemRowHTML).join('');
+    }
+
+    // 4. Render 3-Zone Spatial Shelf View (Chiller / Crisper / Freezer)
+    var shelfEl = document.getElementById('shelfViewContainer');
+    if (shelfEl){
+      var zones = [
+        { key:'chiller', icon:'🥛', title:'Upper Chiller · Dairy, Meat & Ready-to-Eat', temp:'4°C', cls:'' },
+        { key:'crisper', icon:'🥬', title:'Crisper Drawer · Fresh Produce & Greens', temp:'6°C High-Humidity', cls:'' },
+        { key:'freezer', icon:'❄️', title:'Deep Freezer · Long-Term Frozen Lock', temp:'-18°C', cls:'freezer' }
+      ];
+      shelfEl.innerHTML = zones.map(function(z){
+        var zItems = filtered.filter(function(i){ return i.zone === z.key; });
+        var cardsHtml = zItems.length ? zItems.map(function(item){
+          return '<div class="scard" data-id="' + item.id + '">' +
+            buildRingHTML(item) +
+            '<div class="snm">' +
+              '<b>' + item.name + '</b>' +
+              '<small>' + item.days + 'd · ' + item.type + '</small>' +
+            '</div>' +
+            '<div class="qacts">' +
+              '<button class="qbtn eat" data-act="eat" data-id="' + item.id + '" title="Eat">✓</button>' +
+              (z.key !== 'freezer' ? '<button class="qbtn frz" data-act="freeze" data-id="' + item.id + '" title="Freeze +30d">❄️</button>' : '') +
+              '<button class="qbtn pot ' + (item.inPot ? 'in-pot' : '') + '" data-act="pot" data-id="' + item.id + '" title="Add to Pot">🍲</button>' +
+            '</div>' +
+          '</div>';
+        }).join('') : '<div style="grid-column:1/-1;font-size:11px;color:var(--muted);padding:6px 2px">No matching items in this compartment</div>';
+
+        return '<div class="shelf-box ' + z.cls + '">' +
+          '<div class="shelf-hd"><span>' + z.icon + ' ' + z.title + '</span><span class="temp">' + z.temp + '</span></div>' +
+          '<div class="shelf-grid">' + cardsHtml + '</div>' +
+        '</div>';
+      }).join('');
+    }
+
+    // 5. Update Pot Bar
+    var potItems = ITEMS.filter(function(i){ return i.inPot; });
+    document.getElementById('potCount').textContent = potItems.length;
+    document.getElementById('potSubTxt').textContent = potItems.length
+      ? ('In pot: ' + potItems.map(function(i){ return i.name; }).join(', '))
+      : 'Tap 🍲 on any item above to match rescue recipes';
+
+    updateStatsUI();
+  }
+
+  /* ============ 5. Item Actions: Consume (✓), Freeze (❄️), Pot (🍲) ============ */
+  document.addEventListener('click', function(e){
+    var actBtn = e.target.closest ? e.target.closest('[data-act]') : null;
+    if (!actBtn) return;
+    e.stopPropagation();
+    var act = actBtn.getAttribute('data-act');
+    var id = actBtn.getAttribute('data-id');
+    var idx = ITEMS.findIndex(function(x){ return x.id === id; });
+    if (idx === -1) return;
+    var item = ITEMS[idx];
+
+    if (act === 'eat'){
+      ITEMS.splice(idx, 1);
+      rewardRescue(0.3, 28, actBtn);
+      renderAll();
+      say('✓ Consumed ' + item.name + ' — +0.3kg waste saved 🍃');
+    } else if (act === 'freeze'){
+      item.zone = 'freezer';
+      item.days += 30;
+      item.maxDays = 45;
+      item.risk = 'low';
+      renderAll();
+      say('❄️ Moved ' + item.name + ' to Deep Freezer (+30 days extended)');
+    } else if (act === 'pot'){
+      item.inPot = !item.inPot;
+      renderAll();
+      var potBar = document.getElementById('potBar');
+      if (potBar){ potBar.classList.remove('bounce'); void potBar.offsetWidth; potBar.classList.add('bounce'); }
+      say(item.inPot ? ('🍲 Added ' + item.name + ' to cooking pot') : ('Removed ' + item.name + ' from pot'));
+    }
+  });
+
+  document.getElementById('btnOpenPotRecipe').onclick = function(){
+    openRecipe('powerbowl');
+  };
+
+  /* ============ 6. Navigation & View Mode Toggles ============ */
   function go(name){
-    var scr = document.querySelectorAll('.m-screen');
+    var scr = document.querySelectorAll('#deviceSingle .m-screen');
     for (var i=0;i<scr.length;i++) scr[i].classList.remove('on');
     var t = document.getElementById('m-' + name);
-    if (t){ t.classList.add('on'); }
+    if (t) t.classList.add('on');
     appbody.scrollTop = 0;
     var btns = tabbar.querySelectorAll('button');
     for (var j=0;j<btns.length;j++){
@@ -706,31 +1098,64 @@
     }
   }
 
-  /* ---------------- recipe sheet ---------------- */
+  document.getElementById('fridgeViewToggle').addEventListener('click', function(e){
+    var b = e.target.closest('[data-view]');
+    if (!b) return;
+    fridgeViewMode = b.getAttribute('data-view');
+    var all = this.querySelectorAll('.vbtn');
+    for (var i=0;i<all.length;i++) all[i].classList.toggle('on', all[i] === b);
+    document.getElementById('shelfViewContainer').style.display = fridgeViewMode === 'shelf' ? '' : 'none';
+    document.getElementById('itemList').style.display = fridgeViewMode === 'list' ? '' : 'none';
+    say(fridgeViewMode === 'shelf' ? '🧊 Switched to 3-Zone Spatial Shelf View' : '📋 Switched to Compact List View');
+  });
+
+  /* ============ 7. Top Chrome Switches (Helper Mode, Language, Dark OLED) ============ */
+  document.getElementById('btnHelperMode').onclick = function(){
+    var on = document.body.classList.toggle('helper-mode');
+    this.classList.toggle('on', on);
+    say(on ? '👵 125% Large Font Helper Mode Enabled' : 'Standard font size restored');
+  };
+
+  document.getElementById('btnDarkTheme').onclick = function(){
+    var on = document.body.classList.toggle('dark-theme');
+    this.classList.toggle('on', on);
+    say(on ? '🌙 OLED Low-Carbon Dark Mode On' : '☀️ Warm Oat Paper Light Mode On');
+  };
+
+  document.getElementById('btnLangSwitch').onclick = function(){
+    var order = ['EN', 'ZH', 'ID'];
+    currentLang = order[(order.indexOf(currentLang) + 1) % order.length];
+    this.textContent = '🌐 ' + currentLang;
+    var pack = I18N[currentLang];
+    document.getElementById('lblGreeting').textContent = pack.greet;
+    document.getElementById('lblSubGreet').textContent = pack.sub;
+    document.getElementById('lblTrioTitle').textContent = pack.trio;
+    document.getElementById('lblRescueTonight').textContent = pack.rescueTonight;
+    document.getElementById('lblFridgeTitle').textContent = pack.fridge;
+    say('🌐 Language switched to ' + currentLang);
+  };
+
+  /* ============ 8. Recipe Bottom Sheet ============ */
   var RECIPES = {
     powerbowl:{ icon:'🥗', title:'Spinach & Chicken Power Bowl', sub:'Uses 3 expiring items · saves 0.6 kg · 20 min',
       ing:['🥬 Baby Spinach 200 g — best-before tomorrow','🍗 Chicken Breast 400 g — use-by tomorrow','🍅 Cherry Tomatoes 300 g','🍚 Jasmine Rice 1 cup','🫒 Olive oil, lemon, salt'],
-      steps:['Pan-sear the chicken breast until cooked through, then slice.','Wilt the spinach in the same pan for 1 minute.','Cook the rice and let it cool slightly.','Halve the tomatoes and combine everything in a bowl.','Dress with olive oil, lemon juice and a pinch of salt.'] },
+      steps:['Pan-sear the chicken breast until internal temp reaches 75°C, then slice.','Wilt the baby spinach in the same warm pan for 1 minute.','Halve the cherry tomatoes and arrange over warm rice.','Drizzle with olive oil and lemon dressing.'] },
     dip:{ icon:'🍲', title:'Tomato-Yoghurt Dip', sub:'Uses 2 expiring items · saves 0.3 kg · 10 min',
-      ing:['🍅 Cherry Tomatoes 300 g','🥣 Greek Yoghurt 500 g','🧄 Garlic 1 clove','🫒 Olive oil, mint, salt'],
-      steps:['Roast or pan-blister the tomatoes until soft.','Cool, then fold into the Greek yoghurt.','Add crushed garlic, olive oil and chopped mint.','Chill for 10 minutes before serving.'] },
+      ing:['🍅 Cherry Tomatoes 300 g','🥣 Greek Yoghurt 500 g','🧄 Garlic 1 clove, olive oil, mint'],
+      steps:['Blister the cherry tomatoes in a skillet for 4 minutes.','Whisk cold Greek yoghurt with garlic and salt.','Spoon warm tomatoes over yoghurt and serve with toast.'] },
     breadpudding:{ icon:'🍞', title:'Sourdough Bread Pudding', sub:'Uses 2 expiring items · saves 0.4 kg · 45 min',
-      ing:['🍞 Sourdough Bread 1 loaf — best-before tomorrow','🥛 Whole Milk 1 L — use-by in 2 days','🥚 Eggs 3 pcs','🍬 Sugar, cinnamon, butter'],
-      steps:['Tear the bread into chunks and place in a baking dish.','Whisk milk, eggs, sugar and cinnamon together.','Pour over the bread and let it soak for 15 minutes.','Bake at 180°C for about 30 minutes until set.'] },
+      ing:['🍞 Sourdough Bread 1 loaf — best-before tomorrow','🥛 Whole Milk 1 L — use-by in 2 days','🥚 Eggs 3 pcs, cinnamon'],
+      steps:['Cube the sourdough bread and place in a baking dish.','Whisk milk, eggs, and cinnamon, then soak bread for 10 mins.','Bake at 180°C for 25 minutes until golden.'] },
     pasta:{ icon:'🍝', title:'Creamy Tomato Pasta', sub:'Uses 2 expiring items · saves 0.2 kg · 15 min',
-      ing:['🍝 Fresh Pasta 250 g — best-before in 4 days','🍅 Cherry Tomatoes 300 g','🧀 Cheddar Cheese 250 g','🧄 Garlic, olive oil, pepper'],
-      steps:['Boil the pasta until al dente.','Sauté garlic and tomatoes until saucy.','Toss the pasta through the sauce.','Finish with grated cheddar and black pepper.'] },
-    smoothie:{ icon:'🥤', title:'Banana-Yoghurt Smoothie', sub:'Uses 2 expiring items · saves 0.2 kg · 5 min',
-      ing:['🍌 Bananas 4 pcs — best-before in 3 days','🥣 Greek Yoghurt 500 g','🥛 Whole Milk 1 L','🍯 Honey (optional)'],
-      steps:['Peel the bananas and break into chunks.','Add yoghurt, milk and a spoon of honey.','Blend until smooth.','Serve immediately over ice.'] }
+      ing:['🍝 Fresh Pasta 250 g','🍅 Cherry Tomatoes 300 g','🧀 Cheddar Cheese 250 g'],
+      steps:['Boil fresh pasta for 4 minutes until al dente.','Sauté halved tomatoes with garlic and olive oil.','Toss pasta with grated cheddar and black pepper.'] }
   };
 
   function openRecipe(key){
-    var r = RECIPES[key];
-    if (!r) return;
-    document.getElementById('mIcon').textContent  = r.icon;
+    var r = RECIPES[key] || RECIPES.powerbowl;
+    document.getElementById('mIcon').textContent = r.icon;
     document.getElementById('mTitle').textContent = r.title;
-    document.getElementById('mSub').textContent   = r.sub;
+    document.getElementById('mSub').textContent = r.sub;
     var ing = document.getElementById('mIng'); ing.innerHTML = '';
     r.ing.forEach(function(x){ var li=document.createElement('li'); li.textContent=x; ing.appendChild(li); });
     var st = document.getElementById('mSteps'); st.innerHTML = '';
@@ -739,146 +1164,124 @@
   }
   function closeRecipe(){ modal.classList.remove('on'); backdrop.classList.remove('on'); }
 
-  document.getElementById('mClose').onclick  = closeRecipe;
+  document.getElementById('mClose').onclick = closeRecipe;
   document.getElementById('mClose2').onclick = closeRecipe;
   backdrop.onclick = closeRecipe;
-  document.getElementById('mCook').onclick = function(){ closeRecipe(); say('Marked as cooked — 0.6 kg rescued 🎉'); };
+  document.getElementById('mCook').onclick = function(e){
+    closeRecipe();
+    rewardRescue(0.6, 54, e.currentTarget);
+    say('🎉 Cooked! +0.6kg waste saved & Eco-Tree grew!');
+  };
 
-  /* ---------------- fridge filters ---------------- */
-  var catChips  = document.getElementById('catChips');
-  var riskChips = document.getElementById('riskChips');
-  var itemList  = document.getElementById('itemList');
-  var activeCat = 'all';
-  var highOnly  = false;
-
-  function applyFilters(){
-    var rows = itemList.querySelectorAll('.irow');
-    var shown = 0;
-    for (var i=0;i<rows.length;i++){
-      var c = rows[i];
-      var okCat  = (activeCat === 'all' || c.getAttribute('data-cat') === activeCat);
-      var okRisk = (!highOnly || c.getAttribute('data-risk') === 'high');
-      var show = okCat && okRisk;
-      c.style.display = show ? '' : 'none';
-      if (show) shown++;
-    }
-    return shown;
-  }
-  catChips.addEventListener('click', function(e){
+  /* ============ 9. Fridge Filters & Search ============ */
+  document.getElementById('catChips').addEventListener('click', function(e){
     var b = e.target.closest('[data-cat]'); if (!b) return;
     activeCat = b.getAttribute('data-cat');
-    var all = catChips.querySelectorAll('.chip');
+    var all = this.querySelectorAll('.chip');
     for (var i=0;i<all.length;i++) all[i].classList.toggle('on', all[i] === b);
-    var n = applyFilters();
-    if (activeCat !== 'all') say(n + ' item' + (n===1?'':'s') + ' in ' + b.textContent.trim());
+    renderAll();
   });
-  riskChips.addEventListener('click', function(e){
+  document.getElementById('riskChips').addEventListener('click', function(e){
     var b = e.target.closest('[data-risk]'); if (!b) return;
     highOnly = !highOnly;
     b.classList.toggle('on', highOnly);
-    var n = applyFilters();
-    say(highOnly ? (n + ' high-risk items shown') : 'Showing all items');
+    renderAll();
+  });
+  document.getElementById('fridgeSearchInput').addEventListener('input', function(){
+    searchQuery = this.value.trim().toLowerCase();
+    renderAll();
   });
 
-  /* ---------------- receipt scan simulation ---------------- */
+  /* ============ 10. Receipt Laser Scan Simulation (Effect 5) ============ */
   var progress = document.getElementById('progressM');
-  var bar      = document.getElementById('progressBarM');
-  var parsed   = document.getElementById('parsedM');
+  var bar = document.getElementById('progressBarM');
+  var parsed = document.getElementById('parsedM');
+  var scanHero = document.getElementById('btnScanM');
   var scanning = false;
 
   function runScan(){
     if (scanning) return;
     scanning = true;
+    scanHero.classList.add('scanning');
     parsed.classList.remove('on');
     progress.classList.add('on');
     bar.style.width = '0%';
-    say('Reading receipt…');
+    say('🔍 Gemini 2.5 Flash reading receipt…');
     var pct = 0;
     var timer = setInterval(function(){
-      pct += 8 + Math.random()*14;
+      pct += 18 + Math.random()*16;
       if (pct >= 100){
         pct = 100;
         clearInterval(timer);
         setTimeout(function(){
+          scanHero.classList.remove('scanning');
           progress.classList.remove('on');
           parsed.classList.add('on');
-          appbody.scrollTop = appbody.scrollHeight;
-          say('4 items recognised');
+          say('✅ 4 items parsed with Best-before / Use-by dates');
           scanning = false;
-        }, 320);
+        }, 260);
       }
       bar.style.width = pct + '%';
-    }, 220);
+    }, 180);
   }
-  document.getElementById('btnScanM').onclick   = runScan;
-  document.getElementById('btnPhotoM').onclick  = function(){ say('Camera capture is simulated in this mockup'); };
-  document.getElementById('btnManualM').onclick = function(){ say('Manual entry form is simulated in this mockup'); };
-  document.getElementById('btnConfirmM').onclick = function(){
+  scanHero.onclick = runScan;
+  document.getElementById('btnPhotoM').onclick = runScan;
+  document.getElementById('btnManualM').onclick = function(){ say('🎙️ Voice capture: "Added 1L Meiji Milk & 200g Spinach"'); };
+  document.getElementById('btnConfirmM').onclick = function(e){
+    ITEMS.unshift(
+      { id:'new1_'+Date.now(), emoji:'🥬', name:'Organic Baby Spinach', cat:'produce', weight:'200 g', days:3, maxDays:5, type:'Best-before', risk:'med', zone:'crisper', buyer:'D', inPot:false },
+      { id:'new2_'+Date.now(), emoji:'🍗', name:'Chilled Chicken Breast', cat:'meat', weight:'400 g', days:2, maxDays:3, type:'Use-by', risk:'high', zone:'chiller', buyer:'D', inPot:false }
+    );
     parsed.classList.remove('on');
-    say('4 items added to My Fridge ✓');
+    renderAll();
+    spawnEcoLeaves(e.currentTarget);
+    go('fridge');
+    say('✅ Added parsed groceries to your 3-Zone Fridge!');
   };
-  document.getElementById('btnCancelM').onclick = function(){ parsed.classList.remove('on'); say('Scan discarded'); };
+  document.getElementById('btnCancelM').onclick = function(){ parsed.classList.remove('on'); say('Scan cancelled'); };
 
-  /* ---------------- gallery mode ---------------- */
-  var galleryBuilt = false;
+  /* ============ 11. 5-Screen Gallery Mode ============ */
+  var SCREENS = ['home','fridge','recipes','add','impact'];
+  var CAPS = ['Home — Top 3 Rescue & Eco-Tree','My Fridge — 3-Zone Spatial Shelf','Recipes — Expiring Match','Add — Laser Receipt Scan','Impact — Living Eco-Tree & SDG'];
 
   function buildGallery(){
-    if (galleryBuilt) return;
+    var oldNote = stage.querySelector('.gnote');
+    var oldWrap = stage.querySelector('.gwrap');
+    if (oldNote) oldNote.remove();
+    if (oldWrap) oldWrap.remove();
+
     var g = document.createElement('div');
     g.className = 'gwrap';
-
     var note = document.createElement('p');
     note.className = 'gnote';
-    note.innerHTML = 'FreshTrack HK mobile app — <b>five screens</b> of the household-facing prototype. ' +
-                     'Click any phone to open it in the interactive single-device view.';
+    note.innerHTML = '<b>FreshTrack HK Golden Fusion v2.0</b> — All 5 interactive screens side by side. Click any screen to interact.';
 
     SCREENS.forEach(function(id, i){
       var cell = document.createElement('div');
       cell.className = 'gcell';
       cell.setAttribute('data-screen', id);
-
       var dev = base.cloneNode(true);
       dev.removeAttribute('id');
-
-      // 1) filter screens by id FIRST — must happen while the ids still exist
+      dev.style.display = '';
       var list = dev.querySelectorAll('.m-screen');
-      var target = null;
       for (var n=list.length-1;n>=0;n--){
-        if (list[n].id === 'm-' + id){ target = list[n]; }
-        else { list[n].parentNode.removeChild(list[n]); }
+        if (list[n].id === 'm-' + id) list[n].classList.add('on');
+        else list[n].parentNode.removeChild(list[n]);
       }
-      if (target) target.classList.add('on');
-
-      // 2) only now strip every id, so the clone can never collide with the live device
       var withId = dev.querySelectorAll('[id]');
       for (var k=0;k<withId.length;k++) withId[k].removeAttribute('id');
-
-      // 3) sync tab bar highlight by index (ids are gone, order is stable)
       var tb = dev.querySelectorAll('.tabbar button');
-      for (var t=0;t<tb.length;t++){
-        tb[t].classList.toggle('on', t === i);
-      }
-      // neutralise inner data-* hooks so the cell click wins
-      var hooks = dev.querySelectorAll('[data-go],[data-recipe],[data-toast],[data-cat],[data-risk]');
-      for (var h=0;h<hooks.length;h++){
-        hooks[h].removeAttribute('data-go');
-        hooks[h].removeAttribute('data-recipe');
-        hooks[h].removeAttribute('data-toast');
-      }
-      dev.querySelectorAll('input').forEach(function(inp){ inp.setAttribute('tabindex','-1'); });
+      for (var t=0;t<tb.length;t++) tb[t].classList.toggle('on', tb[t].getAttribute('data-go') === id);
 
       var cap = document.createElement('div');
       cap.className = 'gcap';
       cap.innerHTML = '<span class="gnum">' + (i+1) + '</span>' + CAPS[i];
-
       cell.appendChild(dev);
       cell.appendChild(cap);
       g.appendChild(cell);
     });
-
     stage.appendChild(note);
     stage.appendChild(g);
-    galleryBuilt = true;
   }
 
   function setMode(mode){
@@ -886,10 +1289,6 @@
       buildGallery();
       stage.classList.add('gallery');
       base.style.display = 'none';
-      var note = stage.querySelector('.gnote');
-      var g = stage.querySelector('.gwrap');
-      if (note) note.style.display = '';
-      if (g) g.style.display = 'flex';
     } else {
       stage.classList.remove('gallery');
       base.style.display = '';
@@ -898,39 +1297,25 @@
       if (note2) note2.style.display = 'none';
       if (g2) g2.style.display = 'none';
     }
-    var segs = document.querySelectorAll('.seg');
+    var segs = document.querySelectorAll('[data-mode]');
     for (var i=0;i<segs.length;i++) segs[i].classList.toggle('on', segs[i].getAttribute('data-mode') === mode);
   }
 
-  document.querySelectorAll('.seg').forEach(function(s){
+  document.querySelectorAll('[data-mode]').forEach(function(s){
     s.onclick = function(){ setMode(s.getAttribute('data-mode')); };
   });
 
-  /* ---------------- global click routing ---------------- */
   document.addEventListener('click', function(e){
     if (!e.target.closest) return;
-
-    // gallery cell → jump into single-device view on that screen
     var cell = e.target.closest('.gcell');
-    if (cell){
-      setMode('single');
-      go(cell.getAttribute('data-screen'));
-      return;
-    }
-
-    var seg = e.target.closest('.seg');
-    if (seg) return; // handled above
-
-    var tst = e.target.closest('[data-toast]');
-    if (tst){ say(tst.getAttribute('data-toast')); return; }
-
+    if (cell){ setMode('single'); go(cell.getAttribute('data-screen')); return; }
     var rec = e.target.closest('[data-recipe]');
     if (rec){ openRecipe(rec.getAttribute('data-recipe')); return; }
-
     var g = e.target.closest('[data-go]');
     if (g){ go(g.getAttribute('data-go')); }
   });
 
+  renderAll();
   go('home');
 })();
 </script>
