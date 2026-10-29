@@ -106,7 +106,11 @@ CREATE TABLE IF NOT EXISTS profiles (
 );
 
 -- 2. household_members: enables invite-code sharing (V2) and RLS membership checks.
-CREATE TYPE IF NOT EXISTS household_role AS ENUM ('owner', 'editor', 'viewer');
+DO $$ BEGIN
+    CREATE TYPE household_role AS ENUM ('owner', 'editor', 'viewer');
+EXCEPTION
+    WHEN duplicate_object THEN NULL;
+END $$;
 
 CREATE TABLE IF NOT EXISTS household_members (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -748,8 +752,16 @@ CREATE TRIGGER trg_barcode_cache_updated_at
 -- A pluggable notification model: expiry alerts are enqueued as rows, then dispatched by
 -- the notify edge function across any channel (WeChat subscribe / Web Push / email / in-app).
 
-CREATE TYPE IF NOT EXISTS notification_channel AS ENUM ('wechat_subscribe', 'web_push', 'email', 'in_app');
-CREATE TYPE IF NOT EXISTS notification_status AS ENUM ('pending', 'sent', 'failed');
+DO $$ BEGIN
+    CREATE TYPE notification_channel AS ENUM ('wechat_subscribe', 'web_push', 'email', 'in_app');
+EXCEPTION
+    WHEN duplicate_object THEN NULL;
+END $$;
+DO $$ BEGIN
+    CREATE TYPE notification_status AS ENUM ('pending', 'sent', 'failed');
+EXCEPTION
+    WHEN duplicate_object THEN NULL;
+END $$;
 
 CREATE TABLE IF NOT EXISTS notifications (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -820,7 +832,8 @@ END;
 $$;
 
 -- Register the pg_cron job (no-op if the pg_cron extension is unavailable).
-DO $$
+-- NOTE: use distinct dollar-quote tags — a nested $$ would close the outer $$ early.
+DO $cron$
 BEGIN
     IF EXISTS (
         SELECT 1 FROM pg_extension WHERE extname = 'pg_cron'
@@ -828,10 +841,10 @@ BEGIN
         PERFORM cron.schedule(
             'daily-expiry-scan',
             '0 8 * * *',
-            $$SELECT refresh_risk_and_enqueue_notifications();$$
+            $sql$SELECT refresh_risk_and_enqueue_notifications();$sql$
         );
     END IF;
-END $$;
+END $cron$;
 
 -- ===================== seed_storage_rules_expanded.sql =====================
 -- FreshTrack HK — Expanded Seed: Storage Rules (150+) & Rescue Recipes (30+)
