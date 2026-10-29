@@ -16,7 +16,7 @@ supabase secrets set \
   SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
 
 # 2. Deploy MVP-core functions (5-screen demo).
-for fn in ai-scan-receipt ai-scan-food match-recipes cook-recipe; do
+for fn in ai-scan-receipt ai-scan-food match-recipes cook-recipe recipe-ai-chat; do
   echo "==> Deploying $fn"
   supabase functions deploy "$fn"
 done
