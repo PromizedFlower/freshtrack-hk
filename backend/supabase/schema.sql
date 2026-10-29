@@ -62,6 +62,7 @@ CREATE TABLE IF NOT EXISTS recipes (
     ingredients JSONB NOT NULL, -- e.g. [{"name": "Baby Spinach", "category": "Produce", "weight_g": 200, "required": true}]
     steps JSONB NOT NULL,       -- e.g. ["Wash spinach...", "Pan-sear chicken breast..."]
     tags TEXT[] DEFAULT '{}',
+    source TEXT NOT NULL DEFAULT 'local' CHECK (source IN ('local', 'ai')),
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
