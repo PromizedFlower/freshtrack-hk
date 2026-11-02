@@ -6,6 +6,7 @@ Page({
     loading: true, hasData: false,
     lang: 'zh', theme: 'light', font: 'normal',
     me: null, initial: '', roleLabel: '', householdText: '',
+    members: [], memberCountText: '',
     kpi: null, trend: [],
     restock: [], restockName: '', showRestock: false,
   },
@@ -37,6 +38,8 @@ Page({
       addPh: i18n.getLang() === 'en' ? 'e.g. Milk 1L' : '例如：鲜牛奶 1L',
       save: t('save'), cancel: t('cancel'), loadingTxt: t('loading'),
       signOut: t('sign_out'),
+      familyTitle: t('family_title'), inviteCode: t('invite_code'),
+      copy: t('copy'), selfTag: t('self_tag'),
     };
   },
 
@@ -73,9 +76,18 @@ Page({
     try {
       const me = await api.rpc('get_me');
       const initial = String(me.display_name || me.email || '?').charAt(0);
+      let members = [];
+      let memberCountText = '';
+      if (me.household_id) {
+        members = (await api.rpc('get_household_members', { p_household: me.household_id }) || [])
+          .map((m) => Object.assign({}, m, {
+            initial: String(m.display_name || m.email || '?').charAt(0),
+            roleLabel: i18n.roleLabel(m.role),
+          }));
+        memberCountText = i18n.t('family_members', { n: members.length });
+      }
       this.setData({
-        me,
-        initial,
+        me, initial, members, memberCountText,
         roleLabel: i18n.roleLabel(me.role),
         householdText: me.household_name
           ? (me.household_name + ' · ' + i18n.roleLabel(me.role))
@@ -84,6 +96,15 @@ Page({
     } catch (e) {
       console.error('get_me failed', e);
     }
+  },
+
+  copyInvite() {
+    const code = this.data.me && this.data.me.invite_code;
+    if (!code) return;
+    wx.setClipboardData({
+      data: code,
+      success: () => wx.showToast({ title: i18n.t('copied'), icon: 'none' }),
+    });
   },
 
   signOut() {
