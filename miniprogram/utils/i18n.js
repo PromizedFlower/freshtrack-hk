@@ -82,6 +82,10 @@ const dict = {
     sign_out: '退出登录',
     role_owner: '拥有者', role_editor: '编辑者', role_viewer: '访客',
     profile_household: '家庭', profile_no_household: '尚未加入家庭',
+    family_title: '我的家庭',
+    family_members: '{n} 位成员',
+    invite_code: '邀请码', copy: '复制', copied: '邀请码已复制',
+    self_tag: '我',
   },
   en: {
     loading: 'Loading…',
@@ -149,6 +153,10 @@ const dict = {
     sign_out: 'Sign out',
     role_owner: 'Owner', role_editor: 'Editor', role_viewer: 'Viewer',
     profile_household: 'Household', profile_no_household: 'No household yet',
+    family_title: 'My family',
+    family_members: '{n} members',
+    invite_code: 'Invite code', copy: 'Copy', copied: 'Invite code copied',
+    self_tag: 'Me',
   },
 };
 
