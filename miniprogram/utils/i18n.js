@@ -86,6 +86,11 @@ const dict = {
     family_members: '{n} 位成员',
     invite_code: '邀请码', copy: '复制', copied: '邀请码已复制',
     self_tag: '我',
+    family_switch: '切换家庭', family_join: '加入家庭', family_leave: '离开家庭',
+    switch_title: '切换家庭', join_code_ph: '输入家庭邀请码', join_btn: '加入',
+    joined_ok: '已加入 {name}', join_fail: '加入失败，邀请码无效',
+    leave_confirm: '确定离开「{name}」吗？', left_ok: '已离开', leave_fail: '离开失败',
+    current: '当前',
   },
   en: {
     loading: 'Loading…',
@@ -157,6 +162,11 @@ const dict = {
     family_members: '{n} members',
     invite_code: 'Invite code', copy: 'Copy', copied: 'Invite code copied',
     self_tag: 'Me',
+    family_switch: 'Switch household', family_join: 'Join household', family_leave: 'Leave household',
+    switch_title: 'Switch household', join_code_ph: 'Enter invite code', join_btn: 'Join',
+    joined_ok: 'Joined {name}', join_fail: 'Join failed, invalid code',
+    leave_confirm: 'Leave "{name}"?', left_ok: 'Left', leave_fail: 'Leave failed',
+    current: 'Current',
   },
 };
 
