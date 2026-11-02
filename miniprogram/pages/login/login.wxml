@@ -27,7 +27,7 @@
       <view class="avatar">{{item.emoji}}</view>
       <view class="grow">
         <view class="a-name">{{item.name}}</view>
-        <view class="a-email">{{item.email}}</view>
+        <view class="a-email">🏠 {{item.household}} · {{item.email}}</view>
       </view>
       <view class="role-chip {{item.role}}">{{item.roleLabel}}</view>
     </view>
