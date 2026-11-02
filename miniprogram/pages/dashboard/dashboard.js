@@ -13,7 +13,7 @@ Page({
     loading: true,
     hasData: false,
     lang: 'zh', theme: 'light', font: 'normal',
-    period: 'afternoon', manualPeriod: '',
+    period: 'afternoon',
     clock: '', dateStr: '', greeting: '',
     kpi: null,
     zoneCounts: { fridge: 0, freezer: 0, pantry: 0 },
@@ -39,7 +39,6 @@ Page({
   _labels() {
     const t = i18n.t;
     return {
-      tMorning: t('morning'), tAfternoon: t('afternoon'), tNight: t('night'),
       tConsume: t('consumed'), tDiscard: t('discard'),
       tipConsume: t('swipe_tip_consume'), tipEdit: t('swipe_tip_edit'), tipDiscard: t('swipe_tip_discard'),
       kpiInFridge: t('kpi_in_fridge'), kpiExpiring: t('kpi_expiring'), kpiSaved: t('me_month_kg'),
@@ -60,18 +59,13 @@ Page({
         month: 'numeric', day: 'numeric', weekday: 'short',
       });
       const clock = now.toTimeString().slice(0, 8);
-      const period = this.data.manualPeriod || autoPeriod();
+      const period = autoPeriod();
       const patch = { clock, dateStr, period };
       if (this.data.greeting !== i18n.t('greeting_' + period)) patch.greeting = i18n.t('greeting_' + period);
       this.setData(patch);
     };
     tick();
     this.setData({ _timer: setInterval(tick, 1000) });
-  },
-
-  setThemePeriod(e) {
-    const period = e.currentTarget.dataset.period;
-    this.setData({ manualPeriod: period, period, greeting: i18n.t('greeting_' + period) });
   },
 
   async load() {
@@ -93,8 +87,8 @@ Page({
       });
       this.setData({
         loading: false, hasData: true, kpi, zoneCounts, items: mapped,
-        period: this.data.manualPeriod || autoPeriod(),
-        greeting: i18n.t('greeting_' + (this.data.manualPeriod || autoPeriod())),
+        period: autoPeriod(),
+        greeting: i18n.t('greeting_' + autoPeriod()),
       });
     } catch (e) {
       console.error('dashboard load failed', e);
