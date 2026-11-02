@@ -83,10 +83,11 @@ Page({
   },
 
   async _hid() {
-    let hid = getApp().globalData.householdId;
+    let hid = getApp().globalData.householdId || api.getActiveHouseholdId();
     if (!hid) {
-      const hs = await api.rest('GET', 'households', { query: '?select=id&limit=1' });
+      const hs = await api.rpc('get_my_households');
       hid = hs && hs.length ? hs[0].id : null;
+      if (hid) api.setActiveHouseholdId(hid);
       getApp().globalData.householdId = hid;
     }
     return hid;
