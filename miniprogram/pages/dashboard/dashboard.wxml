@@ -3,14 +3,7 @@
   <view wx:if="{{loading}}" class="page-loading">{{loadingTxt}}</view>
 
   <block wx:elif="{{hasData}}">
-    <!-- Scheme C theme preview switcher -->
-    <view class="seg theme-bar">
-      <view class="pseg {{period === 'morning' ? 'active' : ''}}" data-period="morning" bindtap="setThemePeriod">🌅 {{tMorning}}</view>
-      <view class="pseg {{period === 'afternoon' ? 'active' : ''}}" data-period="afternoon" bindtap="setThemePeriod">☀️ {{tAfternoon}}</view>
-      <view class="pseg {{period === 'night' ? 'active' : ''}}" data-period="night" bindtap="setThemePeriod">🌙 {{tNight}}</view>
-    </view>
-
-    <!-- Hero banner -->
+    <!-- Hero banner (Scheme C: gradient auto-switches by time of day) -->
     <view class="hero-banner {{period}}">
       <view class="hero-pulse">
         <view class="pulse-dot"></view>
