@@ -296,3 +296,56 @@ END;
 $$;
 REVOKE EXECUTE ON FUNCTION leave_household(UUID) FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION leave_household(UUID) TO authenticated;
+
+-- 14. Member management: remove a member / transfer ownership (owner only).
+CREATE OR REPLACE FUNCTION remove_member(p_household UUID, p_user_id UUID)
+RETURNS JSONB
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+DECLARE
+    v_target_role TEXT;
+BEGIN
+    IF NOT is_household_owner(p_household) THEN
+        RAISE EXCEPTION 'Only the owner can manage members';
+    END IF;
+    IF p_user_id = auth.uid() THEN
+        RAISE EXCEPTION 'Owner cannot remove themselves; transfer ownership first';
+    END IF;
+    SELECT role::text INTO v_target_role FROM household_members
+    WHERE household_id = p_household AND user_id = p_user_id;
+    IF v_target_role IS NULL THEN
+        RAISE EXCEPTION 'target is not a member';
+    END IF;
+    DELETE FROM household_members WHERE household_id = p_household AND user_id = p_user_id;
+    RETURN jsonb_build_object('removed', p_user_id);
+END;
+$$;
+REVOKE EXECUTE ON FUNCTION remove_member(UUID, UUID) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION remove_member(UUID, UUID) TO authenticated;
+
+CREATE OR REPLACE FUNCTION transfer_ownership(p_household UUID, p_new_owner_id UUID)
+RETURNS JSONB
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+BEGIN
+    IF NOT is_household_owner(p_household) THEN
+        RAISE EXCEPTION 'Only the owner can transfer ownership';
+    END IF;
+    IF p_new_owner_id = auth.uid() THEN
+        RAISE EXCEPTION 'already the owner';
+    END IF;
+    IF NOT EXISTS (SELECT 1 FROM household_members WHERE household_id = p_household AND user_id = p_new_owner_id) THEN
+        RAISE EXCEPTION 'target is not a member';
+    END IF;
+    UPDATE household_members SET role = 'owner' WHERE household_id = p_household AND user_id = p_new_owner_id;
+    UPDATE household_members SET role = 'editor' WHERE household_id = p_household AND user_id = auth.uid();
+    UPDATE households SET owner_id = p_new_owner_id WHERE id = p_household;
+    RETURN jsonb_build_object('new_owner', p_new_owner_id);
+END;
+$$;
+REVOKE EXECUTE ON FUNCTION transfer_ownership(UUID, UUID) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION transfer_ownership(UUID, UUID) TO authenticated;
