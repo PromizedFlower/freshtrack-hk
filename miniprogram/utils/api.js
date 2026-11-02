@@ -64,4 +64,13 @@ function getSession() {
   };
 }
 
-module.exports = { request, rest, rpc, invoke, signIn, signUp, setSession, clearSession, getSession, config };
+// Active household (for multi-household switching). Persisted so the choice survives restarts.
+function getActiveHouseholdId() {
+  return wx.getStorageSync('ft_active_household');
+}
+function setActiveHouseholdId(id) {
+  if (id) wx.setStorageSync('ft_active_household', id);
+  else wx.removeStorageSync('ft_active_household');
+}
+
+module.exports = { request, rest, rpc, invoke, signIn, signUp, setSession, clearSession, getSession, getActiveHouseholdId, setActiveHouseholdId, config };
