@@ -44,6 +44,7 @@ Page({
       familySwitch: t('family_switch'), familyJoin: t('family_join'), familyLeave: t('family_leave'),
       switchTitle: t('switch_title'), joinCodePh: t('join_code_ph'), joinBtn: t('join_btn'),
       current: t('current'),
+      manageMembers: t('manage_members'), transferOwner: t('transfer_owner'), removeMember: t('remove_member'),
     };
   },
 
@@ -164,6 +165,53 @@ Page({
   _errMsg(e) {
     const d = e && e.data;
     return d && (d.message || d.msg || d.error_description || d.error);
+  },
+
+  openManage() { this.setData({ showFamily: 'manage' }); },
+
+  transferOwner(e) {
+    const id = e.currentTarget.dataset.id;
+    const m = this.data.members.find((x) => x.user_id === id);
+    const me = this.data.me;
+    if (!m || !me) return;
+    wx.showModal({
+      title: i18n.t('transfer_owner'),
+      content: i18n.t('transfer_confirm', { name: m.display_name }),
+      success: async (r) => {
+        if (!r.confirm) return;
+        try {
+          await api.rpc('transfer_ownership', { p_household: me.household_id, p_new_owner_id: id });
+          wx.showToast({ title: i18n.t('transferred'), icon: 'none' });
+          this.setData({ showFamily: '' });
+          this._loadMe();
+          this.load();
+        } catch (err) {
+          wx.showToast({ title: this._errMsg(err) || i18n.t('manage_fail'), icon: 'none' });
+        }
+      },
+    });
+  },
+
+  removeMember(e) {
+    const id = e.currentTarget.dataset.id;
+    const m = this.data.members.find((x) => x.user_id === id);
+    const me = this.data.me;
+    if (!m || !me) return;
+    wx.showModal({
+      title: i18n.t('remove_member'),
+      content: i18n.t('remove_confirm', { name: m.display_name }),
+      success: async (r) => {
+        if (!r.confirm) return;
+        try {
+          await api.rpc('remove_member', { p_household: me.household_id, p_user_id: id });
+          wx.showToast({ title: i18n.t('removed'), icon: 'none' });
+          this._loadMe();
+          this.load();
+        } catch (err) {
+          wx.showToast({ title: this._errMsg(err) || i18n.t('manage_fail'), icon: 'none' });
+        }
+      },
+    });
   },
 
   copyInvite() {
