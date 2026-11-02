@@ -108,6 +108,9 @@ DECLARE
     v_total_hkd NUMERIC := 0;
     v_total_co2 NUMERIC := 0;
 BEGIN
+    IF NOT can_edit_household(p_household) THEN
+        RAISE EXCEPTION 'Only owners and editors can modify household stock';
+    END IF;
     FOR v_item IN
         SELECT * FROM fridge_items
         WHERE id = ANY(p_item_ids) AND household_id = p_household AND status = 'in_stock'
@@ -164,6 +167,9 @@ DECLARE
     v_total_kg NUMERIC := 0;
     v_count INT := 0;
 BEGIN
+    IF NOT can_edit_household(p_household) THEN
+        RAISE EXCEPTION 'Only owners and editors can modify household stock';
+    END IF;
     FOR v_item IN
         SELECT * FROM fridge_items
         WHERE id = ANY(p_item_ids) AND household_id = p_household AND status = 'in_stock'
