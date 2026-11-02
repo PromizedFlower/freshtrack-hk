@@ -11,6 +11,28 @@
     <view class="signout" bindtap="signOut">{{signOut}}</view>
   </view>
 
+  <!-- family (household members) -->
+  <view class="card family" wx:if="{{me && me.household_id}}">
+    <view class="between">
+      <view class="h2">👨‍👩‍👧 {{familyTitle}}</view>
+    </view>
+    <view class="fam-meta">
+      <view class="fam-name">{{me.household_name}} · {{memberCountText}}</view>
+      <view class="fam-invite" bindtap="copyInvite">🔑 {{inviteCode}}：{{me.invite_code}} <text class="copy">{{copy}}</text></view>
+    </view>
+    <view class="member-row" wx:for="{{members}}" wx:key="user_id">
+      <view class="m-avatar">{{item.initial}}</view>
+      <view class="grow">
+        <view class="m-name">
+          {{item.display_name}}
+          <text wx:if="{{item.is_self}}" class="self-tag">{{selfTag}}</text>
+        </view>
+        <view class="m-email">{{item.email}}</view>
+      </view>
+      <view class="role-chip {{item.role}}">{{item.roleLabel}}</view>
+    </view>
+  </view>
+
   <view wx:if="{{loading}}" class="page-loading">{{loadingTxt}}</view>
 
   <block wx:elif="{{hasData}}">
