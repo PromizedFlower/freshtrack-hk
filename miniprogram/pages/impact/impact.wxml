@@ -31,6 +31,12 @@
       </view>
       <view class="role-chip {{item.role}}">{{item.roleLabel}}</view>
     </view>
+
+    <view class="fam-actions">
+      <view class="fam-btn" bindtap="openSwitch">🔄 {{familySwitch}}</view>
+      <view class="fam-btn" bindtap="openJoin">➕ {{familyJoin}}</view>
+      <view class="fam-btn danger" bindtap="doLeave">↩ {{familyLeave}}</view>
+    </view>
   </view>
 
   <view wx:if="{{loading}}" class="page-loading">{{loadingTxt}}</view>
@@ -132,5 +138,36 @@
       <button class="btn-ghost" bindtap="closeRestock">{{cancel}}</button>
       <button class="btn-primary" bindtap="addRestock">{{save}}</button>
     </view>
+  </view>
+
+  <!-- family drawer (switch / join) -->
+  <view wx:if="{{showFamily}}" class="drawer-mask" bindtap="closeFamily"></view>
+  <view wx:if="{{showFamily}}" class="drawer">
+    <view class="drawer-pill"></view>
+    <view class="drawer-title">{{showFamily === 'switch' ? switchTitle : familyJoin}}</view>
+
+    <block wx:if="{{showFamily === 'switch'}}">
+      <view class="hh-row" wx:for="{{myHouseholds}}" wx:key="id"
+            data-id="{{item.id}}" bindtap="switchHousehold">
+        <view class="grow">
+          <view class="hh-name">
+            🏠 {{item.name}}
+            <text wx:if="{{item.id === me.household_id}}" class="self-tag">{{current}}</text>
+          </view>
+          <view class="hh-meta">{{item.roleLabel}} · {{item.member_count}} {{lang === 'en' ? 'people' : '人'}}</view>
+        </view>
+      </view>
+    </block>
+
+    <block wx:if="{{showFamily === 'join'}}">
+      <view class="field">
+        <input class="input" value="{{joinCode}}" placeholder="{{joinCodePh}}" bindinput="onJoinCode" />
+      </view>
+      <view class="err" wx:if="{{joinErr}}">{{joinErr}}</view>
+      <view class="drawer-actions">
+        <button class="btn-ghost" bindtap="closeFamily">{{cancel}}</button>
+        <button class="btn-primary" bindtap="doJoin">{{joinBtn}}</button>
+      </view>
+    </block>
   </view>
 </view>
