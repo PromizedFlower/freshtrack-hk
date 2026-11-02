@@ -1,15 +1,48 @@
 const api = require('../../utils/api');
 const config = require('../../utils/config');
+const i18n = require('../../utils/i18n');
 
 Page({
-  data: { email: '', password: '', loading: false, error: '' },
+  data: {
+    email: '', password: '', loading: false, error: '',
+    lang: 'zh', theme: 'light', font: 'normal',
+    accounts: [],
+  },
+
+  onLoad() {
+    const app = getApp();
+    this.setData({ lang: app.globalData.lang, theme: app.globalData.theme, font: app.globalData.font });
+  },
+
+  onShow() {
+    this._refresh();
+  },
+
+  _refresh() {
+    const lang = i18n.getLang(), theme = i18n.getTheme(), font = i18n.getFont();
+    const accounts = config.DEMO_ACCOUNTS.map((a) => Object.assign({}, a, { roleLabel: i18n.roleLabel(a.role) }));
+    this.setData(Object.assign({ lang, theme, font, accounts }, this._labels()));
+    try {
+      wx.setNavigationBarColor({ frontColor: '#ffffff', backgroundColor: theme === 'dark' ? '#121816' : '#0B3B2E' });
+    } catch (e) { /* non-fatal */ }
+  },
+
+  _labels() {
+    const t = i18n.t;
+    return {
+      tagline: t('login_tagline'),
+      emailPh: t('login_email_ph'), pwdPh: t('login_pwd_ph'),
+      loginBtn: t('login_btn'), signupBtn: t('signup_btn'),
+      demoTitle: t('login_demo_title'), demoSub: t('login_demo_sub'),
+    };
+  },
 
   onEmail(e) { this.setData({ email: e.detail.value }); },
   onPwd(e) { this.setData({ password: e.detail.value }); },
 
   doLogin() {
     if (!this._valid()) return;
-    this._auth(() => api.signIn(this.data.email, this.data.password));
+    this._auth(() => api.signIn(this.data.email, this.data.password), 'err_login');
   },
 
   async doSignup() {
@@ -21,41 +54,34 @@ Page({
       api.setSession(t);
       this._enter();
     } catch (e) {
-      this.setData({ error: this._msg(e) || '注册失败' });
+      this.setData({ error: this._msg(e) || i18n.t('err_signup') });
     } finally {
       this.setData({ loading: false });
     }
   },
 
-  async enterDemo() {
+  demoLogin(e) {
+    const email = e.currentTarget.dataset.email;
     this.setData({ loading: true, error: '' });
-    try {
-      const t = await api.signIn(config.DEMO_EMAIL, config.DEMO_PASSWORD);
-      api.setSession(t);
-      this._enter();
-    } catch (e) {
-      this.setData({ error: 'Demo 登录失败，请确认已运行后端部署脚本（见 backend/deploy/SECRETS.md）' });
-    } finally {
-      this.setData({ loading: false });
-    }
+    this._auth(() => api.signIn(email, config.DEMO_PASSWORD), 'err_demo');
   },
 
   _valid() {
     if (!this.data.email || !this.data.password) {
-      this.setData({ error: '请输入邮箱和密码' });
+      this.setData({ error: i18n.t('err_email_pwd') });
       return false;
     }
     return true;
   },
 
-  async _auth(fn) {
+  async _auth(fn, errKey) {
     this.setData({ loading: true, error: '' });
     try {
       const t = await fn();
       api.setSession(t);
       this._enter();
     } catch (e) {
-      this.setData({ error: this._msg(e) || '登录失败' });
+      this.setData({ error: this._msg(e) || i18n.t(errKey) });
     } finally {
       this.setData({ loading: false });
     }
@@ -67,6 +93,9 @@ Page({
   },
 
   _enter() {
+    const app = getApp();
+    app.globalData.loggedIn = true;
+    app.globalData.user = api.getSession().user;
     wx.switchTab({ url: '/pages/dashboard/dashboard' });
   },
 });
