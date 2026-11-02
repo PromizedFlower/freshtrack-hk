@@ -1,47 +1,103 @@
-<view wx:if="{{loading}}" class="page-loading">加载中…</view>
+<view class="page-root {{theme}} {{font === 'large' ? 'font-large' : ''}}">
 
-<block wx:elif="{{hasData}}">
-  <view class="hero">
-    <view class="h1">SDG 12.3</view>
-    <view class="muted">减少食物浪费 · 减缓气候变化</view>
-  </view>
+  <view wx:if="{{loading}}" class="page-loading">{{loadingTxt}}</view>
 
-  <view class="card bigs">
-    <view class="big">
-      <view class="big-num">{{kpi.month_saved_kg}}<text class="u"> kg</text></view>
-      <view class="muted">本月惜食</view>
+  <block wx:elif="{{hasData}}">
+    <!-- SDG hero -->
+    <view class="hero">
+      <view class="h1">🌱 {{meSdg}}</view>
+      <view class="muted">{{meSdgSub}}</view>
     </view>
-    <view class="big">
-      <view class="big-num">HK${{kpi.month_saved_hkd}}</view>
-      <view class="muted">节省开支</view>
-    </view>
-    <view class="big">
-      <view class="big-num">{{kpi.co2e_kg}}<text class="u"> kg</text></view>
-      <view class="muted">减排 CO₂e</view>
-    </view>
-  </view>
 
-  <view class="card">
-    <view class="h2">近 6 月惜食趋势</view>
-    <view class="chart">
-      <view class="bar-col" wx:for="{{trend}}" wx:key="month">
-        <view class="bar-val">{{item.saved_kg}}</view>
-        <view class="bar-wrap"><view class="bar" style="height: {{item.pct}}%;"></view></view>
-        <view class="bar-label">{{item.month.slice(5)}}</view>
+    <view class="card bigs">
+      <view class="big">
+        <view class="big-num">{{kpi.month_saved_kg}}<text class="u"> kg</text></view>
+        <view class="muted">{{monthKg}}</view>
+      </view>
+      <view class="big">
+        <view class="big-num">HK${{kpi.month_saved_hkd}}</view>
+        <view class="muted">{{monthHkd}}</view>
+      </view>
+      <view class="big">
+        <view class="big-num">{{kpi.co2e_kg}}<text class="u"> kg</text></view>
+        <view class="muted">{{monthCo2}}</view>
       </view>
     </view>
-  </view>
 
-  <view class="card stat">
-    <view class="between">
-      <view class="muted">当前跟踪食材</view>
-      <view class="val">{{kpi.total_tracked}} 项</view>
+    <!-- trend -->
+    <view class="card">
+      <view class="h2">{{trend}}</view>
+      <view class="chart">
+        <view class="bar-col" wx:for="{{trend}}" wx:key="month">
+          <view class="bar-val">{{item.saved_kg}}</view>
+          <view class="bar-wrap"><view class="bar" style="height: {{item.pct}}%;"></view></view>
+          <view class="bar-label">{{item.month.slice(5)}}</view>
+        </view>
+      </view>
     </view>
-    <view class="between">
-      <view class="muted">临期 (高风险)</view>
-      <view class="val warn">{{kpi.expiring_soon}} 项</view>
+
+    <!-- restock list -->
+    <view class="card">
+      <view class="between">
+        <view class="h2">🛒 {{restock}}</view>
+        <view class="link" bindtap="openRestock">{{restockAdd}}</view>
+      </view>
+      <view wx:if="{{restock.length === 0}}" class="muted empty">{{restockEmpty}}</view>
+      <view class="restock-row" wx:for="{{restock}}" wx:key="id">
+        <view class="grow restock-name">
+          {{item.item_name}}
+          <text wx:if="{{item.status === 'bought'}}" class="bought-tag">{{restockBought}}</text>
+        </view>
+        <view class="restock-btns" wx:if="{{item.status !== 'bought'}}">
+          <view class="rbtn ok" data-id="{{item.id}}" bindtap="markBought">✓ {{restockBought}}</view>
+          <view class="rbtn del" data-id="{{item.id}}" bindtap="cancelRestock">✕ {{restockCancel}}</view>
+        </view>
+      </view>
+    </view>
+
+    <!-- preferences -->
+    <view class="card">
+      <view class="h2">⚙️ {{prefs}}</view>
+
+      <view class="pref-row">
+        <view class="pref-lbl">🌐 {{prefLang}}</view>
+        <view class="seg mini-seg">
+          <view class="pseg {{lang === 'zh' ? 'active' : ''}}" data-lang="zh" bindtap="setLang">{{prefZh}}</view>
+          <view class="pseg {{lang === 'en' ? 'active' : ''}}" data-lang="en" bindtap="setLang">{{prefEn}}</view>
+        </view>
+      </view>
+
+      <view class="pref-row">
+        <view class="pref-lbl">🎨 {{prefTheme}}</view>
+        <view class="seg mini-seg">
+          <view class="pseg {{theme === 'light' ? 'active' : ''}}" data-theme="light" bindtap="setTheme">{{prefLight}}</view>
+          <view class="pseg {{theme === 'dark' ? 'active' : ''}}" data-theme="dark" bindtap="setTheme">{{prefDark}}</view>
+        </view>
+      </view>
+
+      <view class="pref-row">
+        <view class="pref-lbl">👵 {{prefFont}}</view>
+        <view class="seg mini-seg">
+          <view class="pseg {{font === 'normal' ? 'active' : ''}}" data-font="normal" bindtap="setFont">{{font100}}</view>
+          <view class="pseg {{font === 'large' ? 'active' : ''}}" data-font="large" bindtap="setFont">{{font125}}</view>
+        </view>
+      </view>
+    </view>
+  </block>
+
+  <view wx:else class="page-loading">{{lang === 'en' ? 'No data yet' : '暂无数据，请先在「添加」页录入食材'}}</view>
+
+  <!-- restock drawer -->
+  <view wx:if="{{showRestock}}" class="drawer-mask" bindtap="closeRestock"></view>
+  <view wx:if="{{showRestock}}" class="drawer">
+    <view class="drawer-pill"></view>
+    <view class="drawer-title">{{restockAdd}}</view>
+    <view class="field">
+      <input class="input" value="{{restockName}}" placeholder="{{addPh}}" bindinput="onRestockName" focus="{{showRestock}}" />
+    </view>
+    <view class="drawer-actions">
+      <button class="btn-ghost" bindtap="closeRestock">{{cancel}}</button>
+      <button class="btn-primary" bindtap="addRestock">{{save}}</button>
     </view>
   </view>
-</block>
-
-<view wx:else class="page-loading">暂无数据，请先在「添加」页录入食材</view>
+</view>
