@@ -149,3 +149,45 @@ BEGIN
     );
 END;
 $$;
+
+-- Discard transaction (v4 swipe-left "丢棄"): mark items as discarded and record waste.
+-- action_type='expired_discarded' is deliberately excluded from KPI/trend (nothing "saved").
+CREATE OR REPLACE FUNCTION discard_direct(
+    p_household UUID,
+    p_item_ids UUID[]
+) RETURNS JSONB
+LANGUAGE plpgsql
+AS $$
+DECLARE
+    v_item RECORD;
+    v_weight INT;
+    v_total_kg NUMERIC := 0;
+    v_count INT := 0;
+BEGIN
+    FOR v_item IN
+        SELECT * FROM fridge_items
+        WHERE id = ANY(p_item_ids) AND household_id = p_household AND status = 'in_stock'
+        FOR UPDATE
+    LOOP
+        v_weight := v_item.weight_grams;
+
+        INSERT INTO waste_impact_logs (
+            household_id, item_id, recipe_id, action_type,
+            weight_grams, money_saved_hkd, co2e_avoided_kg
+        ) VALUES (
+            p_household, v_item.id, NULL, 'expired_discarded',
+            v_weight, 0.00, 0.000
+        );
+
+        UPDATE fridge_items SET status = 'discarded', updated_at = NOW() WHERE id = v_item.id;
+
+        v_total_kg := v_total_kg + (v_weight::NUMERIC / 1000);
+        v_count := v_count + 1;
+    END LOOP;
+
+    RETURN jsonb_build_object(
+        'discarded_count', v_count,
+        'discarded_kg', ROUND(v_total_kg, 2)
+    );
+END;
+$$;
