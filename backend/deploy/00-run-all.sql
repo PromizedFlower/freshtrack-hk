@@ -1354,7 +1354,7 @@ CREATE POLICY shopping_list_delete ON shopping_list
 
 -- ===================== get_me (v4 profile) =====================
 -- Current authenticated user's profile + primary household + role.
--- Used by the "Me" tab profile card (avatar / name / email / household / role).
+-- Used by the "Me" tab profile card (avatar / name / email / household / role / invite code).
 CREATE OR REPLACE FUNCTION get_me()
 RETURNS JSONB
 LANGUAGE sql
@@ -1370,6 +1370,7 @@ AS $$
         'locale', p.locale,
         'household_id', hm.household_id,
         'household_name', h.name,
+        'invite_code', h.invite_code,
         'role', hm.role::text
     )
     FROM auth.users u
@@ -1383,4 +1384,39 @@ $$;
 
 REVOKE EXECUTE ON FUNCTION get_me() FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION get_me() TO authenticated;
+
+-- ===================== get_household_members =====================
+-- List a household's members (name / avatar / role) for the family view.
+-- Caller must be a member of that household (enforced even under SECURITY DEFINER).
+CREATE OR REPLACE FUNCTION get_household_members(p_household UUID)
+RETURNS TABLE (
+    user_id UUID,
+    display_name TEXT,
+    avatar_url TEXT,
+    email TEXT,
+    role TEXT,
+    is_self BOOLEAN
+)
+LANGUAGE sql
+STABLE
+SECURITY DEFINER
+SET search_path = public
+AS $$
+    SELECT
+        u.id,
+        COALESCE(p.display_name, 'FreshTrack User'),
+        p.avatar_url,
+        u.email,
+        hm.role::text,
+        (u.id = auth.uid())
+    FROM household_members hm
+    JOIN auth.users u ON u.id = hm.user_id
+    LEFT JOIN profiles p ON p.id = u.id
+    WHERE hm.household_id = p_household
+      AND is_household_member(p_household)
+    ORDER BY (hm.role::text = 'owner') DESC, hm.joined_at ASC;
+$$;
+
+REVOKE EXECUTE ON FUNCTION get_household_members(UUID) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION get_household_members(UUID) TO authenticated;
 
