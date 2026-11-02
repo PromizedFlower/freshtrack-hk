@@ -1,15 +1,43 @@
-.wrap { padding: 96rpx 40rpx; }
-.brand { text-align: center; margin-bottom: 56rpx; }
+.login-root { padding: 96rpx 40rpx 48rpx; }
+
+.brand { text-align: center; margin-bottom: 48rpx; }
 .logo {
   width: 120rpx; height: 120rpx; line-height: 120rpx; border-radius: 32rpx;
   background: linear-gradient(135deg, #16A34A, #0B3B2E);
   color: #fff; font-size: 52rpx; font-weight: 700; margin: 0 auto 24rpx;
   box-shadow: 0 12rpx 28rpx rgba(11, 59, 46, 0.28);
 }
-.field { background: #F4F7F4; border-radius: 16rpx; padding: 22rpx 24rpx; margin: 20rpx 0; }
-.ph { color: #9AA8A0; }
-.err { color: #DC2626; font-size: 24rpx; margin: 8rpx 0; }
+.brand-name { font-size: 44rpx; font-weight: 800; color: var(--text); }
+.brand .muted { margin-top: 6rpx; }
+
+.field { background: var(--card-subtle); border-radius: 16rpx; padding: 22rpx 24rpx; margin: 20rpx 0; font-size: 30rpx; }
+.ph { color: var(--muted); }
+.err { color: var(--high); font-size: 24rpx; margin: 8rpx 0; }
 .btn-ghost { margin-top: 16rpx; }
-.demo { margin-top: 48rpx; text-align: center; }
-.divider { color: #9AA8A0; font-size: 24rpx; margin-bottom: 24rpx; }
-.btn-demo { background: #0EA5E9; color: #fff; border-radius: 999rpx; padding: 24rpx; font-weight: 600; }
+
+.demo { margin-top: 44rpx; }
+.demo-head { text-align: center; margin-bottom: 20rpx; }
+.demo-title { font-size: 30rpx; font-weight: 700; color: var(--text); }
+.demo-head .muted { margin-top: 4rpx; }
+
+.account {
+  display: flex; align-items: center; gap: 20rpx;
+  background: var(--card); border-radius: 20rpx; padding: 22rpx 24rpx;
+  margin: 14rpx 0; border: 1rpx solid var(--border);
+  box-shadow: 0 6rpx 16rpx rgba(11, 59, 46, 0.05);
+}
+.avatar {
+  width: 72rpx; height: 72rpx; border-radius: 50%;
+  background: var(--card-subtle); display: flex; align-items: center; justify-content: center;
+  font-size: 36rpx;
+}
+.a-name { font-size: 30rpx; font-weight: 700; color: var(--text); }
+.a-email { font-size: 22rpx; color: var(--muted); }
+
+.role-chip {
+  font-size: 22rpx; font-weight: 700; padding: 6rpx 20rpx; border-radius: 999rpx;
+  color: #fff; background: var(--muted);
+}
+.role-chip.owner { background: var(--forest); }
+.role-chip.editor { background: #0EA5E9; }
+.role-chip.viewer { background: #6B7280; }
