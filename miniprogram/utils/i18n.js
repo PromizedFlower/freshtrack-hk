@@ -70,6 +70,18 @@ const dict = {
     risk_high: '高风险', risk_medium: '中风险', risk_low: '低风险',
     type_best_before: '最佳赏味期', type_use_by: '此日期前食用',
     days_left: '剩 {n} 天',
+    // login
+    login_tagline: '惜食减废 · 智能冰箱管理',
+    login_email_ph: '邮箱', login_pwd_ph: '密码',
+    login_btn: '登录', signup_btn: '注册新账号',
+    login_demo_title: '一键体验测试账号',
+    login_demo_sub: '5 个账号 · 同一家庭不同角色',
+    err_email_pwd: '请输入邮箱和密码', err_login: '登录失败', err_signup: '注册失败',
+    err_demo: '演示账号登录失败，请确认后端已部署',
+    // profile (Me tab)
+    sign_out: '退出登录',
+    role_owner: '拥有者', role_editor: '编辑者', role_viewer: '访客',
+    profile_household: '家庭', profile_no_household: '尚未加入家庭',
   },
   en: {
     loading: 'Loading…',
@@ -127,6 +139,16 @@ const dict = {
     risk_high: 'High risk', risk_medium: 'Medium risk', risk_low: 'Low risk',
     type_best_before: 'Best before', type_use_by: 'Use by',
     days_left: '{n} days left',
+    login_tagline: 'Save food, waste less · Smart fridge',
+    login_email_ph: 'Email', login_pwd_ph: 'Password',
+    login_btn: 'Sign in', signup_btn: 'Create account',
+    login_demo_title: 'One-tap demo sign-in',
+    login_demo_sub: '5 accounts · one household, different roles',
+    err_email_pwd: 'Enter email and password', err_login: 'Sign in failed', err_signup: 'Sign up failed',
+    err_demo: 'Demo sign-in failed. Check backend deployment.',
+    sign_out: 'Sign out',
+    role_owner: 'Owner', role_editor: 'Editor', role_viewer: 'Viewer',
+    profile_household: 'Household', profile_no_household: 'No household yet',
   },
 };
 
@@ -203,9 +225,13 @@ function zoneLabel(zone) {
 function zoneIcon(zone) { return (ZONE_META[zone] || {}).icon || '🗄️'; }
 function riskLabel(level) { return t(RISK_META[level] || level); }
 function typeLabel(dt) { return t(TYPE_META[dt] || dt); }
+function roleLabel(role) {
+  const key = (role === 'owner' || role === 'editor' || role === 'viewer') ? 'role_' + role : 'role_editor';
+  return t(key);
+}
 
 module.exports = {
   getLang, setLang, getTheme, setTheme, getFont, setFont, t,
   CATEGORY_META, ZONE_META, PICKER_CATS,
-  catLabel, catIcon, zoneLabel, zoneIcon, riskLabel, typeLabel,
+  catLabel, catIcon, zoneLabel, zoneIcon, riskLabel, typeLabel, roleLabel,
 };
