@@ -1,7 +1,8 @@
 -- FreshTrack HK — Demo Seed (run AFTER 00-run-all.sql, in SQL Editor)
 -- Seeds the "Demo Family Fridge" household with realistic near-expiry stock and a few
 -- months of SDG 12.3 impact history, so every screen is populated on first open.
--- Demo user (demo@freshtrack.hk / FreshTrackDemo123!) is created separately — see SECRETS.md.
+-- 5 demo accounts (demo1..demo5@freshtrack.hk / FreshTrackDemo123!) are created via
+-- Admin API (see backend/deploy/seed_demo_users.sql) BEFORE this seed.
 
 -- These tables are FORCE ROW LEVEL SECURITY; temporarily disable so the seed can write as owner.
 ALTER TABLE households DISABLE ROW LEVEL SECURITY;
@@ -10,11 +11,13 @@ ALTER TABLE fridge_items DISABLE ROW LEVEL SECURITY;
 ALTER TABLE waste_impact_logs DISABLE ROW LEVEL SECURITY;
 
 INSERT INTO households (id, name, owner_id, invite_code, monthly_budget_hkd) VALUES
-('11111111-1111-4111-8111-111111111111', 'Demo Family Fridge', 'e2cbec58-8b62-4c24-9dd7-2b0f3085e13f', 'DEMO01', 3500.00)
+('11111111-1111-4111-8111-111111111111', 'Demo Family Fridge',
+ (SELECT id FROM auth.users WHERE email = 'demo1@freshtrack.hk'), 'DEMO01', 3500.00)
 ON CONFLICT (id) DO NOTHING;
 
 INSERT INTO household_members (household_id, user_id, role) VALUES
-('11111111-1111-4111-8111-111111111111', 'e2cbec58-8b62-4c24-9dd7-2b0f3085e13f', 'owner')
+('11111111-1111-4111-8111-111111111111',
+ (SELECT id FROM auth.users WHERE email = 'demo1@freshtrack.hk'), 'owner')
 ON CONFLICT (household_id, user_id) DO NOTHING;
 
 -- Demo stock: a spread of high / medium / low risk relative to today.
