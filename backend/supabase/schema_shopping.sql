@@ -49,12 +49,12 @@ CREATE POLICY shopping_list_select ON shopping_list
 
 DROP POLICY IF EXISTS shopping_list_insert ON shopping_list;
 CREATE POLICY shopping_list_insert ON shopping_list
-    FOR INSERT WITH CHECK (is_household_member(household_id));
+    FOR INSERT WITH CHECK (can_edit_household(household_id));
 
 DROP POLICY IF EXISTS shopping_list_update ON shopping_list;
 CREATE POLICY shopping_list_update ON shopping_list
-    FOR UPDATE USING (is_household_member(household_id)) WITH CHECK (is_household_member(household_id));
+    FOR UPDATE USING (can_edit_household(household_id)) WITH CHECK (can_edit_household(household_id));
 
 DROP POLICY IF EXISTS shopping_list_delete ON shopping_list;
 CREATE POLICY shopping_list_delete ON shopping_list
-    FOR DELETE USING (is_household_member(household_id));
+    FOR DELETE USING (can_edit_household(household_id));
