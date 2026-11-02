@@ -3,18 +3,39 @@
 
 .bigs { display: flex; }
 .big { flex: 1; text-align: center; }
-.big + .big { border-left: 1rpx solid #EEF2EE; }
+.big + .big { border-left: 1rpx solid var(--border); }
 .big-num { font-size: 44rpx; font-weight: 700; color: var(--forest); }
+.dark .big-num { color: #4ADE80; }
 .big-num .u { font-size: 22rpx; color: var(--muted); font-weight: 500; }
 .big .muted { font-size: 24rpx; }
 
 .chart { display: flex; align-items: flex-end; height: 320rpx; margin-top: 24rpx; }
 .bar-col { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; }
 .bar-val { font-size: 20rpx; color: var(--muted); margin-bottom: 6rpx; }
-.bar-wrap { width: 36rpx; height: 220rpx; display: flex; align-items: flex-end; background: #F0F4F0; border-radius: 12rpx; overflow: hidden; }
+.bar-wrap { width: 36rpx; height: 220rpx; display: flex; align-items: flex-end; background: var(--card-subtle); border-radius: 12rpx; overflow: hidden; }
 .bar { width: 100%; background: linear-gradient(180deg, #16A34A, #0B3B2E); border-radius: 12rpx 12rpx 0 0; }
 .bar-label { font-size: 20rpx; color: var(--muted); margin-top: 8rpx; }
 
-.stat .between { padding: 16rpx 0; }
-.stat .val { font-size: 32rpx; font-weight: 700; color: var(--forest); }
-.stat .val.warn { color: var(--high); }
+.link { color: var(--brand); font-size: 26rpx; font-weight: 700; }
+
+.restock-row { display: flex; align-items: center; justify-content: space-between; padding: 20rpx 0; border-bottom: 1rpx solid var(--border); }
+.restock-row:last-child { border-bottom: none; }
+.restock-name { font-size: 28rpx; font-weight: 600; }
+.bought-tag { font-size: 20rpx; color: var(--muted); margin-left: 12rpx; }
+.restock-btns { display: flex; gap: 12rpx; }
+.rbtn { font-size: 22rpx; font-weight: 700; padding: 8rpx 20rpx; border-radius: 999rpx; }
+.rbtn.ok { background: #DCFCE7; color: #16A34A; }
+.rbtn.del { background: #FEE2E2; color: #DC2626; }
+.dark .rbtn.ok { background: rgba(22,163,74,0.2); color: #4ADE80; }
+.dark .rbtn.del { background: rgba(220,38,38,0.2); color: #F87171; }
+.empty { text-align: center; padding: 24rpx 0; }
+
+.pref-row { display: flex; justify-content: space-between; align-items: center; padding: 20rpx 0; border-bottom: 1rpx solid var(--border); }
+.pref-row:last-child { border-bottom: none; }
+.pref-lbl { font-size: 26rpx; font-weight: 600; }
+.mini-seg { width: 320rpx; }
+
+.field { margin: 20rpx 0; }
+.input { background: var(--card-subtle); border-radius: 14rpx; padding: 20rpx 22rpx; font-size: 28rpx; }
+.drawer-actions { display: flex; gap: 16rpx; margin-top: 24rpx; }
+.drawer-actions .btn-primary, .drawer-actions .btn-ghost { flex: 1; border-radius: 999rpx; padding: 24rpx; font-size: 28rpx; }
