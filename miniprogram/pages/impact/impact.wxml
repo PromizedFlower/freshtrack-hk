@@ -36,6 +36,7 @@
       <view class="fam-btn" bindtap="openSwitch">🔄 {{familySwitch}}</view>
       <view class="fam-btn" bindtap="openJoin">➕ {{familyJoin}}</view>
       <view class="fam-btn danger" bindtap="doLeave">↩ {{familyLeave}}</view>
+      <view class="fam-btn" wx:if="{{me.role === 'owner'}}" bindtap="openManage">👥 {{manageMembers}}</view>
     </view>
   </view>
 
@@ -144,7 +145,7 @@
   <view wx:if="{{showFamily}}" class="drawer-mask" bindtap="closeFamily"></view>
   <view wx:if="{{showFamily}}" class="drawer">
     <view class="drawer-pill"></view>
-    <view class="drawer-title">{{showFamily === 'switch' ? switchTitle : familyJoin}}</view>
+    <view class="drawer-title">{{showFamily === 'switch' ? switchTitle : (showFamily === 'join' ? familyJoin : manageMembers)}}</view>
 
     <block wx:if="{{showFamily === 'switch'}}">
       <view class="hh-row" wx:for="{{myHouseholds}}" wx:key="id"
@@ -167,6 +168,20 @@
       <view class="drawer-actions">
         <button class="btn-ghost" bindtap="closeFamily">{{cancel}}</button>
         <button class="btn-primary" bindtap="doJoin">{{joinBtn}}</button>
+      </view>
+    </block>
+
+    <block wx:if="{{showFamily === 'manage'}}">
+      <view class="member-row" wx:for="{{members}}" wx:key="user_id">
+        <view class="m-avatar">{{item.initial}}</view>
+        <view class="grow">
+          <view class="m-name">{{item.display_name}} <text wx:if="{{item.is_self}}" class="self-tag">{{selfTag}}</text></view>
+          <view class="m-email">{{item.email}}</view>
+        </view>
+        <block wx:if="{{!item.is_self}}">
+          <view class="mini-btn" data-id="{{item.user_id}}" bindtap="transferOwner">{{transferOwner}}</view>
+          <view class="mini-btn danger" data-id="{{item.user_id}}" bindtap="removeMember">{{removeMember}}</view>
+        </block>
       </view>
     </block>
   </view>
