@@ -17,6 +17,31 @@
   border: 1rpx solid var(--high); border-radius: 999rpx; padding: 8rpx 20rpx;
 }
 
+.family { margin-top: 24rpx; }
+.fam-meta { margin: 12rpx 0 4rpx; }
+.fam-name { font-size: 28rpx; font-weight: 700; }
+.fam-invite { font-size: 22rpx; color: var(--muted); margin-top: 6rpx; }
+.fam-invite .copy { color: var(--brand); font-weight: 700; margin-left: 8rpx; }
+.member-row { display: flex; align-items: center; gap: 16rpx; padding: 16rpx 0; border-bottom: 1rpx solid var(--border); }
+.member-row:last-child { border-bottom: none; }
+.m-avatar {
+  width: 64rpx; height: 64rpx; border-radius: 50%; flex-shrink: 0;
+  background: var(--card-subtle); display: flex; align-items: center; justify-content: center;
+  font-size: 28rpx; font-weight: 700; color: var(--forest);
+}
+.dark .m-avatar { color: #4ADE80; }
+.m-name { font-size: 28rpx; font-weight: 600; }
+.m-email { font-size: 22rpx; color: var(--muted); }
+.self-tag {
+  font-size: 18rpx; color: var(--brand); background: #DCFCE7; border-radius: 6rpx;
+  padding: 2rpx 8rpx; margin-left: 8rpx; font-weight: 700;
+}
+.dark .self-tag { background: rgba(22,163,74,0.2); color: #4ADE80; }
+.role-chip { font-size: 22rpx; font-weight: 700; padding: 6rpx 20rpx; border-radius: 999rpx; color: #fff; flex-shrink: 0; }
+.role-chip.owner { background: var(--forest); }
+.role-chip.editor { background: #0EA5E9; }
+.role-chip.viewer { background: #6B7280; }
+
 .bigs { display: flex; }
 .big { flex: 1; text-align: center; }
 .big + .big { border-left: 1rpx solid var(--border); }
