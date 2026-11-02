@@ -119,3 +119,34 @@ DROP TRIGGER IF EXISTS trg_on_household_created ON households;
 CREATE TRIGGER trg_on_household_created
     AFTER INSERT ON households
     FOR EACH ROW EXECUTE FUNCTION handle_new_household();
+
+-- 8. get_me(): current authenticated user's profile + primary household + role.
+--    Used by the "Me" tab profile card (avatar / name / email / household / role).
+CREATE OR REPLACE FUNCTION get_me()
+RETURNS JSONB
+LANGUAGE sql
+STABLE
+SECURITY DEFINER
+SET search_path = public
+AS $$
+    SELECT jsonb_build_object(
+        'id', u.id,
+        'email', u.email,
+        'display_name', COALESCE(p.display_name, 'FreshTrack User'),
+        'avatar_url', p.avatar_url,
+        'locale', p.locale,
+        'household_id', hm.household_id,
+        'household_name', h.name,
+        'role', hm.role::text
+    )
+    FROM auth.users u
+    LEFT JOIN profiles p ON p.id = u.id
+    LEFT JOIN household_members hm ON hm.user_id = u.id
+    LEFT JOIN households h ON h.id = hm.household_id
+    WHERE u.id = auth.uid()
+    ORDER BY hm.joined_at ASC NULLS LAST
+    LIMIT 1;
+$$;
+
+REVOKE EXECUTE ON FUNCTION get_me() FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION get_me() TO authenticated;
