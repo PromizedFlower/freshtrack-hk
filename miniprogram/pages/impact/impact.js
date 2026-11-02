@@ -5,6 +5,7 @@ Page({
   data: {
     loading: true, hasData: false,
     lang: 'zh', theme: 'light', font: 'normal',
+    me: null, initial: '', roleLabel: '', householdText: '',
     kpi: null, trend: [],
     restock: [], restockName: '', showRestock: false,
   },
@@ -19,6 +20,7 @@ Page({
     getApp().applyPrefs();
     this.setData(Object.assign({ lang: i18n.getLang(), theme: i18n.getTheme(), font: i18n.getFont() }, this._labels()));
     this.load();
+    this._loadMe();
   },
 
   _labels() {
@@ -34,6 +36,7 @@ Page({
       font100: t('pref_font_100'), font125: t('pref_font_125'),
       addPh: i18n.getLang() === 'en' ? 'e.g. Milk 1L' : '例如：鲜牛奶 1L',
       save: t('save'), cancel: t('cancel'), loadingTxt: t('loading'),
+      signOut: t('sign_out'),
     };
   },
 
@@ -64,6 +67,39 @@ Page({
       getApp().globalData.householdId = hid;
     }
     return hid;
+  },
+
+  async _loadMe() {
+    try {
+      const me = await api.rpc('get_me');
+      const initial = String(me.display_name || me.email || '?').charAt(0);
+      this.setData({
+        me,
+        initial,
+        roleLabel: i18n.roleLabel(me.role),
+        householdText: me.household_name
+          ? (me.household_name + ' · ' + i18n.roleLabel(me.role))
+          : i18n.t('profile_no_household'),
+      });
+    } catch (e) {
+      console.error('get_me failed', e);
+    }
+  },
+
+  signOut() {
+    wx.showModal({
+      title: i18n.t('sign_out'),
+      content: i18n.getLang() === 'en' ? 'Sign out of this device?' : '确定要退出当前账号吗？',
+      success: (r) => {
+        if (!r.confirm) return;
+        api.clearSession();
+        const app = getApp();
+        app.globalData.loggedIn = false;
+        app.globalData.user = null;
+        app.globalData.householdId = null;
+        wx.reLaunch({ url: '/pages/login/login' });
+      },
+    });
   },
 
   // ---- restock list ----
