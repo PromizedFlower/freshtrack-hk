@@ -1,5 +1,16 @@
 <view class="page-root {{theme}} {{font === 'large' ? 'font-large' : ''}}">
 
+  <!-- user profile -->
+  <view class="card profile" wx:if="{{me}}">
+    <view class="avatar">{{initial}}</view>
+    <view class="grow">
+      <view class="pname">{{me.display_name}}</view>
+      <view class="pemail">{{me.email}}</view>
+      <view class="phouse">🏠 {{householdText}}</view>
+    </view>
+    <view class="signout" bindtap="signOut">{{signOut}}</view>
+  </view>
+
   <view wx:if="{{loading}}" class="page-loading">{{loadingTxt}}</view>
 
   <block wx:elif="{{hasData}}">
