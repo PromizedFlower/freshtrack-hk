@@ -1,15 +1,20 @@
-.item { display: flex; align-items: flex-start; }
-.item-name { font-size: 32rpx; font-weight: 600; margin-right: 16rpx; }
-.meta { font-size: 24rpx; margin-top: 6rpx; }
-.suggest { font-size: 24rpx; color: var(--brand); background: #EAF7EE; border-radius: 12rpx; padding: 8rpx 16rpx; margin-top: 12rpx; display: inline-block; }
-.ops { display: flex; flex-direction: column; gap: 12rpx; margin-left: 16rpx; }
-.op { margin: 0 !important; border-radius: 999rpx; font-size: 22rpx; }
-.op-done { background: #16A34A; color: #fff; }
-.op-del { background: #fff; color: #DC2626; border: 1rpx solid #FECACA; }
+.zone-section { margin-bottom: 8rpx; }
+.zone-head { display: flex; justify-content: space-between; align-items: center; padding: 24rpx 28rpx 12rpx; }
+.zone-head-left { display: flex; align-items: center; gap: 12rpx; }
+.zone-head-icon { font-size: 34rpx; }
+.zone-head-name { font-size: 32rpx; font-weight: 800; }
+.zone-head-temp { font-size: 22rpx; color: var(--info); font-weight: 700; }
+.zone-head-count { font-size: 24rpx; color: var(--muted); }
 
-.fab {
-  position: fixed; right: 32rpx; bottom: 48rpx; width: 108rpx; height: 108rpx;
-  border-radius: 50%; background: linear-gradient(135deg, #16A34A, #0B3B2E);
-  color: #fff; font-size: 56rpx; font-weight: 600; text-align: center; line-height: 108rpx;
-  box-shadow: 0 12rpx 28rpx rgba(11, 59, 46, 0.32);
-}
+.empty-zone { padding: 16rpx 28rpx 24rpx; color: var(--muted); font-size: 24rpx; }
+
+.food-meta { display: flex; align-items: center; gap: 8rpx; font-size: 22rpx; }
+.suggest { font-size: 22rpx; color: var(--brand); background: #EAF7EE; border-radius: 10rpx; padding: 6rpx 14rpx; margin-top: 10rpx; display: inline-block; }
+.dark .suggest { background: rgba(22,163,74,0.2); }
+
+.field { margin: 20rpx 0; }
+.label { font-size: 24rpx; color: var(--muted); margin-bottom: 8rpx; }
+.input, .picker { background: var(--card-subtle); border-radius: 14rpx; padding: 20rpx 22rpx; font-size: 28rpx; }
+
+.drawer-actions { display: flex; gap: 16rpx; margin-top: 24rpx; }
+.drawer-actions .btn-primary, .drawer-actions .btn-ghost { flex: 1; border-radius: 999rpx; padding: 24rpx; font-size: 28rpx; }
