@@ -1,25 +1,87 @@
-<view wx:if="{{loading}}" class="page-loading">加载中…</view>
+<view class="page-root {{theme}} {{font === 'large' ? 'font-large' : ''}}">
 
-<block wx:elif="{{hasData}}">
-  <view class="card item" wx:for="{{items}}" wx:key="id">
-    <view class="grow">
-      <view class="row">
-        <view class="item-name">{{item.name}}</view>
-        <risk-badge level="{{item.risk_level}}" />
+  <view wx:if="{{loading}}" class="page-loading">{{loadingTxt}}</view>
+
+  <block wx:elif="{{hasData}}">
+    <view class="section-title">{{title}}</view>
+
+    <view class="zone-section" wx:for="{{zones}}" wx:key="zone" id="zone-{{item.zone}}">
+      <view class="zone-head">
+        <view class="zone-head-left">
+          <text class="zone-head-icon">{{item.icon}}</text>
+          <text class="zone-head-name">{{item.label}}</text>
+          <text class="zone-head-temp">{{item.temp}}</text>
+        </view>
+        <text class="zone-head-count">{{item.items.length}}</text>
       </view>
-      <view class="muted meta">
-        剩 {{item.days_left}} 天 · {{item.category}} · {{item.quantity}}{{item.unit}}
+
+      <view wx:if="{{item.items.length === 0}}" class="empty-zone">{{emptyZone}}</view>
+
+      <view class="swipe-wrapper" wx:for="{{item.items}}" wx:for-item="it" wx:key="id">
+        <view class="swipe-back swipe-green">✓ {{tConsume}}</view>
+        <view class="swipe-back swipe-red">{{tDiscard}} 🗑️</view>
+        <view class="food-row"
+              style="transform: translateX({{it.offset}}px);"
+              data-id="{{it.id}}"
+              bindtouchstart="onTouchStart" bindtouchmove="onTouchMove" bindtouchend="onTouchEnd">
+          <view class="food-left">
+            <view class="food-icon">{{it.icon}}</view>
+            <view class="grow">
+              <view class="food-name">{{it.name}}</view>
+              <view class="food-meta">
+                <text class="chip {{it.risk_level === 'high' ? 'chip-red' : (it.risk_level === 'medium' ? 'chip-gold' : 'chip-green')}}">{{it.days_left}}d</text>
+                <text class="muted">{{it.category}} · {{it.quantity}}{{it.unit}}</text>
+              </view>
+              <view class="suggest" wx:if="{{it.suggested_action}}">{{it.suggested_action}}</view>
+            </view>
+          </view>
+          <view class="food-more" data-id="{{it.id}}" catchtap="openEdit">⋯</view>
+        </view>
       </view>
-      <view class="suggest">{{item.suggested_action}}</view>
     </view>
-    <view class="ops">
-      <button class="op op-done" size="mini" data-id="{{item.id}}" data-name="{{item.name}}" bindtap="consume">已用</button>
-      <button class="op op-del" size="mini" data-id="{{item.id}}" data-name="{{item.name}}" bindtap="remove">删除</button>
+  </block>
+
+  <view wx:else class="page-loading">{{noDataTxt}}</view>
+
+  <view class="fab" bindtap="goAdd">＋</view>
+
+  <!-- edit drawer -->
+  <view wx:if="{{editId}}" class="drawer-mask" bindtap="closeEdit"></view>
+  <view wx:if="{{editId}}" class="drawer">
+    <view class="drawer-pill"></view>
+    <view class="drawer-title">{{editItem}}</view>
+
+    <view class="field">
+      <view class="label">{{labelName}}</view>
+      <input class="input" value="{{editName}}" bindinput="onEditName" />
+    </view>
+
+    <view class="field">
+      <view class="label">{{labelZone}}</view>
+      <view class="seg">
+        <view class="pseg {{editZone === 'fridge' ? 'active' : ''}}" data-zone="fridge" bindtap="setEditZone">🧊 {{zoneFridge}}</view>
+        <view class="pseg {{editZone === 'freezer' ? 'active' : ''}}" data-zone="freezer" bindtap="setEditZone">❄️ {{zoneFreezer}}</view>
+        <view class="pseg {{editZone === 'pantry' ? 'active' : ''}}" data-zone="pantry" bindtap="setEditZone">🗄️ {{zonePantry}}</view>
+      </view>
+    </view>
+
+    <view class="field">
+      <view class="label">{{labelType}}</view>
+      <picker range="{{typeLabels}}" value="{{editType === 'use_by' ? 1 : 0}}" bindchange="onEditType">
+        <view class="picker">{{typeLabels[editType === 'use_by' ? 1 : 0]}}</view>
+      </picker>
+    </view>
+
+    <view class="field">
+      <view class="label">{{labelExpiry}}</view>
+      <picker mode="date" value="{{editExpiry}}" bindchange="onEditExpiry">
+        <view class="picker">{{editExpiry}}</view>
+      </picker>
+    </view>
+
+    <view class="drawer-actions">
+      <button class="btn-ghost" bindtap="closeEdit">{{cancel}}</button>
+      <button class="btn-primary" bindtap="saveEdit">{{save}}</button>
     </view>
   </view>
-  <view wx:if="{{items.length === 0}}" class="page-loading">冰箱空空如也，去添加食材吧</view>
-</block>
-
-<view wx:else class="page-loading">暂无数据，请先在「添加」页录入食材</view>
-
-<view class="fab" bindtap="goAdd">＋</view>
+</view>
