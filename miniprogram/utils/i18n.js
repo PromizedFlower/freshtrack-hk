@@ -91,6 +91,10 @@ const dict = {
     joined_ok: '已加入 {name}', join_fail: '加入失败，邀请码无效',
     leave_confirm: '确定离开「{name}」吗？', left_ok: '已离开', leave_fail: '离开失败',
     current: '当前',
+    manage_members: '管理成员', transfer_owner: '转让 owner', remove_member: '移除',
+    transfer_confirm: '确定把家庭 owner 转让给「{name}」？你将变为编辑者。',
+    remove_confirm: '确定将「{name}」移出家庭？',
+    transferred: '已转让 owner', removed: '已移除', manage_fail: '操作失败',
   },
   en: {
     loading: 'Loading…',
@@ -167,6 +171,10 @@ const dict = {
     joined_ok: 'Joined {name}', join_fail: 'Join failed, invalid code',
     leave_confirm: 'Leave "{name}"?', left_ok: 'Left', leave_fail: 'Leave failed',
     current: 'Current',
+    manage_members: 'Manage members', transfer_owner: 'Make owner', remove_member: 'Remove',
+    transfer_confirm: 'Transfer ownership to "{name}"? You will become an editor.',
+    remove_confirm: 'Remove "{name}" from the household?',
+    transferred: 'Ownership transferred', removed: 'Removed', manage_fail: 'Operation failed',
   },
 };
 
