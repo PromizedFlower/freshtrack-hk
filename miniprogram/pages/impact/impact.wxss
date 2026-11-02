@@ -42,13 +42,20 @@
 .role-chip.editor { background: #0EA5E9; }
 .role-chip.viewer { background: #6B7280; }
 
-.fam-actions { display: flex; gap: 12rpx; margin-top: 16rpx; }
+.fam-actions { display: flex; flex-wrap: wrap; gap: 12rpx; margin-top: 16rpx; }
 .fam-btn {
-  flex: 1; text-align: center; font-size: 24rpx; font-weight: 700; padding: 14rpx 0;
+  flex: 1 1 40%; text-align: center; font-size: 24rpx; font-weight: 700; padding: 14rpx 0;
   border-radius: 999rpx; background: var(--card-subtle); border: 1rpx solid var(--border); color: var(--forest);
 }
 .dark .fam-btn { color: #4ADE80; }
 .fam-btn.danger { color: var(--high); }
+.mini-btn {
+  font-size: 22rpx; font-weight: 700; padding: 8rpx 18rpx; border-radius: 999rpx;
+  background: var(--card-subtle); border: 1rpx solid var(--border); color: var(--forest);
+  margin-left: 8rpx; flex-shrink: 0;
+}
+.dark .mini-btn { color: #4ADE80; }
+.mini-btn.danger { color: var(--high); }
 .hh-row { display: flex; align-items: center; padding: 20rpx 0; border-bottom: 1rpx solid var(--border); }
 .hh-row:last-child { border-bottom: none; }
 .hh-name { font-size: 30rpx; font-weight: 700; }
