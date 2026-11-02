@@ -87,18 +87,18 @@ CREATE POLICY fridge_items_select ON fridge_items
 DROP POLICY IF EXISTS fridge_items_insert ON fridge_items;
 CREATE POLICY fridge_items_insert ON fridge_items
     FOR INSERT
-    WITH CHECK (is_household_member(household_id));
+    WITH CHECK (can_edit_household(household_id));
 
 DROP POLICY IF EXISTS fridge_items_update ON fridge_items;
 CREATE POLICY fridge_items_update ON fridge_items
     FOR UPDATE
-    USING (is_household_member(household_id))
-    WITH CHECK (is_household_member(household_id));
+    USING (can_edit_household(household_id))
+    WITH CHECK (can_edit_household(household_id));
 
 DROP POLICY IF EXISTS fridge_items_delete ON fridge_items;
 CREATE POLICY fridge_items_delete ON fridge_items
     FOR DELETE
-    USING (is_household_member(household_id));
+    USING (can_edit_household(household_id));
 
 -- ============ 4. waste_impact_logs (scoped by household membership) ============
 ALTER TABLE waste_impact_logs ENABLE ROW LEVEL SECURITY;
@@ -157,12 +157,7 @@ CREATE POLICY members_update_owner ON household_members
 DROP POLICY IF EXISTS members_delete_owner ON household_members;
 CREATE POLICY members_delete_owner ON household_members
     FOR DELETE
-    USING (EXISTS (
-        SELECT 1 FROM household_members hm
-        WHERE hm.household_id = household_members.household_id
-          AND hm.user_id = auth.uid()
-          AND hm.role = 'owner'
-    ));
+    USING (user_id = auth.uid() OR is_household_owner(household_id));
 
 -- ============ 6. Reference tables: open read-only to all authenticated users ============
 -- storage_rules and recipes are global knowledge bases, no household scoping.
