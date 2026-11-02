@@ -6,7 +6,8 @@ Page({
     loading: true, hasData: false,
     lang: 'zh', theme: 'light', font: 'normal',
     me: null, initial: '', roleLabel: '', householdText: '',
-    members: [], memberCountText: '',
+    members: [], memberCountText: [], myHouseholds: [],
+    showFamily: '', joinCode: '', joinErr: '',
     kpi: null, trend: [],
     restock: [], restockName: '', showRestock: false,
   },
@@ -40,6 +41,9 @@ Page({
       signOut: t('sign_out'),
       familyTitle: t('family_title'), inviteCode: t('invite_code'),
       copy: t('copy'), selfTag: t('self_tag'),
+      familySwitch: t('family_switch'), familyJoin: t('family_join'), familyLeave: t('family_leave'),
+      switchTitle: t('switch_title'), joinCodePh: t('join_code_ph'), joinBtn: t('join_btn'),
+      current: t('current'),
     };
   },
 
@@ -63,10 +67,11 @@ Page({
   },
 
   async _hid() {
-    let hid = getApp().globalData.householdId;
+    let hid = getApp().globalData.householdId || api.getActiveHouseholdId();
     if (!hid) {
-      const hs = await api.rest('GET', 'households', { query: '?select=id&limit=1' });
+      const hs = await api.rpc('get_my_households');
       hid = hs && hs.length ? hs[0].id : null;
+      if (hid) api.setActiveHouseholdId(hid);
       getApp().globalData.householdId = hid;
     }
     return hid;
@@ -86,8 +91,10 @@ Page({
           }));
         memberCountText = i18n.t('family_members', { n: members.length });
       }
+      const myHouseholds = (await api.rpc('get_my_households') || [])
+        .map((h) => Object.assign({}, h, { roleLabel: i18n.roleLabel(h.role) }));
       this.setData({
-        me, initial, members, memberCountText,
+        me, initial, members, memberCountText, myHouseholds,
         roleLabel: i18n.roleLabel(me.role),
         householdText: me.household_name
           ? (me.household_name + ' · ' + i18n.roleLabel(me.role))
@@ -96,6 +103,67 @@ Page({
     } catch (e) {
       console.error('get_me failed', e);
     }
+  },
+
+  openSwitch() { this.setData({ showFamily: 'switch' }); },
+  openJoin() { this.setData({ showFamily: 'join', joinCode: '', joinErr: '' }); },
+  closeFamily() { this.setData({ showFamily: '' }); },
+  onJoinCode(e) { this.setData({ joinCode: e.detail.value, joinErr: '' }); },
+
+  async switchHousehold(e) {
+    const id = e.currentTarget.dataset.id;
+    api.setActiveHouseholdId(id);
+    getApp().globalData.householdId = id;
+    this.setData({ showFamily: '' });
+    this.load();
+    this._loadMe();
+  },
+
+  async doJoin() {
+    const code = (this.data.joinCode || '').trim();
+    if (!code) return;
+    wx.showLoading({ title: this.data.loadingTxt });
+    try {
+      const joined = await api.rpc('join_household', { p_invite_code: code });
+      wx.hideLoading();
+      const id = joined.household_id;
+      api.setActiveHouseholdId(id);
+      getApp().globalData.householdId = id;
+      this.setData({ showFamily: '', joinCode: '' });
+      wx.showToast({ title: i18n.t('joined_ok', { name: joined.household_name }), icon: 'none' });
+      this.load();
+      this._loadMe();
+    } catch (e) {
+      wx.hideLoading();
+      this.setData({ joinErr: this._errMsg(e) || i18n.t('join_fail') });
+    }
+  },
+
+  doLeave() {
+    const me = this.data.me;
+    if (!me || !me.household_id) return;
+    wx.showModal({
+      title: i18n.t('family_leave'),
+      content: i18n.t('leave_confirm', { name: me.household_name }),
+      success: async (r) => {
+        if (!r.confirm) return;
+        try {
+          await api.rpc('leave_household', { p_household: me.household_id });
+          api.setActiveHouseholdId(null);
+          getApp().globalData.householdId = null;
+          wx.showToast({ title: i18n.t('left_ok'), icon: 'none' });
+          this.load();
+          this._loadMe();
+        } catch (e) {
+          wx.showToast({ title: this._errMsg(e) || i18n.t('leave_fail'), icon: 'none' });
+        }
+      },
+    });
+  },
+
+  _errMsg(e) {
+    const d = e && e.data;
+    return d && (d.message || d.msg || d.error_description || d.error);
   },
 
   copyInvite() {
