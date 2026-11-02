@@ -24,7 +24,7 @@
       { "pagePath": "pages/fridge/fridge", "text": "冰箱" },
       { "pagePath": "pages/recipes/recipes", "text": "菜谱" },
       { "pagePath": "pages/add/add", "text": "添加" },
-      { "pagePath": "pages/impact/impact", "text": "减废" }
+      { "pagePath": "pages/impact/impact", "text": "我的" }
     ]
   },
   "usingComponents": {
