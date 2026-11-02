@@ -185,3 +185,114 @@ $$;
 
 REVOKE EXECUTE ON FUNCTION get_household_members(UUID) FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION get_household_members(UUID) TO authenticated;
+
+-- 10. Role helpers: can the current user EDIT (owner/editor) / is the OWNER of a household?
+--     Used by RLS write policies (role-based permissions) and by mutating RPCs.
+CREATE OR REPLACE FUNCTION can_edit_household(target_household UUID)
+RETURNS BOOLEAN
+LANGUAGE sql
+STABLE
+SECURITY DEFINER
+SET search_path = public
+AS $$
+    SELECT EXISTS (
+        SELECT 1 FROM household_members hm
+        WHERE hm.household_id = target_household
+          AND hm.user_id = auth.uid()
+          AND hm.role IN ('owner', 'editor')
+    );
+$$;
+
+CREATE OR REPLACE FUNCTION is_household_owner(target_household UUID)
+RETURNS BOOLEAN
+LANGUAGE sql
+STABLE
+SECURITY DEFINER
+SET search_path = public
+AS $$
+    SELECT EXISTS (
+        SELECT 1 FROM household_members hm
+        WHERE hm.household_id = target_household
+          AND hm.user_id = auth.uid()
+          AND hm.role = 'owner'
+    );
+$$;
+
+-- 11. get_my_households(): every household the current user belongs to (for switching).
+CREATE OR REPLACE FUNCTION get_my_households()
+RETURNS TABLE (
+    id UUID,
+    name TEXT,
+    invite_code TEXT,
+    role TEXT,
+    member_count BIGINT
+)
+LANGUAGE sql
+STABLE
+SECURITY DEFINER
+SET search_path = public
+AS $$
+    SELECT h.id, h.name, h.invite_code, hm.role::text,
+           (SELECT count(*)::bigint FROM household_members m2 WHERE m2.household_id = h.id)
+    FROM household_members hm
+    JOIN households h ON h.id = hm.household_id
+    WHERE hm.user_id = auth.uid()
+    ORDER BY (hm.role::text = 'owner') DESC, h.name ASC;
+$$;
+REVOKE EXECUTE ON FUNCTION get_my_households() FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION get_my_households() TO authenticated;
+
+-- 12. join_household(p_invite_code): join a household by invite code (default role: editor).
+CREATE OR REPLACE FUNCTION join_household(p_invite_code TEXT)
+RETURNS JSONB
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+DECLARE
+    h RECORD;
+BEGIN
+    SELECT id, name INTO h FROM households WHERE invite_code = p_invite_code;
+    IF h.id IS NULL THEN
+        RAISE EXCEPTION 'invalid invite code';
+    END IF;
+    INSERT INTO household_members (household_id, user_id, role)
+    VALUES (h.id, auth.uid(), 'editor')
+    ON CONFLICT (household_id, user_id) DO NOTHING;
+    RETURN jsonb_build_object('household_id', h.id, 'household_name', h.name, 'role', 'editor');
+END;
+$$;
+REVOKE EXECUTE ON FUNCTION join_household(TEXT) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION join_household(TEXT) TO authenticated;
+
+-- 13. leave_household(p_household): the current user leaves; owner must transfer/delete first.
+CREATE OR REPLACE FUNCTION leave_household(p_household UUID)
+RETURNS JSONB
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+DECLARE
+    v_role TEXT;
+    v_others INT;
+BEGIN
+    SELECT role::text INTO v_role
+    FROM household_members
+    WHERE household_id = p_household AND user_id = auth.uid();
+    IF v_role IS NULL THEN
+        RAISE EXCEPTION 'not a member';
+    END IF;
+    IF v_role = 'owner' THEN
+        SELECT count(*) INTO v_others
+        FROM household_members
+        WHERE household_id = p_household AND user_id <> auth.uid();
+        IF v_others > 0 THEN
+            RAISE EXCEPTION 'owner must transfer ownership or remove members first';
+        END IF;
+    END IF;
+    DELETE FROM household_members WHERE household_id = p_household AND user_id = auth.uid();
+    RETURN jsonb_build_object('left', true, 'household_id', p_household);
+END;
+$$;
+REVOKE EXECUTE ON FUNCTION leave_household(UUID) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION leave_household(UUID) TO authenticated;
