@@ -8,6 +8,7 @@ Page({
     loading: true, hasData: false,
     lang: 'zh', theme: 'light', font: 'normal',
     zones: [],
+    activeZone: '',
     // edit drawer
     editId: null, editName: '', editExpiry: '', editType: 'best_before', editZone: 'fridge', editToday: '',
   },
@@ -76,10 +77,26 @@ Page({
     const z = getApp().globalData.focusZone;
     if (!z) return;
     getApp().globalData.focusZone = null;
+    this._scrollToZone(z);
+  },
+
+  // 溫區快速定位（Tab 條 / 外部跳轉共用）
+  jumpZone(e) {
+    const z = e.currentTarget.dataset.zone;
+    this._scrollToZone(z);
+  },
+  _scrollToZone(z) {
+    this.setData({ activeZone: z });
     wx.nextTick(() => {
-      wx.createSelectorQuery().select('#zone-' + z).boundingClientRect().exec((r) => {
-        if (r && r[0]) wx.pageScrollTo({ scrollTop: r[0].top - 20, duration: 200 });
-      });
+      wx.createSelectorQuery()
+        .select('#zone-' + z).boundingClientRect()
+        .selectViewport().scrollOffset()
+        .exec((r) => {
+          if (r && r[0]) {
+            const top = r[0].top + ((r[1] && r[1].scrollTop) || 0) - 10;
+            wx.pageScrollTo({ scrollTop: Math.max(0, top), duration: 300 });
+          }
+        });
     });
   },
 
@@ -125,40 +142,57 @@ Page({
     return ref ? this.data.zones[ref.g].items[ref.i] : null;
   },
 
-  _consume(id) {
+  // 直接執行（不再二次確認），配合飛葉特效提供即時動態反饋
+  async _consume(id) {
+    const ref = this._idx && this._idx[id];
     const item = this._itemById(id);
-    wx.showModal({
-      title: i18n.t('consumed'),
-      content: i18n.t('confirm_consume', { name: item ? item.name : '' }),
-      success: async (r) => {
-        if (!r.confirm) return;
-        wx.showLoading({ title: i18n.t('loading') });
-        try {
-          const hid = await this._hid();
-          await api.rpc('consume_direct', { p_household: hid, p_item_ids: [id] });
-          wx.hideLoading(); wx.showToast({ title: i18n.t('add_saved'), icon: 'success' });
-          this.load();
-        } catch (e) { wx.hideLoading(); wx.showToast({ title: i18n.t('retry'), icon: 'none' }); }
-      },
+    if (!ref || !item || item.busy) return;
+    this.setData({
+      [`zones[${ref.g}].items[${ref.i}].busy`]: true,
+      [`zones[${ref.g}].items[${ref.i}].fx`]: 'consume',
     });
+    wx.vibrateShort({ type: 'light' });
+    try {
+      const hid = await this._hid();
+      await api.rpc('consume_direct', { p_household: hid, p_item_ids: [id] });
+      wx.vibrateShort({ type: 'medium' });
+      setTimeout(() => {
+        wx.showToast({ title: i18n.t('fx_consumed'), icon: 'success' });
+        this.load();
+      }, 650);
+    } catch (e) {
+      this.setData({
+        [`zones[${ref.g}].items[${ref.i}].busy`]: false,
+        [`zones[${ref.g}].items[${ref.i}].fx`]: '',
+      });
+      wx.showToast({ title: i18n.t('retry'), icon: 'none' });
+    }
   },
 
-  _discard(id) {
+  async _discard(id) {
+    const ref = this._idx && this._idx[id];
     const item = this._itemById(id);
-    wx.showModal({
-      title: i18n.t('discard'),
-      content: i18n.t('confirm_discard', { name: item ? item.name : '' }),
-      success: async (r) => {
-        if (!r.confirm) return;
-        wx.showLoading({ title: i18n.t('loading') });
-        try {
-          const hid = await this._hid();
-          await api.rpc('discard_direct', { p_household: hid, p_item_ids: [id] });
-          wx.hideLoading(); wx.showToast({ title: i18n.t('add_saved'), icon: 'success' });
-          this.load();
-        } catch (e) { wx.hideLoading(); wx.showToast({ title: i18n.t('retry'), icon: 'none' }); }
-      },
+    if (!ref || !item || item.busy) return;
+    this.setData({
+      [`zones[${ref.g}].items[${ref.i}].busy`]: true,
+      [`zones[${ref.g}].items[${ref.i}].fx`]: 'discard',
     });
+    wx.vibrateShort({ type: 'light' });
+    try {
+      const hid = await this._hid();
+      await api.rpc('discard_direct', { p_household: hid, p_item_ids: [id] });
+      wx.vibrateShort({ type: 'medium' });
+      setTimeout(() => {
+        wx.showToast({ title: i18n.t('fx_discarded'), icon: 'none' });
+        this.load();
+      }, 650);
+    } catch (e) {
+      this.setData({
+        [`zones[${ref.g}].items[${ref.i}].busy`]: false,
+        [`zones[${ref.g}].items[${ref.i}].fx`]: '',
+      });
+      wx.showToast({ title: i18n.t('retry'), icon: 'none' });
+    }
   },
 
   // ---- edit drawer ----
