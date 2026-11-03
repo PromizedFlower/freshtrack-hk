@@ -10,6 +10,15 @@
 .dark .rcp-matched { color: #4ADE80; }
 .empty-recipe { text-align: center; padding: 48rpx 28rpx; }
 .empty-emoji { font-size: 64rpx; margin-bottom: 12rpx; }
+
+.sec-head { display: flex; align-items: center; justify-content: space-between; margin: 28rpx 28rpx 12rpx; }
+.sec-head .section-title { margin: 0; }
+.add-link { color: var(--brand); font-size: 26rpx; font-weight: 700; }
+.del-link { color: var(--high); font-size: 24rpx; font-weight: 700; flex-shrink: 0; }
+.my-note { font-size: 24rpx; margin-top: 6rpx; }
+.rec-note { width: 100%; box-sizing: border-box; min-height: 120rpx; }
+.label { font-size: 24rpx; color: var(--muted); margin: 16rpx 0 8rpx; font-weight: 600; }
+.input { background: var(--card-subtle); border-radius: 14rpx; padding: 20rpx 22rpx; font-size: 28rpx; }
 .tag { font-size: 22rpx; color: var(--forest); background: #EAF7EE; border-radius: 10rpx; padding: 6rpx 14rpx; }
 .dark .tag { background: rgba(22,163,74,0.2); color: #4ADE80; }
 
