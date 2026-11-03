@@ -35,17 +35,6 @@ App({
     });
     wx.setBackgroundColor({ backgroundColor: dark ? '#121816' : '#F4F7F4' });
     wx.setBackgroundTextStyle({ textStyle: dark ? 'light' : 'dark' });
-
-    // Tab bar text + colors
-    const tabs = ['tab_home', 'tab_fridge', 'tab_recipes', 'tab_add', 'tab_me'];
-    tabs.forEach((key, i) => {
-      wx.setTabBarItem({ index: i, text: i18n.t(key) });
-    });
-    wx.setTabBarStyle({
-      color: '#6B7C72',
-      selectedColor: '#16A34A',
-      backgroundColor: dark ? '#1C2421' : '#FFFFFF',
-      borderStyle: dark ? 'black' : 'white',
-    });
+    // Custom tabBar handles its own labels/colors (see /custom-tab-bar).
   },
 });
