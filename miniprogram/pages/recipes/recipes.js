@@ -38,6 +38,7 @@ Page({
       servings: i18n.getLang() === 'en' ? 'serves' : '人份',
       useExpiring: i18n.getLang() === 'en' ? 'uses expiring' : '可耗临期',
       saveKg: i18n.getLang() === 'en' ? 'saves' : '省',
+      matchedWith: t('matched_with'), emptyHint: t('recipe_empty_hint'),
     };
   },
 
@@ -47,11 +48,15 @@ Page({
     this.setData({ loading: true });
     try {
       const hid = await this._hid();
-      const [res, items] = await Promise.all([
-        api.invoke('match-recipes', { household_id: hid }),
+      const [rows, items] = await Promise.all([
+        api.rpc('get_local_recipes', { p_household: hid }),
         api.rest('GET', 'v_fridge_items_with_risk', { query: '?select=id,name&order=days_left.asc' }),
       ]);
-      this.setData({ loading: false, hasData: true, recipes: (res && res.recipes) || [], items });
+      const recipes = (rows || []).map((r) => Object.assign({}, r, {
+        matchedText: (r.matched_items || []).join(' · '),
+        waste_saved_kg: Number(r.waste_saved_kg) || 0,
+      }));
+      this.setData({ loading: false, hasData: true, recipes, items });
     } catch (e) {
       console.error('recipes load failed', e);
       this.setData({ loading: false, hasData: false });
