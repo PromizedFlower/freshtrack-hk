@@ -5,6 +5,7 @@ backend/supabase/.branches/
 
 # WeChat devtools private config
 miniprogram/project.private.config.json
+miniprogram/.cloudbase/
 
 # Dependencies
 node_modules/
