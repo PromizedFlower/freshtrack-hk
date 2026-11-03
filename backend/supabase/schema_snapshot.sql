@@ -3,7 +3,7 @@
 -- snapshot-diff feature that flags unlogged/forgotten items.
 
 CREATE TABLE IF NOT EXISTS fridge_snapshots (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     household_id UUID NOT NULL REFERENCES households(id) ON DELETE CASCADE,
     image_url TEXT,
     detected_items JSONB NOT NULL DEFAULT '[]'::jsonb,
