@@ -21,6 +21,7 @@ Page({
 
   onShow() {
     if (!api.getSession().access_token) { wx.redirectTo({ url: '/pages/login/login' }); return; }
+    if (this.getTabBar && this.getTabBar()) this.getTabBar().setData({ active: '/pages/fridge/fridge' });
     getApp().applyPrefs();
     this.setData(Object.assign({ lang: i18n.getLang(), theme: i18n.getTheme(), font: i18n.getFont() }, this._labels()));
     this.load();
