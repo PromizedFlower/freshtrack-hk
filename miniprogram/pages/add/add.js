@@ -31,6 +31,7 @@ Page({
 
   onShow() {
     if (!api.getSession().access_token) { wx.redirectTo({ url: '/pages/login/login' }); return; }
+    if (this.getTabBar && this.getTabBar()) this.getTabBar().setData({ active: '/pages/add/add' });
     getApp().applyPrefs();
     this.setData(Object.assign(
       { lang: i18n.getLang(), theme: i18n.getTheme(), font: i18n.getFont() },
@@ -44,7 +45,7 @@ Page({
     return {
       modeReceipt: t('mode_receipt'), modeFood: t('mode_food'), modeManual: t('mode_manual'),
       scanReceipt: t('scan_receipt'), scanFood: t('scan_food'), scanning: t('scanning'),
-      detected: t('detected'), confirmAdd: t('confirm_add'),
+      detectedTitle: t('detected'), confirmAdd: t('confirm_add'),
       addTitle: t('add_title'), catTitle: t('cat_title'),
       addNamePh: t('add_name_ph'), addDays: t('add_days'), addZone: t('add_zone'),
       addPrice: t('add_price'), addSave: t('add_save'),
