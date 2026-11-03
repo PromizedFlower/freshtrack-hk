@@ -13,7 +13,7 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 -- 1. Households (家庭/个人冰箱账本表)
 CREATE TABLE IF NOT EXISTS households (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     name TEXT NOT NULL DEFAULT 'My FreshTrack Fridge',
     owner_id UUID,
     invite_code TEXT UNIQUE DEFAULT substring(md5(random()::text) from 1 for 6),
@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS storage_rules (
 
 -- 3. Fridge Items (冰箱在库食材明细表)
 CREATE TABLE IF NOT EXISTS fridge_items (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     household_id UUID NOT NULL REFERENCES households(id) ON DELETE CASCADE,
     name TEXT NOT NULL,
     category TEXT NOT NULL CHECK (category IN ('Produce', 'Dairy', 'Meat', 'Bakery', 'Pantry')),
@@ -62,7 +62,7 @@ CREATE INDEX idx_fridge_items_lookup ON fridge_items (household_id, status, expi
 
 -- 4. Rescue Recipes (抢救菜谱库表)
 CREATE TABLE IF NOT EXISTS recipes (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     title TEXT NOT NULL,
     prep_time_min INT NOT NULL DEFAULT 15,
     difficulty TEXT NOT NULL DEFAULT 'Easy',
@@ -76,7 +76,7 @@ CREATE TABLE IF NOT EXISTS recipes (
 
 -- 5. Waste & SDG 12.3 Impact Logs (减废与碳排行为流水表)
 CREATE TABLE IF NOT EXISTS waste_impact_logs (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     household_id UUID NOT NULL REFERENCES households(id) ON DELETE CASCADE,
     item_id UUID REFERENCES fridge_items(id) ON DELETE SET NULL,
     recipe_id UUID REFERENCES recipes(id) ON DELETE SET NULL,
@@ -113,7 +113,7 @@ EXCEPTION
 END $$;
 
 CREATE TABLE IF NOT EXISTS household_members (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     household_id UUID NOT NULL REFERENCES households(id) ON DELETE CASCADE,
     user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
     role household_role NOT NULL DEFAULT 'editor',
@@ -723,7 +723,7 @@ $$;
 -- Local cache for Open Food Facts lookups: millisecond read on repeat scans.
 
 CREATE TABLE IF NOT EXISTS barcode_cache (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     barcode TEXT NOT NULL UNIQUE,
     name TEXT,
     brand TEXT,
@@ -767,7 +767,7 @@ EXCEPTION
 END $$;
 
 CREATE TABLE IF NOT EXISTS notifications (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     household_id UUID NOT NULL REFERENCES households(id) ON DELETE CASCADE,
     user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
     channel notification_channel NOT NULL DEFAULT 'in_app',
@@ -1224,7 +1224,7 @@ SECURITY DEFINER
 SET search_path = public
 AS $$
 DECLARE
-    v_id UUID := uuid_generate_v4();
+    v_id UUID := gen_random_uuid();
 BEGIN
     IF p_title IS NULL OR trim(p_title) = '' THEN
         RAISE EXCEPTION 'title is required';
@@ -1303,7 +1303,7 @@ $$;
 -- Smart shopping list: auto-suggests replenishment when stock is consumed or discarded.
 
 CREATE TABLE IF NOT EXISTS shopping_list (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     household_id UUID NOT NULL REFERENCES households(id) ON DELETE CASCADE,
     item_name TEXT NOT NULL,
     category TEXT,
@@ -1624,7 +1624,7 @@ GRANT EXECUTE ON FUNCTION get_local_recipes(UUID) TO authenticated;
 
 -- ===================== user_recipes (P1 "我的菜谱") =====================
 CREATE TABLE IF NOT EXISTS user_recipes (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     household_id UUID NOT NULL REFERENCES households(id) ON DELETE CASCADE,
     created_by UUID DEFAULT auth.uid() REFERENCES auth.users(id) ON DELETE SET NULL,
     title TEXT NOT NULL,
