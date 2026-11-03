@@ -9,7 +9,7 @@ Page({
     members: [], memberCountText: '', myHouseholds: [],
     showFamily: '', joinCode: '', joinErr: '',
     kpi: null, trend: [],
-    restock: [], restockName: '', showRestock: false,
+    restock: [], restockName: '', showRestock: false, showPrefs: false,
     cats: [], restockPickIndex: 0, restockQty: '1', restockCategory: 'Produce',
   },
 
@@ -37,10 +37,10 @@ Page({
       restockTitle: t('me_restock'), restockAdd: t('me_restock_add'), restockEmpty: t('me_restock_empty'),
       restockBought: t('me_restock_bought'), restockCancel: t('me_restock_cancel'),
       restockNamePh: t('restock_name_ph'), restockQtyTxt: t('restock_qty'), restockCatTxt: t('restock_cat'),
-      prefs: t('me_prefs'), prefLang: t('pref_lang'), prefTheme: t('pref_theme'), prefFont: t('pref_font'),
-      prefZh: t('pref_zh'), prefEn: t('pref_en'), prefLight: t('pref_light'), prefDark: t('pref_dark'),
+      prefs: t('me_prefs'), prefTheme: t('pref_theme'), prefFont: t('pref_font'),
+      prefLight: t('pref_light'), prefDark: t('pref_dark'),
       font100: t('pref_font_100'), font125: t('pref_font_125'),
-      addPh: i18n.getLang() === 'en' ? 'e.g. Milk 1L' : '例如：鲜牛奶 1L',
+      addPh: '例如：鮮牛奶 1L',
       save: t('save'), cancel: t('cancel'), loadingTxt: t('loading'),
       signOut: t('sign_out'),
       familyTitle: t('family_title'), inviteCode: t('invite_code'),
@@ -60,17 +60,19 @@ Page({
       const [kpi, trend, restock] = await Promise.all([
         api.rpc('get_household_kpi', { p_household: hid }),
         api.rpc('get_household_trend', { p_household: hid }),
-        api.rest('GET', 'shopping_list', { query: `?household_id=eq.${hid}&order=created_at.desc` }),
+        api.rest('GET', 'shopping_list', { query: `?household_id=eq.${hid}&status=neq.bought&order=created_at.desc` }),
       ]);
-      const lang = i18n.getLang();
       const MONTHS_EN = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
       const maxKg = Math.max(1, ...(trend || []).map((t) => t.saved_kg || 0));
       const withPct = (trend || []).map((t) => {
         const mm = Number(String(t.month || '').slice(5, 7)) || 0;
-        const label = lang === 'en' ? (MONTHS_EN[mm - 1] || mm) : (mm + '月');
+        const label = mm + '月';
         return Object.assign({}, t, { pct: Math.round(((t.saved_kg || 0) / maxKg) * 100), label });
       });
-      const restockMapped = (restock || []).map((r) => Object.assign({}, r, { icon: i18n.catIcon(r.category) }));
+      // 已買項目不再佔據代購清單（服務端已過濾，此處二次保險）
+      const restockMapped = (restock || [])
+        .filter((r) => r.status !== 'bought')
+        .map((r) => Object.assign({}, r, { icon: i18n.catIcon(r.category) }));
       this.setData({ loading: false, hasData: true, kpi, trend: withPct, restock: restockMapped });
     } catch (e) {
       console.error('impact load failed', e);
@@ -237,7 +239,7 @@ Page({
   signOut() {
     wx.showModal({
       title: i18n.t('sign_out'),
-      content: i18n.getLang() === 'en' ? 'Sign out of this device?' : '确定要退出当前账号吗？',
+      content: i18n.t('sign_out_confirm'),
       success: (r) => {
         if (!r.confirm) return;
         api.clearSession();
@@ -325,19 +327,14 @@ Page({
   async _reloadRestock() {
     try {
       const hid = await this._hid();
-      const restock = await api.rest('GET', 'shopping_list', { query: `?household_id=eq.${hid}&order=created_at.desc` });
-      this.setData({ restock: (restock || []).map((r) => Object.assign({}, r, { icon: i18n.catIcon(r.category) })) });
+      const restock = await api.rest('GET', 'shopping_list', { query: `?household_id=eq.${hid}&status=neq.bought&order=created_at.desc` });
+      this.setData({ restock: (restock || []).filter((r) => r.status !== 'bought').map((r) => Object.assign({}, r, { icon: i18n.catIcon(r.category) })) });
     } catch (e) { console.error(e); }
   },
 
-  // ---- preferences ----
-  setLang(e) {
-    const lang = e.currentTarget.dataset.lang;
-    i18n.setLang(lang);
-    getApp().globalData.lang = lang;
-    getApp().applyPrefs();
-    this.setData(Object.assign({ lang }, this._labels()));
-  },
+  // ---- preferences（一級入口 → 二級抽屜）----
+  openPrefs() { this.setData({ showPrefs: true }); },
+  closePrefs() { this.setData({ showPrefs: false }); },
   setTheme(e) {
     const theme = e.currentTarget.dataset.theme;
     i18n.setTheme(theme);
