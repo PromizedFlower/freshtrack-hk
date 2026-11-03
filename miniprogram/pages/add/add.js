@@ -97,14 +97,14 @@ Page({
             }));
           }
           this.setData({ scanning: false, detected });
-          if (!detected.length) wx.showToast({ title: i18n.getLang() === 'en' ? 'Nothing detected' : '未识别到食材', icon: 'none' });
+          if (!detected.length) wx.showToast({ title: i18n.t('nothing_detected'), icon: 'none' });
         } catch (e) {
           console.error('scan failed', e);
           this.setData({ scanning: false });
-          wx.showToast({ title: i18n.getLang() === 'en' ? 'Scan failed' : '识别失败，请重试', icon: 'none' });
+          wx.showToast({ title: i18n.t('scan_failed'), icon: 'none' });
         }
       },
-      fail: () => { this.setData({ scanning: false }); wx.showToast({ title: i18n.getLang() === 'en' ? 'Read failed' : '读取图片失败', icon: 'none' }); },
+      fail: () => { this.setData({ scanning: false }); wx.showToast({ title: i18n.t('read_failed'), icon: 'none' }); },
     });
   },
 
