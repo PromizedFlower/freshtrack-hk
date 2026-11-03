@@ -16,7 +16,7 @@
     </view>
 
     <view class="card" wx:if="{{detected.length > 0}}">
-      <view class="h2">{{detected}}</view>
+      <view class="h2">{{detectedTitle}}</view>
       <view class="det" wx:for="{{detected}}" wx:for-index="di" wx:key="di">
         <view class="grow">
           <view class="det-name">{{item.name}}</view>
