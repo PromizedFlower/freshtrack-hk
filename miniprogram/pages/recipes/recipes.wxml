@@ -11,6 +11,27 @@
 
     <!-- Mode 1: local rescue list -->
     <block wx:if="{{mode === 'explore'}}">
+      <!-- my recipes -->
+      <view class="sec-head">
+        <view class="section-title">{{myRecipesTitle}}<text class="count">· {{myRecipes.length}}</text></view>
+        <view class="add-link" bindtap="openRecord">＋ {{recordAdd}}</view>
+      </view>
+      <view class="card rcp" wx:for="{{myRecipes}}" wx:key="id">
+        <view class="row">
+          <view class="grow">
+            <view class="rcp-title">📝 {{item.title}}</view>
+            <view wx:if="{{item.note}}" class="muted my-note">{{item.note}}</view>
+          </view>
+          <view class="del-link" data-id="{{item.id}}" bindtap="deleteRecipe">{{deleteRecipe}}</view>
+        </view>
+        <view wx:if="{{item.matchedText}}" class="rcp-matched">🔎 {{matchedWith}} {{item.matchedText}}</view>
+      </view>
+      <view wx:if="{{myRecipes.length === 0}}" class="card empty-recipe">
+        <view class="empty-emoji">📝</view>
+        <view class="muted">{{recordEmptyHint}}</view>
+      </view>
+
+      <!-- recommended (personalised) -->
       <view class="section-title">{{weeklyRescue}}<text wx:if="{{recipes.length}}" class="count">· {{recipes.length}}</text></view>
       <view class="card rcp" wx:for="{{recipes}}" wx:key="id">
         <view class="row" data-id="{{item.id}}" bindtap="toggle">
@@ -79,4 +100,23 @@
   </block>
 
   <view wx:else class="page-loading">{{noDataTxt}}</view>
+
+  <!-- record my recipe drawer -->
+  <view wx:if="{{showRecord}}" class="drawer-mask" bindtap="closeRecord"></view>
+  <view wx:if="{{showRecord}}" class="drawer">
+    <view class="drawer-pill"></view>
+    <view class="drawer-title">{{recordAdd}}</view>
+    <view class="field">
+      <view class="label">{{recordTitleLbl}}</view>
+      <input class="input" value="{{recTitle}}" bindinput="onRecTitle" placeholder="{{lang === 'en' ? 'e.g. Tomato Egg' : '例如：番茄炒蛋'}}" />
+    </view>
+    <view class="field">
+      <view class="label">{{recordNoteLbl}}</view>
+      <textarea class="input rec-note" value="{{recNote}}" bindinput="onRecNote" auto-height maxlength="200" />
+    </view>
+    <view class="drawer-actions">
+      <button class="btn-ghost" bindtap="closeRecord">{{cancel}}</button>
+      <button class="btn-primary" bindtap="saveRecord">{{recordSave}}</button>
+    </view>
+  </view>
 </view>
