@@ -10,7 +10,7 @@ module.exports = {
     { email: 'demo1@freshtrack.hk', name: '陳先生', role: 'owner', emoji: '👨', household: '陳家' },
     { email: 'demo2@freshtrack.hk', name: '陳太', role: 'editor', emoji: '👩', household: '陳家' },
     { email: 'demo3@freshtrack.hk', name: '李小姐', role: 'owner', emoji: '👩‍💼', household: '李家' },
-    { email: 'demo4@freshtrack.hk', name: '李婆婆', role: 'viewer', emoji: '👵', household: '李家' },
+    { email: 'demo4@freshtrack.hk', name: '李婆婆', role: 'editor', emoji: '👵', household: '李家' },
     { email: 'demo5@freshtrack.hk', name: '周同學', role: 'owner', emoji: '🧑', household: '周家' },
   ],
 };
