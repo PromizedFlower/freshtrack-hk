@@ -16,7 +16,11 @@
 
 .ai-box { }
 .ai-title { font-size: 32rpx; font-weight: 800; margin-bottom: 16rpx; }
-.ai-input { background: var(--card-subtle); border-radius: 14rpx; padding: 20rpx 22rpx; font-size: 28rpx; width: 100%; box-sizing: border-box; }
+.ai-input {
+  background: var(--card-subtle); border-radius: 14rpx;
+  padding: 22rpx 24rpx; font-size: 28rpx; line-height: 1.5;
+  width: 100%; box-sizing: border-box; min-height: 140rpx;
+}
 .ai-row { display: flex; gap: 16rpx; margin-top: 16rpx; }
 .btn-ai { flex: 1; background: var(--forest); color: #fff; border-radius: 999rpx; font-weight: 600; font-size: 28rpx; padding: 20rpx; }
 .presets { margin-top: 16rpx; display: flex; flex-direction: column; gap: 12rpx; }
