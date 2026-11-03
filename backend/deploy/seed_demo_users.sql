@@ -4,7 +4,7 @@
 --   demo1@freshtrack.hk / FreshTrackDemo123!  ->  陳家 owner   陳先生
 --   demo2@freshtrack.hk / FreshTrackDemo123!  ->  陳家 editor  陳太
 --   demo3@freshtrack.hk / FreshTrackDemo123!  ->  李家 owner   李小姐
---   demo4@freshtrack.hk / FreshTrackDemo123!  ->  李家 viewer  李婆婆
+--   demo4@freshtrack.hk / FreshTrackDemo123!  ->  李家 editor  李婆婆
 --   demo5@freshtrack.hk / FreshTrackDemo123!  ->  周家 owner   周同學
 --
 -- Create the auth users with:
@@ -32,7 +32,7 @@ FROM (VALUES
     ('CHEN01', 'demo1@freshtrack.hk', 'owner'),
     ('CHEN01', 'demo2@freshtrack.hk', 'editor'),
     ('LEE01',  'demo3@freshtrack.hk', 'owner'),
-    ('LEE01',  'demo4@freshtrack.hk', 'viewer'),
+    ('LEE01',  'demo4@freshtrack.hk', 'editor'),
     ('CHOW01', 'demo5@freshtrack.hk', 'owner')
 ) AS r(invite_code, email, role)
 JOIN households h ON h.invite_code = r.invite_code
