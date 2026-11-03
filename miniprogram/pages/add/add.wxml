@@ -12,7 +12,7 @@
       <button class="btn-primary" loading="{{scanning}}" bindtap="chooseImage">
         {{scanning ? scanning : (mode === 'receipt' ? scanReceipt : scanFood)}}
       </button>
-      <view class="muted tip">百佳 / 惠康 / HKTVmall · {{lang === 'en' ? 'auto-detect name, qty & expiry' : '自动识别名称、数量与保质期'}}</view>
+      <view class="muted tip">百佳 / 惠康 / HKTVmall · 自動識別名稱、數量與保質期</view>
     </view>
 
     <view class="card" wx:if="{{detected.length > 0}}">
@@ -48,18 +48,18 @@
 
       <view class="row">
         <view class="field grow">
-          <view class="label">{{lang === 'en' ? 'Qty' : '数量'}}</view>
+          <view class="label">數量</view>
           <input class="input" type="number" value="{{form.quantity}}" data-key="quantity" bindinput="onInput" />
         </view>
         <view class="field grow">
-          <view class="label">{{lang === 'en' ? 'Unit' : '单位'}}</view>
+          <view class="label">單位</view>
           <input class="input" value="{{form.unit}}" data-key="unit" bindinput="onInput" placeholder="pcs" />
         </view>
       </view>
 
       <view class="row">
         <view class="field grow">
-          <view class="label">{{lang === 'en' ? 'Weight (g)' : '重量(g)'}}</view>
+          <view class="label">重量(g)</view>
           <input class="input" type="number" value="{{form.weight_grams}}" data-key="weight_grams" bindinput="onInput" />
         </view>
         <view class="field grow">
