@@ -74,7 +74,7 @@
           <view class="bar-label">{{item.label}}</view>
         </view>
       </view>
-      <view wx:else class="muted empty">{{lang === 'en' ? 'No history yet' : '暂无惜食记录'}}</view>
+      <view wx:else class="muted empty">暫無惜食紀錄</view>
     </view>
 
     <!-- group-buy / restock list -->
@@ -88,46 +88,24 @@
         <view class="grow restock-name">
           <text class="r-icon">{{item.icon}}</text>{{item.item_name}}
           <text class="r-qty">×{{item.quantity}}</text>
-          <text wx:if="{{item.status === 'bought'}}" class="bought-tag">{{restockBought}}</text>
         </view>
-        <view class="restock-btns" wx:if="{{item.status !== 'bought'}}">
+        <view class="restock-btns">
           <view class="rbtn ok" data-id="{{item.id}}" bindtap="markBought">✓ {{restockBought}}</view>
           <view class="rbtn del" data-id="{{item.id}}" bindtap="cancelRestock">✕ {{restockCancel}}</view>
         </view>
       </view>
     </view>
 
-    <!-- preferences -->
-    <view class="card">
-      <view class="h2">⚙️ {{prefs}}</view>
-
-      <view class="pref-row">
-        <view class="pref-lbl">🌐 {{prefLang}}</view>
-        <view class="seg mini-seg">
-          <view class="pseg {{lang === 'zh' ? 'active' : ''}}" data-lang="zh" bindtap="setLang">{{prefZh}}</view>
-          <view class="pseg {{lang === 'en' ? 'active' : ''}}" data-lang="en" bindtap="setLang">{{prefEn}}</view>
-        </view>
-      </view>
-
-      <view class="pref-row">
-        <view class="pref-lbl">🎨 {{prefTheme}}</view>
-        <view class="seg mini-seg">
-          <view class="pseg {{theme === 'light' ? 'active' : ''}}" data-theme="light" bindtap="setTheme">{{prefLight}}</view>
-          <view class="pseg {{theme === 'dark' ? 'active' : ''}}" data-theme="dark" bindtap="setTheme">{{prefDark}}</view>
-        </view>
-      </view>
-
-      <view class="pref-row">
-        <view class="pref-lbl">👵 {{prefFont}}</view>
-        <view class="seg mini-seg">
-          <view class="pseg {{font === 'normal' ? 'active' : ''}}" data-font="normal" bindtap="setFont">{{font100}}</view>
-          <view class="pseg {{font === 'large' ? 'active' : ''}}" data-font="large" bindtap="setFont">{{font125}}</view>
-        </view>
+    <!-- preferences：一級入口（點擊開啟二級抽屜） -->
+    <view class="card pref-card">
+      <view class="pref-entry" bindtap="openPrefs">
+        <text class="pref-entry-l">⚙️ {{prefs}}</text>
+        <text class="pref-entry-r">›</text>
       </view>
     </view>
   </block>
 
-  <view wx:else class="page-loading">{{lang === 'en' ? 'No data yet' : '暂无数据，请先在「添加」页录入食材'}}</view>
+  <view wx:else class="page-loading">暫無數據，請先在「添加」頁錄入食材</view>
 
   <!-- restock / group-buy drawer (simplified add: icon + name + qty) -->
   <view wx:if="{{showRestock}}" class="drawer-mask" bindtap="closeRestock"></view>
@@ -145,7 +123,7 @@
     </view>
 
     <view class="field">
-      <view class="label">{{lang === 'en' ? 'Name' : '名称'}}</view>
+      <view class="label">名稱</view>
       <input class="input" value="{{restockName}}" placeholder="{{restockNamePh}}" bindinput="onRestockName" />
     </view>
 
@@ -174,7 +152,7 @@
             🏠 {{item.name}}
             <text wx:if="{{item.id === me.household_id}}" class="self-tag">{{current}}</text>
           </view>
-          <view class="hh-meta">{{item.roleLabel}} · {{item.member_count}} {{lang === 'en' ? 'people' : '人'}}</view>
+          <view class="hh-meta">{{item.roleLabel}} · {{item.member_count}} 人</view>
         </view>
       </view>
     </block>
@@ -203,5 +181,35 @@
         </block>
       </view>
     </block>
+  </view>
+
+  <!-- preferences drawer（二級：主題 + 長輩大字；繁體中文為唯一語言） -->
+  <view wx:if="{{showPrefs}}" class="drawer-mask" bindtap="closePrefs"></view>
+  <view wx:if="{{showPrefs}}" class="drawer">
+    <view class="drawer-pill"></view>
+    <view class="drawer-title">{{prefs}}</view>
+
+    <view class="pref-row">
+      <view class="pref-lbl">🌐 界面語言</view>
+      <view class="seg mini-seg">
+        <view class="pseg active">繁體中文</view>
+      </view>
+    </view>
+
+    <view class="pref-row">
+      <view class="pref-lbl">🎨 {{prefTheme}}</view>
+      <view class="seg mini-seg">
+        <view class="pseg {{theme === 'light' ? 'active' : ''}}" data-theme="light" bindtap="setTheme">{{prefLight}}</view>
+        <view class="pseg {{theme === 'dark' ? 'active' : ''}}" data-theme="dark" bindtap="setTheme">{{prefDark}}</view>
+      </view>
+    </view>
+
+    <view class="pref-row">
+      <view class="pref-lbl">👵 {{prefFont}}</view>
+      <view class="seg mini-seg">
+        <view class="pseg {{font === 'normal' ? 'active' : ''}}" data-font="normal" bindtap="setFont">{{font100}}</view>
+        <view class="pseg {{font === 'large' ? 'active' : ''}}" data-font="large" bindtap="setFont">{{font125}}</view>
+      </view>
+    </view>
   </view>
 </view>
