@@ -1563,3 +1563,62 @@ $$;
 REVOKE EXECUTE ON FUNCTION transfer_ownership(UUID, UUID) FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION transfer_ownership(UUID, UUID) TO authenticated;
 
+-- ===================== get_local_recipes (P0 explore matching) =====================
+-- Returns ONLY recipes that actually match the household's current stock, scored by
+-- ingredient coverage + expiring bonus. Replaces the old "static catalog" feel.
+CREATE OR REPLACE FUNCTION get_local_recipes(p_household UUID)
+RETURNS TABLE (
+    id UUID, title TEXT, prep_time_min INT, difficulty TEXT, servings INT,
+    ingredients JSONB, steps JSONB, tags TEXT[],
+    match_score INT, expiring_used_count INT, waste_saved_kg NUMERIC,
+    matched_items TEXT[]
+)
+LANGUAGE sql STABLE SECURITY DEFINER SET search_path = public
+AS $$
+WITH hi AS (
+    SELECT lower(btrim(name)) AS lname, name, risk_level, COALESCE(weight_grams, 0) AS weight_grams
+    FROM v_fridge_items_with_risk
+    WHERE household_id = p_household
+),
+ing AS (
+    SELECT r.id AS recipe_id, lower(btrim(i->>'name')) AS iname
+    FROM recipes r, jsonb_array_elements(r.ingredients) i
+    WHERE COALESCE(i->>'name', '') <> ''
+),
+pairs AS (
+    SELECT ing.recipe_id, ing.iname, hi.name AS item_name, hi.risk_level, hi.weight_grams
+    FROM ing
+    JOIN hi ON (hi.lname = ing.iname
+             OR hi.lname LIKE '%' || ing.iname || '%'
+             OR ing.iname LIKE '%' || hi.lname || '%')
+),
+agg AS (
+    SELECT recipe_id,
+           count(DISTINCT iname) AS matched_ings,
+           count(*) FILTER (WHERE risk_level IN ('high','medium')) AS expiring_hits,
+           COALESCE(sum(weight_grams) FILTER (WHERE risk_level IN ('high','medium')), 0) AS waste_g,
+           array_agg(DISTINCT item_name) AS matched_items
+    FROM pairs GROUP BY recipe_id
+),
+tot AS (
+    SELECT r.id AS recipe_id, GREATEST(count(*), 1) AS total_ings
+    FROM recipes r, jsonb_array_elements(r.ingredients) i
+    WHERE COALESCE(i->>'name', '') <> ''
+    GROUP BY r.id
+)
+SELECT r.id, r.title, r.prep_time_min, r.difficulty, r.servings, r.ingredients, r.steps,
+       COALESCE(r.tags, '{}') AS tags,
+       LEAST(100, ROUND(agg.matched_ings::numeric / tot.total_ings * 100)::int
+                  + LEAST(agg.expiring_hits, 5) * 6) AS match_score,
+       agg.expiring_hits::int AS expiring_used_count,
+       ROUND(agg.waste_g::numeric / 1000, 2) AS waste_saved_kg,
+       agg.matched_items
+FROM recipes r
+JOIN agg ON agg.recipe_id = r.id
+JOIN tot ON tot.recipe_id = r.id
+ORDER BY match_score DESC, expiring_used_count DESC, waste_saved_kg DESC
+LIMIT 30;
+$$;
+REVOKE EXECUTE ON FUNCTION get_local_recipes(UUID) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION get_local_recipes(UUID) TO authenticated;
+
