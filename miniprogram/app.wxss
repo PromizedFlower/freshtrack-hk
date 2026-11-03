@@ -147,8 +147,15 @@ page {
 .food-more { background: transparent; border: none; font-size: 40rpx; color: var(--muted); padding: 6rpx 12rpx; }
 
 /* ---- Drawer / bottom sheet ---- */
-.drawer-mask { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 200; }
-.drawer { position: fixed; left: 0; right: 0; bottom: 0; background: var(--card); border-radius: 32rpx 32rpx 0 0; padding: 28rpx 32rpx 48rpx; z-index: 201; }
+.drawer-mask { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1000; }
+.drawer {
+  position: fixed; left: 0; right: 0; bottom: 0; background: var(--card);
+  border-radius: 32rpx 32rpx 0 0;
+  /* large bottom padding keeps the action buttons clear of the fixed custom tab bar */
+  padding: 28rpx 32rpx 170rpx;
+  z-index: 1001; box-sizing: border-box;
+  max-height: 90vh; overflow-y: auto;
+}
 .drawer-pill { width: 72rpx; height: 8rpx; background: #D1D5DB; border-radius: 8rpx; margin: 0 auto 24rpx; }
 .drawer-title { font-size: 32rpx; font-weight: 800; margin-bottom: 24rpx; text-align: center; }
 
