@@ -1622,3 +1622,68 @@ $$;
 REVOKE EXECUTE ON FUNCTION get_local_recipes(UUID) FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION get_local_recipes(UUID) TO authenticated;
 
+-- ===================== user_recipes (P1 "我的菜谱") =====================
+CREATE TABLE IF NOT EXISTS user_recipes (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    household_id UUID NOT NULL REFERENCES households(id) ON DELETE CASCADE,
+    created_by UUID DEFAULT auth.uid() REFERENCES auth.users(id) ON DELETE SET NULL,
+    title TEXT NOT NULL,
+    note TEXT,
+    ingredients JSONB NOT NULL DEFAULT '[]'::jsonb,
+    steps JSONB NOT NULL DEFAULT '[]'::jsonb,
+    source TEXT NOT NULL DEFAULT 'manual' CHECK (source IN ('manual','ai')),
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+CREATE INDEX IF NOT EXISTS idx_user_recipes_household ON user_recipes (household_id, created_at DESC);
+
+DROP TRIGGER IF EXISTS trg_user_recipes_updated_at ON user_recipes;
+CREATE TRIGGER trg_user_recipes_updated_at BEFORE UPDATE ON user_recipes
+    FOR EACH ROW EXECUTE FUNCTION touch_updated_at();
+
+ALTER TABLE user_recipes ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS user_recipes_select ON user_recipes;
+CREATE POLICY user_recipes_select ON user_recipes FOR SELECT USING (is_household_member(household_id));
+DROP POLICY IF EXISTS user_recipes_insert ON user_recipes;
+CREATE POLICY user_recipes_insert ON user_recipes FOR INSERT WITH CHECK (can_edit_household(household_id));
+DROP POLICY IF EXISTS user_recipes_update ON user_recipes;
+CREATE POLICY user_recipes_update ON user_recipes FOR UPDATE USING (can_edit_household(household_id)) WITH CHECK (can_edit_household(household_id));
+DROP POLICY IF EXISTS user_recipes_delete ON user_recipes;
+CREATE POLICY user_recipes_delete ON user_recipes FOR DELETE USING (can_edit_household(household_id));
+
+CREATE OR REPLACE FUNCTION get_my_recipes(p_household UUID)
+RETURNS TABLE (
+    id UUID, title TEXT, note TEXT, ingredients JSONB, steps JSONB, source TEXT,
+    created_at TIMESTAMPTZ, matched_items TEXT[]
+)
+LANGUAGE sql STABLE SECURITY DEFINER SET search_path = public
+AS $$
+WITH hi AS (
+    SELECT lower(btrim(name)) AS lname, name
+    FROM v_fridge_items_with_risk WHERE household_id = p_household
+),
+ing AS (
+    SELECT ur.id AS rid, lower(btrim(i->>'name')) AS iname
+    FROM user_recipes ur, jsonb_array_elements(ur.ingredients) i
+    WHERE ur.household_id = p_household AND COALESCE(i->>'name', '') <> ''
+),
+pairs AS (
+    SELECT ing.rid, hi.name AS item_name
+    FROM ing
+    JOIN hi ON (hi.lname = ing.iname
+             OR hi.lname LIKE '%' || ing.iname || '%'
+             OR ing.iname LIKE '%' || hi.lname || '%')
+),
+agg AS (
+    SELECT rid, array_agg(DISTINCT item_name) AS matched_items FROM pairs GROUP BY rid
+)
+SELECT ur.id, ur.title, ur.note, ur.ingredients, ur.steps, ur.source, ur.created_at,
+       COALESCE(agg.matched_items, '{}') AS matched_items
+FROM user_recipes ur
+LEFT JOIN agg ON agg.rid = ur.id
+WHERE ur.household_id = p_household AND is_household_member(p_household)
+ORDER BY ur.created_at DESC;
+$$;
+REVOKE EXECUTE ON FUNCTION get_my_recipes(UUID) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION get_my_recipes(UUID) TO authenticated;
+
