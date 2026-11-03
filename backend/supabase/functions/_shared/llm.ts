@@ -45,7 +45,8 @@ export async function chatCompletion(messages: ChatMessage[], tools?: any[]): Pr
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), 40_000);
   try {
-    const resp = await fetch(`${LLM_BASE_URL}/chat/completions`, {
+    const base = LLM_BASE_URL.replace(/\/chat\/completions\/?$/i, "");
+    const resp = await fetch(`${base}/chat/completions`, {
       method: "POST",
       headers: { "Content-Type": "application/json", Authorization: `Bearer ${LLM_API_KEY}` },
       body: JSON.stringify(payload),
