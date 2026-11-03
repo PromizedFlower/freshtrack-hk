@@ -41,7 +41,6 @@ Page({
     const t = i18n.t;
     return {
       tConsume: t('consumed'), tDiscard: t('discard'),
-      tipConsume: t('swipe_tip_consume'), tipEdit: t('swipe_tip_edit'), tipDiscard: t('swipe_tip_discard'),
       kpiInFridge: t('kpi_in_fridge'), kpiExpiring: t('kpi_expiring'), kpiSaved: t('me_month_kg'),
       zoneFridge: t('zone_fridge'), zoneFreezer: t('zone_freezer'), zonePantry: t('zone_pantry'),
       quickAdd: t('quick_add'), quickRecipes: t('quick_recipes'), quickImpact: t('quick_impact'),
@@ -56,7 +55,7 @@ Page({
     if (this.data._timer) clearInterval(this.data._timer);
     const tick = () => {
       const now = new Date();
-      const dateStr = now.toLocaleDateString(i18n.getLang() === 'en' ? 'en-US' : 'zh-HK', {
+      const dateStr = now.toLocaleDateString('zh-HK', {
         month: 'numeric', day: 'numeric', weekday: 'short',
       });
       const clock = now.toTimeString().slice(0, 8);
@@ -134,40 +133,43 @@ Page({
     this._swipe = null;
   },
 
-  _consume(id) {
-    const item = this.data.items.find((i) => i.id === id);
-    wx.showModal({
-      title: i18n.t('consumed'),
-      content: i18n.t('confirm_consume', { name: item ? item.name : '' }),
-      success: async (r) => {
-        if (!r.confirm) return;
-        wx.showLoading({ title: i18n.t('loading') });
-        try {
-          const hid = await this._hid();
-          await api.rpc('consume_direct', { p_household: hid, p_item_ids: [id] });
-          wx.hideLoading(); wx.showToast({ title: i18n.t('add_saved'), icon: 'success' });
-          this.load();
-        } catch (e) { wx.hideLoading(); wx.showToast({ title: i18n.t('retry'), icon: 'none' }); }
-      },
-    });
+  // 直接執行（不再二次確認），配合飛葉特效提供即時動態反饋
+  async _consume(id) {
+    const idx = this.data.items.findIndex((i) => i.id === id);
+    if (idx < 0 || this.data.items[idx].busy) return;
+    this.setData({ ['items[' + idx + '].busy']: true, ['items[' + idx + '].fx']: 'consume' });
+    wx.vibrateShort({ type: 'light' });
+    try {
+      const hid = await this._hid();
+      await api.rpc('consume_direct', { p_household: hid, p_item_ids: [id] });
+      wx.vibrateShort({ type: 'medium' });
+      setTimeout(() => {
+        wx.showToast({ title: i18n.t('fx_consumed'), icon: 'success' });
+        this.load();
+      }, 650);
+    } catch (e) {
+      this.setData({ ['items[' + idx + '].busy']: false, ['items[' + idx + '].fx']: '' });
+      wx.showToast({ title: i18n.t('retry'), icon: 'none' });
+    }
   },
 
-  _discard(id) {
-    const item = this.data.items.find((i) => i.id === id);
-    wx.showModal({
-      title: i18n.t('discard'),
-      content: i18n.t('confirm_discard', { name: item ? item.name : '' }),
-      success: async (r) => {
-        if (!r.confirm) return;
-        wx.showLoading({ title: i18n.t('loading') });
-        try {
-          const hid = await this._hid();
-          await api.rpc('discard_direct', { p_household: hid, p_item_ids: [id] });
-          wx.hideLoading(); wx.showToast({ title: i18n.t('add_saved'), icon: 'success' });
-          this.load();
-        } catch (e) { wx.hideLoading(); wx.showToast({ title: i18n.t('retry'), icon: 'none' }); }
-      },
-    });
+  async _discard(id) {
+    const idx = this.data.items.findIndex((i) => i.id === id);
+    if (idx < 0 || this.data.items[idx].busy) return;
+    this.setData({ ['items[' + idx + '].busy']: true, ['items[' + idx + '].fx']: 'discard' });
+    wx.vibrateShort({ type: 'light' });
+    try {
+      const hid = await this._hid();
+      await api.rpc('discard_direct', { p_household: hid, p_item_ids: [id] });
+      wx.vibrateShort({ type: 'medium' });
+      setTimeout(() => {
+        wx.showToast({ title: i18n.t('fx_discarded'), icon: 'none' });
+        this.load();
+      }, 650);
+    } catch (e) {
+      this.setData({ ['items[' + idx + '].busy']: false, ['items[' + idx + '].fx']: '' });
+      wx.showToast({ title: i18n.t('retry'), icon: 'none' });
+    }
   },
 
   goFridgeZone(e) {
