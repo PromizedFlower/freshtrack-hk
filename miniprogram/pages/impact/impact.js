@@ -6,10 +6,11 @@ Page({
     loading: true, hasData: false,
     lang: 'zh', theme: 'light', font: 'normal',
     me: null, initial: '', roleLabel: '', householdText: '',
-    members: [], memberCountText: [], myHouseholds: [],
+    members: [], memberCountText: '', myHouseholds: [],
     showFamily: '', joinCode: '', joinErr: '',
     kpi: null, trend: [],
     restock: [], restockName: '', showRestock: false,
+    cats: [], restockPickIndex: 0, restockQty: '1', restockCategory: 'Produce',
   },
 
   onLoad() {
@@ -19,8 +20,10 @@ Page({
 
   onShow() {
     if (!api.getSession().access_token) { wx.redirectTo({ url: '/pages/login/login' }); return; }
+    if (this.getTabBar && this.getTabBar()) this.getTabBar().setData({ active: '/pages/impact/impact' });
     getApp().applyPrefs();
     this.setData(Object.assign({ lang: i18n.getLang(), theme: i18n.getTheme(), font: i18n.getFont() }, this._labels()));
+    this._syncRestockCats();
     this.load();
     this._loadMe();
   },
@@ -30,9 +33,10 @@ Page({
     return {
       meSdg: t('me_sdg'), meSdgSub: t('me_sdg_sub'),
       monthKg: t('me_month_kg'), monthHkd: t('me_month_hkd'), monthCo2: t('me_month_co2'),
-      trend: t('me_trend'), statTracked: t('stat_tracked'), statExpiring: t('stat_expiring'),
-      restock: t('me_restock'), restockAdd: t('me_restock_add'), restockEmpty: t('me_restock_empty'),
+      trendTitle: t('me_trend'), statTracked: t('stat_tracked'), statExpiring: t('stat_expiring'),
+      restockTitle: t('me_restock'), restockAdd: t('me_restock_add'), restockEmpty: t('me_restock_empty'),
       restockBought: t('me_restock_bought'), restockCancel: t('me_restock_cancel'),
+      restockNamePh: t('restock_name_ph'), restockQtyTxt: t('restock_qty'), restockCatTxt: t('restock_cat'),
       prefs: t('me_prefs'), prefLang: t('pref_lang'), prefTheme: t('pref_theme'), prefFont: t('pref_font'),
       prefZh: t('pref_zh'), prefEn: t('pref_en'), prefLight: t('pref_light'), prefDark: t('pref_dark'),
       font100: t('pref_font_100'), font125: t('pref_font_125'),
@@ -58,9 +62,16 @@ Page({
         api.rpc('get_household_trend', { p_household: hid }),
         api.rest('GET', 'shopping_list', { query: `?household_id=eq.${hid}&order=created_at.desc` }),
       ]);
+      const lang = i18n.getLang();
+      const MONTHS_EN = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
       const maxKg = Math.max(1, ...(trend || []).map((t) => t.saved_kg || 0));
-      const withPct = (trend || []).map((t) => ({ ...t, pct: Math.round((t.saved_kg / maxKg) * 100) }));
-      this.setData({ loading: false, hasData: true, kpi, trend: withPct, restock: restock || [] });
+      const withPct = (trend || []).map((t) => {
+        const mm = Number(String(t.month || '').slice(5, 7)) || 0;
+        const label = lang === 'en' ? (MONTHS_EN[mm - 1] || mm) : (mm + '月');
+        return Object.assign({}, t, { pct: Math.round(((t.saved_kg || 0) / maxKg) * 100), label });
+      });
+      const restockMapped = (restock || []).map((r) => Object.assign({}, r, { icon: i18n.catIcon(r.category) }));
+      this.setData({ loading: false, hasData: true, kpi, trend: withPct, restock: restockMapped });
     } catch (e) {
       console.error('impact load failed', e);
       this.setData({ loading: false, hasData: false });
@@ -239,22 +250,52 @@ Page({
     });
   },
 
-  // ---- restock list ----
-  openRestock() { this.setData({ showRestock: true, restockName: '' }); },
+  // ---- restock / group-buy list ----
+  _syncRestockCats() {
+    const cats = i18n.PICKER_CATS.map((c, i) => ({
+      id: i, icon: c.icon, label: i18n.t(c.name), category: c.category,
+    }));
+    this.setData({ cats });
+  },
+
+  openRestock() {
+    this.setData({
+      showRestock: true, restockName: '', restockQty: '1',
+      restockPickIndex: 0, restockCategory: i18n.PICKER_CATS[0].category,
+    });
+  },
   closeRestock() { this.setData({ showRestock: false }); },
   onRestockName(e) { this.setData({ restockName: e.detail.value }); },
+  onRestockQty(e) { this.setData({ restockQty: e.detail.value }); },
+  selectRestockCat(e) {
+    const i = Number(e.currentTarget.dataset.index);
+    this.setData({ restockPickIndex: i, restockCategory: i18n.PICKER_CATS[i].category });
+  },
 
   async addRestock() {
-    const name = this.data.restockName.trim();
-    if (!name) return;
+    const name = (this.data.restockName || '').trim();
+    if (!name) {
+      wx.showToast({ title: i18n.t('restock_name_required'), icon: 'none' });
+      return;
+    }
     const hid = await this._hid();
     wx.showLoading({ title: this.data.loadingTxt });
     try {
-      await api.rest('POST', 'shopping_list', { body: { household_id: hid, item_name: name } });
+      await api.rest('POST', 'shopping_list', {
+        body: {
+          household_id: hid, item_name: name, category: this.data.restockCategory,
+          quantity: Number(this.data.restockQty) || 1, unit: 'pcs',
+        },
+      });
       wx.hideLoading();
-      this.setData({ showRestock: false, restockName: '' });
+      this.setData({ showRestock: false, restockName: '', restockQty: '1' });
+      wx.showToast({ title: i18n.t('restock_added'), icon: 'success' });
       this._reloadRestock();
-    } catch (e) { wx.hideLoading(); console.error('add restock failed', e); }
+    } catch (e) {
+      wx.hideLoading();
+      console.error('add restock failed', e);
+      wx.showToast({ title: this._errMsg(e) || i18n.t('restock_fail'), icon: 'none' });
+    }
   },
 
   async markBought(e) {
@@ -262,7 +303,11 @@ Page({
     try {
       await api.rest('PATCH', 'shopping_list', { query: `?id=eq.${id}`, body: { status: 'bought' } });
       this._reloadRestock();
-    } catch (e) { console.error('bought failed', e); }
+      wx.showToast({ title: i18n.t('me_restock_bought'), icon: 'none' });
+    } catch (e) {
+      console.error('bought failed', e);
+      wx.showToast({ title: this._errMsg(e) || i18n.t('restock_fail'), icon: 'none' });
+    }
   },
 
   async cancelRestock(e) {
@@ -270,14 +315,18 @@ Page({
     try {
       await api.rest('DELETE', 'shopping_list', { query: `?id=eq.${id}` });
       this._reloadRestock();
-    } catch (e) { console.error('cancel failed', e); }
+      wx.showToast({ title: i18n.t('me_restock_cancel'), icon: 'none' });
+    } catch (e) {
+      console.error('cancel failed', e);
+      wx.showToast({ title: this._errMsg(e) || i18n.t('restock_fail'), icon: 'none' });
+    }
   },
 
   async _reloadRestock() {
     try {
       const hid = await this._hid();
       const restock = await api.rest('GET', 'shopping_list', { query: `?household_id=eq.${hid}&order=created_at.desc` });
-      this.setData({ restock: restock || [] });
+      this.setData({ restock: (restock || []).map((r) => Object.assign({}, r, { icon: i18n.catIcon(r.category) })) });
     } catch (e) { console.error(e); }
   },
 
