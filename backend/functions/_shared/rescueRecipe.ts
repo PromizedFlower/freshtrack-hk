@@ -76,6 +76,9 @@ Output ONLY a JSON object of this exact shape (no markdown fences):
     }
   ]
 }
+LANGUAGE (STRICT): All user-facing text — title, difficulty, steps, ingredient names, uses_expiring,
+reason and disclaimer — MUST be written in Traditional Chinese (繁體中文, Hong Kong usage, zh-Hant).
+Never output Simplified Chinese or English in those fields, regardless of the input language.
 The disclaimer must remind users this is a suggestion and that food-safety (use_by) dates must always be
 respected; never claim any food is safe to eat.`;
 
@@ -136,7 +139,7 @@ function coerceRecipe(r: any): GeneratedRecipe {
 export function normalize(raw: any, input: RescueInput): RescueResult {
   const disclaimer =
     String(raw?.disclaimer || "") ||
-    "建议仅供参考；请始终以食材包装上的 use-by 日期与感官判断为准，本应用不证明任何食物可安全食用。";
+    "建議僅供參考；請始終以食材包裝上的 use-by 日期與感官判斷為準，本應用不證明任何食物可安全食用。";
 
   let list: any[] = [];
   if (Array.isArray(raw)) list = raw;
@@ -155,7 +158,7 @@ export async function generateRescueRecipes(input: RescueInput, allowSearch = tr
   if (hasLlm()) {
     try {
       const agentSystem = SYSTEM +
-        '\n\nYou are running as an agent with a "web_search" tool. If unsure about a substitution or a cooking fact, call web_search (at most twice), then output ONLY the JSON object described above.';
+        '\n\nYou are running as an agent with a "web_search" tool. If unsure about a substitution or a cooking fact, call web_search (at most twice), then output ONLY the JSON object described above. Remember: every user-facing field MUST be in Traditional Chinese (繁體中文).';
       const raw = await agentJson({ system: agentSystem, user: promptText, allowSearch, maxRounds: 2 });
       return normalize(raw, input);
     } catch (e) {
