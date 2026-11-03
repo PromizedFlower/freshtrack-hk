@@ -2,7 +2,7 @@
 -- A household shopping list that auto-suggests replenishment when stock is consumed or discarded.
 
 CREATE TABLE IF NOT EXISTS shopping_list (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     household_id UUID NOT NULL REFERENCES households(id) ON DELETE CASCADE,
     item_name TEXT NOT NULL,
     category TEXT,
