@@ -47,9 +47,9 @@
         </view>
         <view wx:if="{{item.matchedText}}" class="rcp-matched">🔎 {{matchedWith}} {{item.matchedText}}</view>
         <view wx:if="{{expandedId === item.id}}" class="detail">
-          <view class="sec">{{lang === 'en' ? 'Ingredients' : '用料'}}</view>
+          <view class="sec">用料</view>
           <view class="ing" wx:for="{{item.ingredients}}" wx:for-item="ing" wx:key="name">{{ing.name}}</view>
-          <view class="sec">{{lang === 'en' ? 'Steps' : '步骤'}}</view>
+          <view class="sec">步驟</view>
           <view class="step" wx:for="{{item.steps}}" wx:for-item="s" wx:for-index="si" wx:key="*this">{{si + 1}}. {{s}}</view>
           <button class="btn-primary cook" data-id="{{item.id}}" bindtap="cook">{{cook}}</button>
         </view>
@@ -90,9 +90,9 @@
           <button class="btn-ghost mini" size="mini" data-idx="{{aiIdx}}" bindtap="toggleAi">{{item._open ? collapse : detail}}</button>
         </view>
         <view wx:if="{{item._open}}" class="detail">
-          <view class="sec">{{lang === 'en' ? 'Ingredients' : '用料'}}</view>
-          <view class="ing" wx:for="{{item.ingredients}}" wx:for-item="ing" wx:key="name">{{ing.name}}<text wx:if="{{ing.substitute}}" class="sub">（{{lang === 'en' ? 'sub:' : '可替'}} {{ing.substitute}}）</text></view>
-          <view class="sec">{{lang === 'en' ? 'Steps' : '步骤'}}</view>
+          <view class="sec">用料</view>
+          <view class="ing" wx:for="{{item.ingredients}}" wx:for-item="ing" wx:key="name">{{ing.name}}<text wx:if="{{ing.substitute}}" class="sub">（可替 {{ing.substitute}}）</text></view>
+          <view class="sec">步驟</view>
           <view class="step" wx:for="{{item.steps}}" wx:for-item="s" wx:for-index="si" wx:key="*this">{{si + 1}}. {{s}}</view>
         </view>
       </view>
@@ -108,7 +108,7 @@
     <view class="drawer-title">{{recordAdd}}</view>
     <view class="field">
       <view class="label">{{recordTitleLbl}}</view>
-      <input class="input" value="{{recTitle}}" bindinput="onRecTitle" placeholder="{{lang === 'en' ? 'e.g. Tomato Egg' : '例如：番茄炒蛋'}}" />
+      <input class="input" value="{{recTitle}}" bindinput="onRecTitle" placeholder="例如：番茄炒蛋" />
     </view>
     <view class="field">
       <view class="label">{{recordNoteLbl}}</view>
