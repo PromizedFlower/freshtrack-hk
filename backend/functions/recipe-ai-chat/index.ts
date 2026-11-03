@@ -40,6 +40,7 @@ serve(async (req: Request) => {
     let allergies: string[] = [];
     let dietary: string[] = [];
     let count = 3;
+    let allowSearch = true;
 
     if (req.method === "POST") {
       const body = await req.json().catch(() => ({}));
@@ -48,6 +49,7 @@ serve(async (req: Request) => {
       if (Array.isArray(body.allergies)) allergies = body.allergies.map(String);
       if (Array.isArray(body.dietary)) dietary = body.dietary.map(String);
       if (body.count) count = Number(body.count);
+      if (body.allow_search === false) allowSearch = false;
     } else {
       const aq = url.searchParams.get("allergies");
       if (aq) allergies = aq.split(",").map((s) => s.trim()).filter(Boolean);
@@ -55,6 +57,7 @@ serve(async (req: Request) => {
       if (dq) dietary = dq.split(",").map((s) => s.trim()).filter(Boolean);
       const cq = url.searchParams.get("count");
       if (cq) count = Number(cq);
+      if (url.searchParams.get("allow_search") === "false") allowSearch = false;
     }
     if (!household_id) return corsResponse({ error: "household_id is required" }, 400);
     if (!SUPABASE_URL || !SERVICE_KEY) return corsResponse({ error: "Supabase env not configured" }, 500);
@@ -76,7 +79,7 @@ serve(async (req: Request) => {
     if (hit && Date.now() - hit.ts < CACHE_TTL_MS) {
       result = hit.data;
     } else {
-      const gen = await generateRescueRecipes({ items, candidateRecipes: library, query, allergies, dietary, count });
+      const gen = await generateRescueRecipes({ items, candidateRecipes: library, query, allergies, dietary, count }, allowSearch);
       result = { recipes: gen.recipes, disclaimer: gen.disclaimer };
       cache.set(key, { ts: Date.now(), data: result });
     }
