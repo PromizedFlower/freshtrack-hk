@@ -11,7 +11,7 @@
       </view>
       <view class="hero-title">{{greeting}}</view>
       <view class="hero-sub" wx:if="{{kpi}}">
-        {{kpi.expiring_soon > 0 ? '⚠️ ' : ''}}{{lang === 'en' ? (kpi.expiring_soon + ' item(s) expiring soon') : (kpi.expiring_soon + ' 件食材即将过期')}}
+        {{kpi.expiring_soon > 0 ? '⚠️ ' : ''}}{{kpi.expiring_soon + ' 件食材即將過期'}}
       </view>
       <view class="hero-kpis" wx:if="{{kpi}}">
         <view class="kpi-box">
@@ -48,18 +48,21 @@
       </view>
     </view>
 
-    <!-- swipe tip -->
-    <view class="swipe-tip">
-      <text class="tip-green">{{tipConsume}}</text>
-      <text class="tip-muted">{{tipEdit}}</text>
-      <text class="tip-red">{{tipDiscard}}</text>
-    </view>
-
     <!-- swipe feed -->
     <view class="swipe-wrapper" wx:for="{{items}}" wx:key="id">
       <view class="swipe-back swipe-green">✓ {{tConsume}}</view>
       <view class="swipe-back swipe-red">{{tDiscard}} 🗑️</view>
-      <view class="food-row"
+
+      <!-- 飛葉特效粒子層 -->
+      <block wx:if="{{item.fx}}">
+        <view class="leaf leaf-1 {{item.fx}}"></view>
+        <view class="leaf leaf-2 {{item.fx}}"></view>
+        <view class="leaf leaf-3 {{item.fx}}"></view>
+        <view class="leaf leaf-4 {{item.fx}}"></view>
+        <view class="fx-spark {{item.fx}}"></view>
+      </block>
+
+      <view class="food-row {{item.fx ? 'fx-' + item.fx : ''}}"
             style="transform: translateX({{item.offset}}px);"
             data-id="{{item.id}}"
             bindtouchstart="onTouchStart" bindtouchmove="onTouchMove" bindtouchend="onTouchEnd">
@@ -69,7 +72,7 @@
             <view class="food-name">{{item.name}}</view>
             <view class="food-meta">
               <text class="chip {{item.risk_level === 'high' ? 'chip-red' : (item.risk_level === 'medium' ? 'chip-gold' : 'chip-green')}}">{{item.days_left}}d</text>
-              <text class="muted">{{item.date_type === 'use_by' ? (lang === 'en' ? 'Use by' : '此日期前食用') : (lang === 'en' ? 'Best before' : '最佳赏味期')}}</text>
+              <text class="muted">{{item.date_type === 'use_by' ? '此日期前食用' : '最佳賞味期'}}</text>
             </view>
           </view>
         </view>
