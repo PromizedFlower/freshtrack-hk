@@ -43,7 +43,7 @@
 
   <view wx:else class="page-loading">{{noDataTxt}}</view>
 
-  <view class="fab" bindtap="goAdd">＋</view>
+
 
   <!-- edit drawer -->
   <view wx:if="{{editId}}" class="drawer-mask" bindtap="closeEdit"></view>
