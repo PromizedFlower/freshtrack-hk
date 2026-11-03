@@ -7,9 +7,9 @@ $REF = "cjqmeypqkxvnyojpyexw"
 
 # ===== 填写你的密钥（留空则 AI 大厨自动回退 Gemini）=====
 $SUPABASE_ACCESS_TOKEN = ""   # 控制台 Personal access token，sbp_... （或用下方 supabase login 替代）
-$LLM_API_KEY     = ""         # 开源模型 key，例如 DeepSeek 的 sk-... （必填才能走开源 LLM 路径）
-$LLM_BASE_URL    = "https://api.deepseek.com/v1"
-$LLM_MODEL       = "deepseek-chat"
+$LLM_API_KEY     = ""         # 开源模型 key（HKBU 网关为 UUID 格式）
+$LLM_BASE_URL    = "https://genai.hkbu.edu.hk/api/v1"
+$LLM_MODEL       = "deepseek-v4-flash-0731"
 $TAVILY_API_KEY  = ""         # 可选，开启 AI 联网搜索（web_search 工具）
 
 # 若未填 token，则尝试用 supabase login 的本地会话
