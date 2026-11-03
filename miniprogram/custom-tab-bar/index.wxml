@@ -1,0 +1,13 @@
+<view class="ctb {{theme === 'dark' ? 'dark' : ''}}">
+  <view wx:for="{{items}}" wx:key="key"
+        class="ctb-item {{item.center ? 'center' : ''}} {{active === item.path ? 'active' : ''}}"
+        data-path="{{item.path}}" bindtap="onTap">
+    <block wx:if="{{item.center}}">
+      <view class="ctb-fab">＋</view>
+    </block>
+    <block wx:else>
+      <view class="ctb-icon">{{item.icon}}</view>
+      <view class="ctb-label">{{labels[item.key]}}</view>
+    </block>
+  </view>
+</view>
