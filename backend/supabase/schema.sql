@@ -5,7 +5,7 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 -- 1. Households (家庭/个人冰箱账本表)
 CREATE TABLE IF NOT EXISTS households (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     name TEXT NOT NULL DEFAULT 'My FreshTrack Fridge',
     owner_id UUID,
     invite_code TEXT UNIQUE DEFAULT substring(md5(random()::text) from 1 for 6),
@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS storage_rules (
 
 -- 3. Fridge Items (冰箱在库食材明细表)
 CREATE TABLE IF NOT EXISTS fridge_items (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     household_id UUID NOT NULL REFERENCES households(id) ON DELETE CASCADE,
     name TEXT NOT NULL,
     category TEXT NOT NULL CHECK (category IN ('Produce', 'Dairy', 'Meat', 'Bakery', 'Pantry')),
@@ -54,7 +54,7 @@ CREATE INDEX idx_fridge_items_lookup ON fridge_items (household_id, status, expi
 
 -- 4. Rescue Recipes (抢救菜谱库表)
 CREATE TABLE IF NOT EXISTS recipes (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     title TEXT NOT NULL,
     prep_time_min INT NOT NULL DEFAULT 15,
     difficulty TEXT NOT NULL DEFAULT 'Easy',
@@ -68,7 +68,7 @@ CREATE TABLE IF NOT EXISTS recipes (
 
 -- 5. Waste & SDG 12.3 Impact Logs (减废与碳排行为流水表)
 CREATE TABLE IF NOT EXISTS waste_impact_logs (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     household_id UUID NOT NULL REFERENCES households(id) ON DELETE CASCADE,
     item_id UUID REFERENCES fridge_items(id) ON DELETE SET NULL,
     recipe_id UUID REFERENCES recipes(id) ON DELETE SET NULL,
