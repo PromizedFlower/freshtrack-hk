@@ -91,11 +91,25 @@
 .dark .rbtn.del { background: rgba(220,38,38,0.2); color: #F87171; }
 .empty { text-align: center; padding: 24rpx 0; }
 
+.r-icon { font-size: 30rpx; margin-right: 8rpx; }
+.r-qty { font-size: 22rpx; color: var(--muted); margin-left: 8rpx; }
+
+.cat-grid { display: flex; flex-wrap: wrap; gap: 12rpx; margin: 8rpx 0 4rpx; }
+.cat-item {
+  flex: 1 1 22%; max-width: 23%; background: var(--card-subtle); border: 2rpx solid transparent;
+  border-radius: 16rpx; padding: 14rpx 0; text-align: center;
+}
+.cat-item.active { border-color: var(--brand); background: #DCFCE7; }
+.dark .cat-item.active { background: rgba(22,163,74,0.2); }
+.cat-icon { font-size: 36rpx; line-height: 1.2; }
+.cat-name { font-size: 18rpx; color: var(--muted); margin-top: 4rpx; }
+
 .pref-row { display: flex; justify-content: space-between; align-items: center; padding: 20rpx 0; border-bottom: 1rpx solid var(--border); }
 .pref-row:last-child { border-bottom: none; }
 .pref-lbl { font-size: 26rpx; font-weight: 600; }
 .mini-seg { width: 320rpx; }
 
+.label { font-size: 24rpx; color: var(--muted); margin: 16rpx 0 8rpx; font-weight: 600; }
 .field { margin: 20rpx 0; }
 .input { background: var(--card-subtle); border-radius: 14rpx; padding: 20rpx 22rpx; font-size: 28rpx; }
 .drawer-actions { display: flex; gap: 16rpx; margin-top: 24rpx; }
