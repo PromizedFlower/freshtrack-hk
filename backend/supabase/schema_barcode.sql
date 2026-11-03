@@ -2,7 +2,7 @@
 -- Local cache for Open Food Facts lookups: millisecond read on repeat scans.
 
 CREATE TABLE IF NOT EXISTS barcode_cache (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     barcode TEXT NOT NULL UNIQUE,
     name TEXT,
     brand TEXT,
