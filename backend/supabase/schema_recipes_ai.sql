@@ -25,7 +25,7 @@ SECURITY DEFINER
 SET search_path = public
 AS $$
 DECLARE
-    v_id UUID := uuid_generate_v4();
+    v_id UUID := gen_random_uuid();
 BEGIN
     IF p_title IS NULL OR trim(p_title) = '' THEN
         RAISE EXCEPTION 'title is required';
