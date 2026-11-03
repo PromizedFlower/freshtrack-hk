@@ -66,26 +66,28 @@
 
     <!-- trend -->
     <view class="card">
-      <view class="h2">{{trend}}</view>
-      <view class="chart">
+      <view class="h2">{{trendTitle}}</view>
+      <view class="chart" wx:if="{{trend.length}}">
         <view class="bar-col" wx:for="{{trend}}" wx:key="month">
           <view class="bar-val">{{item.saved_kg}}</view>
           <view class="bar-wrap"><view class="bar" style="height: {{item.pct}}%;"></view></view>
-          <view class="bar-label">{{item.month.slice(5)}}</view>
+          <view class="bar-label">{{item.label}}</view>
         </view>
       </view>
+      <view wx:else class="muted empty">{{lang === 'en' ? 'No history yet' : '暂无惜食记录'}}</view>
     </view>
 
-    <!-- restock list -->
+    <!-- group-buy / restock list -->
     <view class="card">
       <view class="between">
-        <view class="h2">🛒 {{restock}}</view>
+        <view class="h2">🛒 {{restockTitle}}</view>
         <view class="link" bindtap="openRestock">{{restockAdd}}</view>
       </view>
       <view wx:if="{{restock.length === 0}}" class="muted empty">{{restockEmpty}}</view>
       <view class="restock-row" wx:for="{{restock}}" wx:key="id">
         <view class="grow restock-name">
-          {{item.item_name}}
+          <text class="r-icon">{{item.icon}}</text>{{item.item_name}}
+          <text class="r-qty">×{{item.quantity}}</text>
           <text wx:if="{{item.status === 'bought'}}" class="bought-tag">{{restockBought}}</text>
         </view>
         <view class="restock-btns" wx:if="{{item.status !== 'bought'}}">
@@ -127,17 +129,34 @@
 
   <view wx:else class="page-loading">{{lang === 'en' ? 'No data yet' : '暂无数据，请先在「添加」页录入食材'}}</view>
 
-  <!-- restock drawer -->
+  <!-- restock / group-buy drawer (simplified add: icon + name + qty) -->
   <view wx:if="{{showRestock}}" class="drawer-mask" bindtap="closeRestock"></view>
   <view wx:if="{{showRestock}}" class="drawer">
     <view class="drawer-pill"></view>
     <view class="drawer-title">{{restockAdd}}</view>
-    <view class="field">
-      <input class="input" value="{{restockName}}" placeholder="{{addPh}}" bindinput="onRestockName" focus="{{showRestock}}" />
+
+    <view class="label">{{restockCatTxt}}</view>
+    <view class="cat-grid">
+      <view class="cat-item {{restockPickIndex === index ? 'active' : ''}}"
+            wx:for="{{cats}}" wx:key="id" data-index="{{index}}" bindtap="selectRestockCat">
+        <view class="cat-icon">{{item.icon}}</view>
+        <view class="cat-name">{{item.label}}</view>
+      </view>
     </view>
+
+    <view class="field">
+      <view class="label">{{lang === 'en' ? 'Name' : '名称'}}</view>
+      <input class="input" value="{{restockName}}" placeholder="{{restockNamePh}}" bindinput="onRestockName" />
+    </view>
+
+    <view class="field">
+      <view class="label">{{restockQtyTxt}}</view>
+      <input class="input" type="number" value="{{restockQty}}" bindinput="onRestockQty" />
+    </view>
+
     <view class="drawer-actions">
       <button class="btn-ghost" bindtap="closeRestock">{{cancel}}</button>
-      <button class="btn-primary" bindtap="addRestock">{{save}}</button>
+      <button class="btn-primary" bindtap="addRestock">{{restockAdd}}</button>
     </view>
   </view>
 
