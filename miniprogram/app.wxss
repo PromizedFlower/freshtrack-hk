@@ -25,7 +25,8 @@ page {
   background: var(--bg);
   color: var(--text);
   box-sizing: border-box;
-  padding-bottom: 40rpx;
+  /* leave room for the fixed custom tab bar (110rpx + safe area) */
+  padding-bottom: 170rpx;
 }
 
 /* ---- Dark theme ---- */
