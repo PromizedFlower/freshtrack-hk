@@ -22,7 +22,7 @@ EXCEPTION
 END $$;
 
 CREATE TABLE IF NOT EXISTS household_members (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     household_id UUID NOT NULL REFERENCES households(id) ON DELETE CASCADE,
     user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
     role household_role NOT NULL DEFAULT 'editor',
