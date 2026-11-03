@@ -5,6 +5,17 @@
   <block wx:elif="{{hasData}}">
     <view class="section-title">{{title}}</view>
 
+    <!-- 溫區快速定位 Tab 條（sticky） -->
+    <view class="zone-tabs">
+      <view class="zone-tab {{activeZone === item.zone ? 'active' : ''}}"
+            wx:for="{{zones}}" wx:key="zone"
+            data-zone="{{item.zone}}" bindtap="jumpZone">
+        <text class="zt-icon">{{item.icon}}</text>
+        <text class="zt-label">{{item.label}}</text>
+        <text class="zt-count">{{item.items.length}}</text>
+      </view>
+    </view>
+
     <view class="zone-section" wx:for="{{zones}}" wx:key="zone" id="zone-{{item.zone}}">
       <view class="zone-head">
         <view class="zone-head-left">
@@ -20,7 +31,17 @@
       <view class="swipe-wrapper" wx:for="{{item.items}}" wx:for-item="it" wx:key="id">
         <view class="swipe-back swipe-green">✓ {{tConsume}}</view>
         <view class="swipe-back swipe-red">{{tDiscard}} 🗑️</view>
-        <view class="food-row"
+
+        <!-- 飛葉特效粒子層：消化（上飄）／丟棄（飄落） -->
+        <block wx:if="{{it.fx}}">
+          <view class="leaf leaf-1 {{it.fx}}"></view>
+          <view class="leaf leaf-2 {{it.fx}}"></view>
+          <view class="leaf leaf-3 {{it.fx}}"></view>
+          <view class="leaf leaf-4 {{it.fx}}"></view>
+          <view class="fx-spark {{it.fx}}"></view>
+        </block>
+
+        <view class="food-row {{it.fx ? 'fx-' + it.fx : ''}}"
               style="transform: translateX({{it.offset}}px);"
               data-id="{{it.id}}"
               bindtouchstart="onTouchStart" bindtouchmove="onTouchMove" bindtouchend="onTouchEnd">
