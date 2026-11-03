@@ -39,7 +39,7 @@
     <block wx:else>
       <view class="ai-box card">
         <view class="ai-title">👨‍🍳 {{aiTitle}}</view>
-        <input class="ai-input" placeholder="{{aiPlaceholder}}" value="{{query}}" bindinput="onQueryInput" bindconfirm="onAsk" confirm-type="search" />
+        <textarea class="ai-input" placeholder="{{aiPlaceholder}}" value="{{query}}" bindinput="onQueryInput" auto-height maxlength="200" />
         <view class="ai-row">
           <button class="btn-ai" bindtap="onAsk" disabled="{{aiLoading}}">{{aiLoading ? aiGenerating : aiAsk}}</button>
         </view>
