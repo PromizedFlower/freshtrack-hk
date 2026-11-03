@@ -1,0 +1,22 @@
+# Supabase CLI temp / link artifacts
+backend/supabase/.temp/
+backend/supabase/.branches/
+.supabase/
+
+# WeChat devtools private config
+miniprogram/project.private.config.json
+
+# Dependencies
+node_modules/
+
+# Tooling / OS
+.codebuddy/
+__pycache__/
+*.log
+.DS_Store
+Thumbs.db
+
+# Local secrets (never commit)
+.env
+.env.local
+.env.*.local
