@@ -7,6 +7,7 @@ Page({
     lang: 'zh', theme: 'light', font: 'normal',
     mode: 'explore', // explore | chef
     recipes: [], items: [], expandedId: null,
+    myRecipes: [], showRecord: false, recTitle: '', recNote: '',
     aiRecipes: [], aiDisclaimer: '', aiLoading: false, aiError: '', query: '',
     presets: [],
   },
@@ -39,6 +40,9 @@ Page({
       useExpiring: i18n.getLang() === 'en' ? 'uses expiring' : '可耗临期',
       saveKg: i18n.getLang() === 'en' ? 'saves' : '省',
       matchedWith: t('matched_with'), emptyHint: t('recipe_empty_hint'),
+      myRecipesTitle: t('my_recipes'), recordAdd: t('record_add'),
+      recordTitleLbl: t('record_title'), recordNoteLbl: t('record_note'),
+      recordSave: t('save'), deleteRecipe: t('delete_recipe'), recordEmptyHint: t('record_empty_hint'),
     };
   },
 
@@ -48,15 +52,16 @@ Page({
     this.setData({ loading: true });
     try {
       const hid = await this._hid();
-      const [rows, items] = await Promise.all([
+      const [rows, mine, items] = await Promise.all([
         api.rpc('get_local_recipes', { p_household: hid }),
+        api.rpc('get_my_recipes', { p_household: hid }),
         api.rest('GET', 'v_fridge_items_with_risk', { query: '?select=id,name&order=days_left.asc' }),
       ]);
       const recipes = (rows || []).map((r) => Object.assign({}, r, {
         matchedText: (r.matched_items || []).join(' · '),
         waste_saved_kg: Number(r.waste_saved_kg) || 0,
       }));
-      this.setData({ loading: false, hasData: true, recipes, items });
+      this.setData({ loading: false, hasData: true, recipes, myRecipes: this._mapMine(mine), items });
     } catch (e) {
       console.error('recipes load failed', e);
       this.setData({ loading: false, hasData: false });
@@ -77,6 +82,56 @@ Page({
   toggle(e) {
     const id = e.currentTarget.dataset.id;
     this.setData({ expandedId: this.data.expandedId === id ? null : id });
+  },
+
+  // ---------- my recipes (user-recorded) ----------
+  _mapMine(rows) {
+    return (rows || []).map((r) => Object.assign({}, r, {
+      matchedText: (r.matched_items || []).join(' · '),
+    }));
+  },
+
+  openRecord() { this.setData({ showRecord: true, recTitle: '', recNote: '' }); },
+  closeRecord() { this.setData({ showRecord: false }); },
+  onRecTitle(e) { this.setData({ recTitle: e.detail.value }); },
+  onRecNote(e) { this.setData({ recNote: e.detail.value }); },
+
+  async saveRecord() {
+    const title = (this.data.recTitle || '').trim();
+    if (!title) {
+      wx.showToast({ title: i18n.t('record_name_required'), icon: 'none' });
+      return;
+    }
+    const hid = await this._hid();
+    wx.showLoading({ title: this.data.loadingTxt });
+    try {
+      await api.rest('POST', 'user_recipes', {
+        body: { household_id: hid, title, note: (this.data.recNote || '').trim() },
+      });
+      wx.hideLoading();
+      this.setData({ showRecord: false, recTitle: '', recNote: '' });
+      wx.showToast({ title: i18n.t('record_saved'), icon: 'success' });
+      const rows = await api.rpc('get_my_recipes', { p_household: hid });
+      this.setData({ myRecipes: this._mapMine(rows) });
+    } catch (e) {
+      wx.hideLoading();
+      console.error('save recipe failed', e);
+      wx.showToast({ title: i18n.t('record_fail'), icon: 'none' });
+    }
+  },
+
+  async deleteRecipe(e) {
+    const id = e.currentTarget.dataset.id;
+    try {
+      await api.rest('DELETE', 'user_recipes', { query: `?id=eq.${id}` });
+      wx.showToast({ title: i18n.t('recipe_deleted'), icon: 'none' });
+      const hid = await this._hid();
+      const rows = await api.rpc('get_my_recipes', { p_household: hid });
+      this.setData({ myRecipes: this._mapMine(rows) });
+    } catch (e) {
+      console.error('delete recipe failed', e);
+      wx.showToast({ title: i18n.t('record_fail'), icon: 'none' });
+    }
   },
 
   norm(s) { return (s || '').toLowerCase().trim(); },
