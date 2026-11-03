@@ -4,6 +4,7 @@
 // recipe-ai-chat (primary) and match-recipes (fallback / query mode).
 
 import { callGemini } from "./gemini.ts";
+import { agentJson, hasLlm } from "./llm.ts";
 
 export interface FridgeItem {
   id: string;
@@ -146,8 +147,22 @@ export function normalize(raw: any, input: RescueInput): RescueResult {
   return { recipes, disclaimer };
 }
 
-export async function generateRescueRecipes(input: RescueInput): Promise<RescueResult> {
+export async function generateRescueRecipes(input: RescueInput, allowSearch = true): Promise<RescueResult> {
   const promptText = buildPrompt(input);
+
+  // Preferred path: open-source LLM (OpenAI-compatible) with an optional web_search tool.
+  // Falls back to Gemini when LLM_API_KEY is not configured or the agent call fails.
+  if (hasLlm()) {
+    try {
+      const agentSystem = SYSTEM +
+        '\n\nYou are running as an agent with a "web_search" tool. If unsure about a substitution or a cooking fact, call web_search (at most twice), then output ONLY the JSON object described above.';
+      const raw = await agentJson({ system: agentSystem, user: promptText, allowSearch, maxRounds: 2 });
+      return normalize(raw, input);
+    } catch (e) {
+      console.error("LLM agent failed; falling back to Gemini:", String(e));
+    }
+  }
+
   const raw = await callGemini({ systemPrompt: SYSTEM, promptText, imageBase64: "" });
   return normalize(raw, input);
 }
