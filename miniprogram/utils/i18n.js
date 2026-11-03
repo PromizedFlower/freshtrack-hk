@@ -1,204 +1,111 @@
 // FreshTrack HK — lightweight i18n + preferences store (no external deps).
-// Language / theme / font scale are persisted in storage and applied globally.
+// 繁體中文（zh-HK）為唯一介面語言；theme / font scale 持久化於 storage 並全域套用。
 
-const LANG_KEY = 'ft_lang';
 const THEME_KEY = 'ft_theme';
 const FONT_KEY = 'ft_font';
 
 const dict = {
   zh: {
     // common
-    loading: '加载中…',
-    noData: '暂无数据，请先在「添加」页录入食材',
-    save: '保存', cancel: '取消', done: '完成', retry: '重试',
+    loading: '載入中…',
+    noData: '暫無數據，請先在「添加」頁錄入食材',
+    save: '儲存', cancel: '取消', done: '完成', retry: '重試',
     // tabs
-    tab_home: '首页', tab_fridge: '冰箱', tab_recipes: '菜谱', tab_add: '添加', tab_me: '我的',
+    tab_home: '首頁', tab_fridge: '雪櫃', tab_recipes: '食譜', tab_add: '添加', tab_me: '我的',
     // dashboard / scheme C
-    morning: '晨曦', afternoon: '午后', night: '墨夜',
+    morning: '晨曦', afternoon: '午後', night: '夜幕',
     greeting_morning: '早安', greeting_afternoon: '午安', greeting_night: '晚上好',
-    hero_sub_expiring: '雪柜中有 {n} 件食材即将过期，{m} 件正在开封食用。',
-    kpi_in_fridge: '在库食材', kpi_expiring: '临期', kpi_in_use: '食用中',
-    zone_fridge: '冷藏', zone_freezer: '冷冻', zone_pantry: '常温',
-    zone_fridge_desc: '4°C · 乳品/熟食', zone_freezer_desc: '-18°C · 肉类/急冻', zone_pantry_desc: '常温 · 干货/蔬果',
-    swipe_tip_consume: '右滑吃完 ✓', swipe_tip_edit: '点击 ⋯ 换层编辑', swipe_tip_discard: '左滑丢弃 🗑️',
-    today_expiring_top: '今日临期 Top',
-    quick_add: '添加食材', quick_recipes: '抢救菜谱', quick_impact: '减废成果',
+    hero_sub_expiring: '雪櫃中有 {n} 件食材即將過期，{m} 件正在開封食用。',
+    kpi_in_fridge: '在庫食材', kpi_expiring: '臨期', kpi_in_use: '食用中',
+    zone_fridge: '冷藏', zone_freezer: '冷凍', zone_pantry: '常溫',
+    zone_fridge_desc: '4°C · 乳品/熟食', zone_freezer_desc: '-18°C · 肉類/急凍', zone_pantry_desc: '常溫 · 乾貨/蔬果',
+    today_expiring_top: '今日臨期 Top',
+    quick_add: '添加食材', quick_recipes: '搶救食譜', quick_impact: '減廢成果',
     // fridge
-    fridge_title: '三温区雪柜视图',
-    empty_zone: '此温区暂无食材',
-    edit_item: '编辑食材与调整温区',
-    label_name: '食材名称', label_expiry: '到期日期', label_date_type: '日期类型', label_zone: '存放温区',
-    consumed: '吃完消化', discard: '过期丢弃',
-    confirm_consume: '确认「{name}」已用完 / 已下厨？将计入惜食减废。',
-    confirm_discard: '确认「{name}」已过期丢弃？',
+    fridge_title: '三溫區雪櫃視圖',
+    empty_zone: '此溫區暫無食材',
+    edit_item: '編輯食材與調整溫區',
+    label_name: '食材名稱', label_expiry: '到期日期', label_date_type: '日期類型', label_zone: '存放溫區',
+    consumed: '吃完消化', discard: '過期丟棄',
+    fx_consumed: '已計入惜食 ✓', fx_discarded: '已記錄丟棄',
+    // （舊的 confirm_consume / confirm_discard 已隨二次確認彈窗一併移除）
     // add
-    mode_receipt: '小票扫描', mode_food: '食材拍照', mode_manual: '手动录入',
-    scan_receipt: '拍摄超市小票', scan_food: '拍摄食材 / 喷码', scanning: '识别中…',
-    detected: '识别结果', confirm_add: '确认入库', nothing_detected: '未识别到食材',
-    scan_failed: '识别失败，请重试', read_failed: '读取图片失败',
-    add_title: '新增生鲜入库',
-    cat_title: '1. 选择类别图标',
-    cat_veg: '蔬菜', cat_fruit: '水果', cat_meat: '肉类', cat_seafood: '海鲜',
-    cat_dairy: '乳品/蛋', cat_bakery: '烘焙', cat_frozen: '急冻', cat_other: '其他',
-    add_name_ph: '例如：日本产温室小青瓜',
-    add_days: '保鲜天数', add_zone: '存放温区', add_price: '购买金额 (HK$，选填)',
-    add_save: '存入雪柜', add_saved: '已入库',
+    mode_receipt: '小票掃描', mode_food: '食材拍照', mode_manual: '手動錄入',
+    scan_receipt: '拍攝超市小票', scan_food: '拍攝食材／噴碼', scanning: '識別中…',
+    detected: '識別結果', confirm_add: '確認入庫', nothing_detected: '未識別到食材',
+    scan_failed: '識別失敗，請重試', read_failed: '讀取圖片失敗',
+    add_title: '新增生鮮入庫',
+    cat_title: '1. 選擇類別圖標',
+    cat_veg: '蔬菜', cat_fruit: '水果', cat_meat: '肉類', cat_seafood: '海鮮',
+    cat_dairy: '乳品/蛋', cat_bakery: '烘焙', cat_frozen: '急凍', cat_other: '其他',
+    add_name_ph: '例如：日本產溫室小青瓜',
+    add_days: '保鮮天數', add_zone: '存放溫區', add_price: '購買金額 (HK$，選填)',
+    add_save: '存入雪櫃', add_saved: '已入庫',
     // recipes
-    recipe_explore: '探索灵感', recipe_chef: '港式 AI 私厨',
-    ai_tonight: '今晚怎么煮', ai_ask: '问 AI', ai_placeholder: '例如：鸡胸+菜心，10 分钟能做什么',
-    ai_generating: '生成中…', ai_failed: 'AI 生成失败，已回退本地菜谱', ai_unavailable: 'AI 暂时不可用',
-    preset_1: '帮我清空快过期的菠菜与鸡胸肉',
-    preset_2: '15分钟电饭煲懒人快手菜推荐',
-    preset_3: '食谱要白葡萄酒，用家里花雕酒怎么替换？',
-    weekly_rescue: '本周抢救清单', no_recipe: '暂无推荐菜谱',
-    matched_with: '用到', recipe_empty_hint: '冰箱里还没有可匹配的食材，先去「添加」录入吧',
-    my_recipes: '我的菜谱', record_add: '记录菜谱', record_title: '菜谱名称', record_note: '备注（可选）',
-    record_saved: '已记录', record_fail: '保存失败', record_name_required: '请填写菜谱名称',
-    recipe_deleted: '已删除', delete_recipe: '删除',
-    record_empty_hint: '还没有自己的菜谱，点右上角「记录菜谱」吧',
-    fav: '收藏', cook: '下厨', detail: '详情', collapse: '收起',
-    fav_ok: '已收藏', fav_fail: '收藏失败',
-    cook_title: '开始下厨', cook_confirm: '将核销 {n} 项食材并计入惜食减废。',
-    no_match: '没有匹配的可核销食材',
+    recipe_explore: '探索靈感', recipe_chef: '港式 AI 私廚',
+    ai_tonight: '今晚怎麼煮', ai_ask: '問 AI', ai_placeholder: '例如：雞胸＋菜心，10 分鐘能做什麼',
+    ai_generating: '生成中…', ai_failed: 'AI 生成失敗，已回退本地食譜', ai_unavailable: 'AI 暫時不可用',
+    preset_1: '幫我清空快過期的菠菜與雞胸肉',
+    preset_2: '15 分鐘電飯煲懶人快手菜推薦',
+    preset_3: '食譜要白葡萄酒，用家裡花雕酒怎麼替換？',
+    weekly_rescue: '本週搶救清單', no_recipe: '暫無推薦食譜',
+    matched_with: '用到', recipe_empty_hint: '雪櫃裡還沒有可匹配的食材，先去「添加」錄入吧',
+    my_recipes: '我的食譜', record_add: '記錄食譜', record_title: '食譜名稱', record_note: '備註（可選）',
+    record_saved: '已記錄', record_fail: '儲存失敗', record_name_required: '請填寫食譜名稱',
+    recipe_deleted: '已刪除', delete_recipe: '刪除',
+    record_empty_hint: '還沒有自己的食譜，點右上角「記錄食譜」吧',
+    fav: '收藏', cook: '下廚', detail: '詳情', collapse: '收起',
+    fav_ok: '已收藏', fav_fail: '收藏失敗',
+    cook_title: '開始下廚', cook_confirm: '將核銷 {n} 項食材並計入惜食減廢。',
+    no_match: '沒有匹配的可核銷食材',
     // me / impact
-    me_sdg: '减废成果 (SDG 12.3)', me_sdg_sub: '减少食物浪费 · 减缓气候变化',
-    me_month_kg: '本月惜食', me_month_hkd: '节省开支', me_month_co2: '减排 CO₂e',
-    me_trend: '近 6 月惜食趋势', stat_tracked: '当前跟踪食材', stat_expiring: '临期 (高风险)',
-    me_restock: '代购清单', me_restock_add: '加入代购', me_restock_empty: '还没有代购需求，点右上角「加入代购」吧',
-    me_restock_bought: '已买', me_restock_cancel: '取消',
-    restock_name_ph: '例如：鸡蛋 1 盒', restock_qty: '数量', restock_cat: '选择图标',
-    restock_name_required: '请先填写名称', restock_added: '已加入代购', restock_fail: '操作失败，请重试',
-    me_prefs: '偏好与无障碍设置',
-    pref_lang: '界面语言', pref_theme: '外观主题', pref_font: '长辈大字',
-    pref_zh: '繁体中文', pref_en: 'English',
-    pref_light: '暖纸', pref_dark: '深黑',
+    me_sdg: '減廢成果 (SDG 12.3)', me_sdg_sub: '減少食物浪費 · 減緩氣候變化',
+    me_month_kg: '本月惜食', me_month_hkd: '節省開支', me_month_co2: '減排 CO₂e',
+    me_trend: '近 6 月惜食趨勢', stat_tracked: '當前追蹤食材', stat_expiring: '臨期 (高風險)',
+    me_restock: '代購清單', me_restock_add: '加入代購', me_restock_empty: '還沒有代購需求，點右上角「加入代購」吧',
+    me_restock_bought: '已買', me_restock_cancel: '取消',
+    restock_name_ph: '例如：雞蛋 1 盒', restock_qty: '數量', restock_cat: '選擇圖標',
+    restock_name_required: '請先填寫名稱', restock_added: '已加入代購', restock_fail: '操作失敗，請重試',
+    me_prefs: '偏好與無障礙設定',
+    pref_theme: '外觀主題', pref_font: '長輩大字',
+    pref_light: '暖紙', pref_dark: '深黑',
     pref_font_100: '100%', pref_font_125: '125%',
     // risk / date type labels
-    risk_high: '高风险', risk_medium: '中风险', risk_low: '低风险',
-    type_best_before: '最佳赏味期', type_use_by: '此日期前食用',
+    risk_high: '高風險', risk_medium: '中風險', risk_low: '低風險',
+    type_best_before: '最佳賞味期', type_use_by: '此日期前食用',
     days_left: '剩 {n} 天',
     // login
-    login_tagline: '惜食减废 · 智能冰箱管理',
-    login_email_ph: '邮箱', login_pwd_ph: '密码',
-    login_btn: '登录', signup_btn: '注册新账号',
-    login_demo_title: '一键体验测试账号',
-    login_demo_sub: '5 个账号 · 同一家庭不同角色',
-    err_email_pwd: '请输入邮箱和密码', err_login: '登录失败', err_signup: '注册失败',
-    err_demo: '演示账号登录失败，请确认后端已部署',
+    login_tagline: '惜食減廢 · 智能雪櫃管理',
+    login_email_ph: '郵箱', login_pwd_ph: '密碼',
+    login_btn: '登入', signup_btn: '註冊新帳號',
+    login_demo_title: '一鍵體驗測試帳號',
+    login_demo_sub: '5 個帳號 · 同一家庭不同角色',
+    err_email_pwd: '請輸入郵箱和密碼', err_login: '登入失敗', err_signup: '註冊失敗',
+    err_demo: '演示帳號登入失敗，請確認後端已部署',
     // profile (Me tab)
-    sign_out: '退出登录',
-    role_owner: '拥有者', role_editor: '编辑者', role_viewer: '访客',
+    sign_out: '退出登入', sign_out_confirm: '確定要退出當前帳號嗎？',
+    role_owner: '擁有者', role_editor: '編輯者', role_viewer: '訪客',
     profile_household: '家庭', profile_no_household: '尚未加入家庭',
     family_title: '我的家庭',
-    family_members: '{n} 位成员',
-    invite_code: '邀请码', copy: '复制', copied: '邀请码已复制',
+    family_members: '{n} 位成員',
+    invite_code: '邀請碼', copy: '複製', copied: '邀請碼已複製',
     self_tag: '我',
-    family_switch: '切换家庭', family_join: '加入家庭', family_leave: '离开家庭',
-    switch_title: '切换家庭', join_code_ph: '输入家庭邀请码', join_btn: '加入',
-    joined_ok: '已加入 {name}', join_fail: '加入失败，邀请码无效',
-    leave_confirm: '确定离开「{name}」吗？', left_ok: '已离开', leave_fail: '离开失败',
-    current: '当前',
-    manage_members: '管理成员', transfer_owner: '转让 owner', remove_member: '移除',
-    transfer_confirm: '确定把家庭 owner 转让给「{name}」？你将变为编辑者。',
-    remove_confirm: '确定将「{name}」移出家庭？',
-    transferred: '已转让 owner', removed: '已移除', manage_fail: '操作失败',
-  },
-  en: {
-    loading: 'Loading…',
-    noData: 'No data yet. Add items in the "Add" tab.',
-    save: 'Save', cancel: 'Cancel', done: 'Done', retry: 'Retry',
-    tab_home: 'Home', tab_fridge: 'Fridge', tab_recipes: 'Recipes', tab_add: 'Add', tab_me: 'Me',
-    morning: 'Dawn', afternoon: 'Afternoon', night: 'Night',
-    greeting_morning: 'Good morning', greeting_afternoon: 'Good afternoon', greeting_night: 'Good evening',
-    hero_sub_expiring: '{n} items are expiring soon, {m} opened & in use.',
-    kpi_in_fridge: 'In fridge', kpi_expiring: 'Expiring', kpi_in_use: 'In use',
-    zone_fridge: 'Chilled', zone_freezer: 'Freezer', zone_pantry: 'Pantry',
-    zone_fridge_desc: '4°C · Dairy/Deli', zone_freezer_desc: '-18°C · Meat/Frozen', zone_pantry_desc: 'Ambient · Dry/Produce',
-    swipe_tip_consume: 'Swipe right: eaten ✓', swipe_tip_edit: 'Tap ⋯ to move/edit', swipe_tip_discard: 'Swipe left: discard 🗑️',
-    today_expiring_top: 'Expiring soon',
-    quick_add: 'Add item', quick_recipes: 'Rescue recipes', quick_impact: 'My impact',
-    fridge_title: 'Three-zone fridge',
-    empty_zone: 'Nothing in this zone',
-    edit_item: 'Edit item & move zone',
-    label_name: 'Name', label_expiry: 'Expiry date', label_date_type: 'Date type', label_zone: 'Zone',
-    consumed: 'Eaten', discard: 'Discard',
-    confirm_consume: 'Mark "{name}" as used / cooked? Counts as food saved.',
-    confirm_discard: 'Discard "{name}" as expired?',
-    mode_receipt: 'Receipt scan', mode_food: 'Food photo', mode_manual: 'Manual',
-    scan_receipt: 'Scan receipt', scan_food: 'Snap food / label', scanning: 'Scanning…',
-    detected: 'Detected', confirm_add: 'Confirm', nothing_detected: 'Nothing detected',
-    scan_failed: 'Scan failed, retry', read_failed: 'Read image failed',
-    add_title: 'Add fresh item',
-    cat_title: '1. Pick a category',
-    cat_veg: 'Vegetable', cat_fruit: 'Fruit', cat_meat: 'Meat', cat_seafood: 'Seafood',
-    cat_dairy: 'Dairy/Egg', cat_bakery: 'Bakery', cat_frozen: 'Frozen', cat_other: 'Other',
-    add_name_ph: 'e.g. Japanese cucumber',
-    add_days: 'Fresh for (days)', add_zone: 'Storage zone', add_price: 'Price (HK$, optional)',
-    add_save: 'Save to fridge', add_saved: 'Saved',
-    recipe_explore: 'Explore', recipe_chef: 'AI Chef',
-    ai_tonight: "What's for dinner?", ai_ask: 'Ask AI', ai_placeholder: 'e.g. chicken breast + choy sum in 10 min',
-    ai_generating: 'Cooking up…', ai_failed: 'AI failed, showing local recipes', ai_unavailable: 'AI unavailable',
-    preset_1: 'Clear my expiring spinach & chicken breast',
-    preset_2: '15-min rice-cooker quick meals',
-    preset_3: 'Substitute white wine with Shaoxing wine?',
-    weekly_rescue: 'This week\'s rescue', no_recipe: 'No recipes yet',
-    matched_with: 'Uses', recipe_empty_hint: 'No matching ingredients yet — add some in the Add tab',
-    my_recipes: 'My recipes', record_add: 'Add recipe', record_title: 'Recipe name', record_note: 'Note (optional)',
-    record_saved: 'Saved', record_fail: 'Save failed', record_name_required: 'Recipe name is required',
-    recipe_deleted: 'Deleted', delete_recipe: 'Delete',
-    record_empty_hint: 'No personal recipes yet — tap “Add recipe”',
-    fav: 'Save', cook: 'Cook', detail: 'Detail', collapse: 'Hide',
-    fav_ok: 'Saved', fav_fail: 'Save failed',
-    cook_title: 'Start cooking', cook_confirm: 'This will consume {n} item(s) and count as food saved.',
-    no_match: 'No matching items to consume',
-    me_sdg: 'Waste saved (SDG 12.3)', me_sdg_sub: 'Less food waste · slower climate change',
-    me_month_kg: 'Saved this month', me_month_hkd: 'Money saved', me_month_co2: 'CO₂e avoided',
-    me_trend: '6-month trend', stat_tracked: 'Tracked items', stat_expiring: 'Expiring (high)',
-    me_restock: 'Group-buy list', me_restock_add: '+ Add', me_restock_empty: 'No group-buy items yet — tap “Add” at the top right',
-    me_restock_bought: 'Bought', me_restock_cancel: 'Cancel',
-    restock_name_ph: 'e.g. Eggs 1 box', restock_qty: 'Qty', restock_cat: 'Icon',
-    restock_name_required: 'Name is required', restock_added: 'Added to group buy', restock_fail: 'Action failed, try again',
-    me_prefs: 'Preferences & accessibility',
-    pref_lang: 'Language', pref_theme: 'Theme', pref_font: 'Font scale',
-    pref_zh: '繁體中文', pref_en: 'English',
-    pref_light: 'Light', pref_dark: 'Dark',
-    pref_font_100: '100%', pref_font_125: '125%',
-    risk_high: 'High risk', risk_medium: 'Medium risk', risk_low: 'Low risk',
-    type_best_before: 'Best before', type_use_by: 'Use by',
-    days_left: '{n} days left',
-    login_tagline: 'Save food, waste less · Smart fridge',
-    login_email_ph: 'Email', login_pwd_ph: 'Password',
-    login_btn: 'Sign in', signup_btn: 'Create account',
-    login_demo_title: 'One-tap demo sign-in',
-    login_demo_sub: '5 accounts · one household, different roles',
-    err_email_pwd: 'Enter email and password', err_login: 'Sign in failed', err_signup: 'Sign up failed',
-    err_demo: 'Demo sign-in failed. Check backend deployment.',
-    sign_out: 'Sign out',
-    role_owner: 'Owner', role_editor: 'Editor', role_viewer: 'Viewer',
-    profile_household: 'Household', profile_no_household: 'No household yet',
-    family_title: 'My family',
-    family_members: '{n} members',
-    invite_code: 'Invite code', copy: 'Copy', copied: 'Invite code copied',
-    self_tag: 'Me',
-    family_switch: 'Switch household', family_join: 'Join household', family_leave: 'Leave household',
-    switch_title: 'Switch household', join_code_ph: 'Enter invite code', join_btn: 'Join',
-    joined_ok: 'Joined {name}', join_fail: 'Join failed, invalid code',
-    leave_confirm: 'Leave "{name}"?', left_ok: 'Left', leave_fail: 'Leave failed',
-    current: 'Current',
-    manage_members: 'Manage members', transfer_owner: 'Make owner', remove_member: 'Remove',
-    transfer_confirm: 'Transfer ownership to "{name}"? You will become an editor.',
-    remove_confirm: 'Remove "{name}" from the household?',
-    transferred: 'Ownership transferred', removed: 'Removed', manage_fail: 'Operation failed',
+    family_switch: '切換家庭', family_join: '加入家庭', family_leave: '離開家庭',
+    switch_title: '切換家庭', join_code_ph: '輸入家庭邀請碼', join_btn: '加入',
+    joined_ok: '已加入 {name}', join_fail: '加入失敗，邀請碼無效',
+    leave_confirm: '確定離開「{name}」嗎？', left_ok: '已離開', leave_fail: '離開失敗',
+    current: '當前',
+    manage_members: '管理成員', transfer_owner: '轉讓擁有者', remove_member: '移除',
+    transfer_confirm: '確定把家庭擁有者轉讓給「{name}」？你將變為編輯者。',
+    remove_confirm: '確定將「{name}」移出家庭？',
+    transferred: '已轉讓擁有者', removed: '已移除', manage_fail: '操作失敗',
   },
 };
 
 function getLang() {
-  const l = wx.getStorageSync(LANG_KEY);
-  return l === 'en' ? 'en' : 'zh';
+  return 'zh'; // 繁體中文為唯一介面語言
 }
-function setLang(lang) {
-  wx.setStorageSync(LANG_KEY, lang);
-}
+function setLang() { /* 已移除多語言切換，保留空實作以兼容舊調用 */ }
 function getTheme() {
   return wx.getStorageSync(THEME_KEY) === 'dark' ? 'dark' : 'light';
 }
@@ -213,26 +120,25 @@ function setFont(font) {
 }
 
 function t(key, vars) {
-  const lang = getLang();
-  let s = (dict[lang] && dict[lang][key]) || dict.zh[key] || key;
+  let s = dict.zh[key] || key;
   if (vars) {
     Object.keys(vars).forEach((k) => { s = s.split('{' + k + '}').join(vars[k]); });
   }
   return s;
 }
 
-// ---- domain label maps (bilingual) ----
+// ---- domain label maps (Traditional Chinese only) ----
 const CATEGORY_META = {
-  Produce: { zh: '蔬果', en: 'Produce', icon: '🥬' },
-  Dairy: { zh: '乳品/蛋', en: 'Dairy', icon: '🥛' },
-  Meat: { zh: '肉类', en: 'Meat', icon: '🥩' },
-  Bakery: { zh: '烘焙', en: 'Bakery', icon: '🍞' },
-  Pantry: { zh: '干货/其他', en: 'Pantry', icon: '📦' },
+  Produce: { zh: '蔬果', icon: '🥬' },
+  Dairy: { zh: '乳品/蛋', icon: '🥛' },
+  Meat: { zh: '肉類', icon: '🥩' },
+  Bakery: { zh: '烘焙', icon: '🍞' },
+  Pantry: { zh: '乾貨/其他', icon: '📦' },
 };
 const ZONE_META = {
-  fridge: { zh: '冷藏', en: 'Chilled', icon: '🧊', temp: '4°C' },
-  freezer: { zh: '冷冻', en: 'Freezer', icon: '❄️', temp: '-18°C' },
-  pantry: { zh: '常温', en: 'Pantry', icon: '🗄️', temp: '—' },
+  fridge: { zh: '冷藏', icon: '🧊', temp: '4°C' },
+  freezer: { zh: '冷凍', icon: '❄️', temp: '-18°C' },
+  pantry: { zh: '常溫', icon: '🗄️', temp: '—' },
 };
 const RISK_META = { high: 'risk_high', medium: 'risk_medium', low: 'risk_low' };
 const TYPE_META = { best_before: 'type_best_before', use_by: 'type_use_by' };
@@ -250,17 +156,15 @@ const PICKER_CATS = [
 ];
 
 function catLabel(category) {
-  const m = CATEGORY_META[category] || { zh: category, en: category, icon: '📦' };
-  const lang = getLang();
-  return lang === 'en' ? m.en : m.zh;
+  const m = CATEGORY_META[category] || { zh: category, icon: '📦' };
+  return m.zh;
 }
 function catIcon(category) {
   return (CATEGORY_META[category] || {}).icon || '📦';
 }
 function zoneLabel(zone) {
-  const m = ZONE_META[zone] || { zh: zone, en: zone, icon: '🗄️', temp: '' };
-  const lang = getLang();
-  return lang === 'en' ? m.en : m.zh;
+  const m = ZONE_META[zone] || { zh: zone, icon: '🗄️', temp: '' };
+  return m.zh;
 }
 function zoneIcon(zone) { return (ZONE_META[zone] || {}).icon || '🗄️'; }
 function riskLabel(level) { return t(RISK_META[level] || level); }
