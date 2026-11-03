@@ -169,3 +169,92 @@ page {
 
 /* ---- section title ---- */
 .section-title { font-size: 30rpx; font-weight: 800; margin: 28rpx 28rpx 12rpx; color: var(--text); }
+
+/* ---- 飛葉特效（滑動消化／丟棄共用，fridge + dashboard） ---- */
+/* 卡片本身：消化上飄收斂 / 丟棄下墜淡出 */
+@keyframes cardOutUp {
+  0%   { opacity: 1; transform: translateX(0) translateY(0) rotate(0); }
+  60%  { opacity: 1; transform: translateX(0) translateY(-36rpx) rotate(-2deg); }
+  100% { opacity: 0; transform: translateX(0) translateY(-110rpx) rotate(3deg) scale(0.92); }
+}
+@keyframes cardOutDown {
+  0%   { opacity: 1; transform: translateX(0) translateY(0) rotate(0); }
+  60%  { opacity: 1; transform: translateX(0) translateY(30rpx) rotate(2deg); }
+  100% { opacity: 0; transform: translateX(0) translateY(110rpx) rotate(-3deg) scale(0.92); }
+}
+.food-row.fx-consume { animation: cardOutUp 0.65s ease-in forwards; }
+.food-row.fx-discard { animation: cardOutDown 0.65s ease-in forwards; }
+
+/* 葉片本體（CSS 葉形：對角圓角） */
+.leaf {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20rpx;
+  height: 30rpx;
+  margin: -15rpx 0 0 -10rpx;
+  border-radius: 0 60% 0 60%;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 5;
+}
+.leaf.consume { background: linear-gradient(135deg, #4ADE80, #16A34A); }
+.leaf.discard { background: linear-gradient(135deg, #FBBF24, #DC2626); }
+
+/* 消化：葉片向右上飄散盤旋 */
+@keyframes leafFlyA { 0% { opacity: 0; transform: translate(0, 0) rotate(0deg) scale(0.6); }
+  15% { opacity: 1; }
+  100% { opacity: 0; transform: translate(96rpx, -180rpx) rotate(320deg) scale(1); } }
+@keyframes leafFlyB { 0% { opacity: 0; transform: translate(0, 0) rotate(0deg) scale(0.6); }
+  15% { opacity: 1; }
+  100% { opacity: 0; transform: translate(-70rpx, -220rpx) rotate(-280deg) scale(0.9); } }
+@keyframes leafFlyC { 0% { opacity: 0; transform: translate(0, 0) rotate(0deg) scale(0.6); }
+  15% { opacity: 1; }
+  100% { opacity: 0; transform: translate(150rpx, -120rpx) rotate(400deg) scale(0.8); } }
+@keyframes leafFlyD { 0% { opacity: 0; transform: translate(0, 0) rotate(0deg) scale(0.6); }
+  15% { opacity: 1; }
+  100% { opacity: 0; transform: translate(30rpx, -260rpx) rotate(240deg) scale(1.1); } }
+
+/* 丟棄：葉片向下飄落翻轉 */
+@keyframes leafFallA { 0% { opacity: 0; transform: translate(0, 0) rotate(0deg) scale(0.6); }
+  15% { opacity: 1; }
+  100% { opacity: 0; transform: translate(-110rpx, 170rpx) rotate(-300deg) scale(1); } }
+@keyframes leafFallB { 0% { opacity: 0; transform: translate(0, 0) rotate(0deg) scale(0.6); }
+  15% { opacity: 1; }
+  100% { opacity: 0; transform: translate(80rpx, 200rpx) rotate(260deg) scale(0.9); } }
+@keyframes leafFallC { 0% { opacity: 0; transform: translate(0, 0) rotate(0deg) scale(0.6); }
+  15% { opacity: 1; }
+  100% { opacity: 0; transform: translate(-160rpx, 90rpx) rotate(-380deg) scale(0.8); } }
+@keyframes leafFallD { 0% { opacity: 0; transform: translate(0, 0) rotate(0deg) scale(0.6); }
+  15% { opacity: 1; }
+  100% { opacity: 0; transform: translate(-30rpx, 240rpx) rotate(220deg) scale(1.1); } }
+
+.leaf-1.consume { animation: leafFlyA 0.7s ease-out forwards; }
+.leaf-2.consume { animation: leafFlyB 0.75s ease-out 0.05s forwards; }
+.leaf-3.consume { animation: leafFlyC 0.7s ease-out 0.1s forwards; }
+.leaf-4.consume { animation: leafFlyD 0.8s ease-out 0.08s forwards; }
+
+.leaf-1.discard { animation: leafFallA 0.7s ease-in forwards; }
+.leaf-2.discard { animation: leafFallB 0.75s ease-in 0.05s forwards; }
+.leaf-3.discard { animation: leafFallC 0.7s ease-in 0.1s forwards; }
+.leaf-4.discard { animation: leafFallD 0.8s ease-in 0.08s forwards; }
+
+/* 中心擴散光暈脈衝 */
+.fx-spark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 90rpx;
+  height: 90rpx;
+  margin: -45rpx 0 0 -45rpx;
+  border-radius: 50%;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 4;
+}
+@keyframes sparkPulse {
+  0% { opacity: 0.75; transform: scale(0.35); }
+  100% { opacity: 0; transform: scale(2.1); }
+}
+.fx-spark.consume { background: radial-gradient(circle, rgba(74, 222, 128, 0.55), transparent 70%); animation: sparkPulse 0.6s ease-out forwards; }
+.fx-spark.discard { background: radial-gradient(circle, rgba(248, 113, 113, 0.5), transparent 70%); animation: sparkPulse 0.6s ease-out forwards; }
