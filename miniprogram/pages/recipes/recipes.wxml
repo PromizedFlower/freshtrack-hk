@@ -11,7 +11,7 @@
 
     <!-- Mode 1: local rescue list -->
     <block wx:if="{{mode === 'explore'}}">
-      <view class="section-title">{{weeklyRescue}}</view>
+      <view class="section-title">{{weeklyRescue}}<text wx:if="{{recipes.length}}" class="count">· {{recipes.length}}</text></view>
       <view class="card rcp" wx:for="{{recipes}}" wx:key="id">
         <view class="row" data-id="{{item.id}}" bindtap="toggle">
           <view class="grow">
@@ -24,6 +24,7 @@
           <text class="tag">{{useExpiring}} {{item.expiring_used_count}}</text>
           <text class="tag">{{saveKg}} {{item.waste_saved_kg}}kg</text>
         </view>
+        <view wx:if="{{item.matchedText}}" class="rcp-matched">🔎 {{matchedWith}} {{item.matchedText}}</view>
         <view wx:if="{{expandedId === item.id}}" class="detail">
           <view class="sec">{{lang === 'en' ? 'Ingredients' : '用料'}}</view>
           <view class="ing" wx:for="{{item.ingredients}}" wx:for-item="ing" wx:key="name">{{ing.name}}</view>
@@ -32,7 +33,10 @@
           <button class="btn-primary cook" data-id="{{item.id}}" bindtap="cook">{{cook}}</button>
         </view>
       </view>
-      <view wx:if="{{recipes.length === 0}}" class="page-loading">{{noRecipe}}</view>
+      <view wx:if="{{recipes.length === 0}}" class="card empty-recipe">
+        <view class="empty-emoji">🥬</view>
+        <view class="muted">{{emptyHint}}</view>
+      </view>
     </block>
 
     <!-- Mode 2: AI chef -->
